@@ -98,4 +98,14 @@ class Product
     {
         $this->price = $price;
     }
+
+    public function summmarize():string
+    {
+        return
+            "ID: $this->id;" .
+            "Name: $this->name;" .
+            "Größe: $this->size;" .
+            "Größe: $this->category;" .
+            "Preis: $this->price;";
+    }
 }

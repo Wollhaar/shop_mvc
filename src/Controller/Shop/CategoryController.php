@@ -3,9 +3,12 @@
 namespace Controller\Shop;
 
 use Model\Shop\Category;
+use View\Engine\Response;
 
 class CategoryController
 {
+    private const page = 'category';
+
     private const categories = [
         1 => 'T-Shirt',
         2 => 'Pullover',
@@ -19,7 +22,7 @@ class CategoryController
     public function __construct()
     {
         foreach (self::categories as $id => $name) {
-            $this->collection[] = new Category($id, $name);
+            $this->collection[] = new Category((int) $id, $name);
         }
     }
 

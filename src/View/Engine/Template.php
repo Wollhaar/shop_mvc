@@ -4,7 +4,7 @@ namespace View\Engine;
 
 class Template
 {
-    private const path = './Resources/view/Templates/';
+    private const path = ROOT_PATH . '/src/View/Resources/Templates/';
     private const format = '.php';
 
     private $filename;
