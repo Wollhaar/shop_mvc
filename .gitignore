@@ -1,0 +1,6 @@
+#genreal #generated
+.idea/
+vendor/
+
+#files
+composer.lock
