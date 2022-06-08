@@ -8,7 +8,9 @@ class FrontController
     private static string $layout = 'default';
     private static string $page = 'home';
 
-    private static array $contentList = array();
+    private static array $contentList = array(
+        'home' => '<h2>Welcome</h2>'
+    );
 
     public static function currentLayout(): string
     {
@@ -17,6 +19,9 @@ class FrontController
 
     public static function activePage(): string
     {
+        if (self::$page === 'home') {
+            self::$page = ROOT_PATH . '/src/View/Resources/Templates/home.php';
+        }
         return self::$page;
     }
 
@@ -42,17 +47,23 @@ class FrontController
 
     public static function build(string $content, string $category):void
     {
+        $content = explode(';', $content);
         switch ($category) {
             case 'category':
-                self::$contentList['category'] = '<h2>Category</h2><div class="content">' . $content . '</div>';
+                self::$contentList['category'] = '<h2>Kategorie</h2><ul class="content">';
+                foreach ($content as $str) {
+                    self::$contentList['category'] .= "<li>$str</li>";
+                }
+                self::$contentList['category'] .= '</ul>';
                 break;
 
             case 'detail':
-                self::$contentList['details'] = '<h2>Produktdetails</h2><div class="content">' . $content . '</div>';
+                self::$contentList['details'] = '<h2>Produktdetails</h2><ul class="content">';
+                foreach ($content as $str) {
+                    self::$contentList['details'] .= "<li>$str</li>";
+                }
+                self::$contentList['details'] .= '</ul>';
                 break;
-
-            default:
-                self::$contentList['home'] = '<h2>Welcome</h2>';
         }
     }
 }

@@ -4,7 +4,7 @@ include_once './config.php';
 use Controller\Shop\CategoryController as CategoryControl;
 use Controller\Shop\ProductController;
 use View\FrontController;
-use View\Page\HomeController;
+use Controller\HomeController;
 
 $request = $_REQUEST;
 $page = $request['page'];
@@ -16,14 +16,14 @@ switch ($page)
     case 'category':
         $control = new CategoryControl();
 
-        FrontController::build($control->getById(intval($id))->summarize(), 'category');
+        FrontController::build($control->getById((int) $id)->summarize(), 'category');
         FrontController::setPage($control->view()->call());
         break;
 
     case 'detail':
         $control = new ProductController();
 
-        FrontController::build($control->getById(intval($id))->summmarize(), 'detail');
+        FrontController::build($control->getById((int) $id)->summmarize(), 'detail');
         FrontController::setPage($control->view()->call());
         break;
 
