@@ -29,8 +29,11 @@ class Category
         return $this->name;
     }
 
-    public function summarize():string
+    public function summarize():array
     {
-        return 'ID:' . $this->id . ';Kategorie: ' . $this->name;
+        return [
+            'id' => $this->id,
+            'name' => $this->name
+        ];
     }
 }

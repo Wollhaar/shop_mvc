@@ -99,13 +99,14 @@ class Product
         $this->price = $price;
     }
 
-    public function summmarize():string
+    public function summarize():array
     {
-        return
-            "ID: $this->id;" .
-            "Name: $this->name;" .
-            "Größe: $this->size;" .
-            "Größe: $this->category;" .
-            "Preis: $this->price;";
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'size' => $this->size,
+            'category' => $this->category,
+            'price' => $this->price
+        ];
     }
 }

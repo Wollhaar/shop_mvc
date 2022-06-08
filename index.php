@@ -1,16 +1,14 @@
 <?php declare(strict_types=1);
 include_once './config.php';
 
-use Controller\Shop\CategoryController as CategoryControl;
-use Controller\Shop\ProductController;
-use View\FrontController;
 use Controller\HomeController;
 
 $request = $_REQUEST;
-$page = $request['page'];
 
-$id = $request['id'] ?? 0;
-
+$home = new HomeController($request);
+$home->route();
+$home->view();
+exit;
 switch ($page)
 {
     case 'category':

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Controller\Shop;
+namespace Controller;
 
 use Model\Shop\Category;
 use View\Engine\Response;
