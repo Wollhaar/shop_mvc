@@ -26,6 +26,11 @@ class CategoryController
         }
     }
 
+    public function view():Response
+    {
+        return new Response('category');
+    }
+
     public function getById(int $id): Category
     {
         foreach ($this->collection as $category) {
