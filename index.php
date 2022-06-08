@@ -16,14 +16,21 @@ switch ($page)
     case 'category':
         $control = new CategoryControl();
 
-        FrontController::build($control->getById((int) $id)->summarize(), 'category');
+
+        $category = $control->getById((int) $id);
+        $exist = (bool) $control->getById((int) $id)->getId();
+
+        FrontController::build($category->summarize(), 'category', $exist);
         FrontController::setPage($control->view()->call());
         break;
 
     case 'detail':
         $control = new ProductController();
 
-        FrontController::build($control->getById((int) $id)->summmarize(), 'detail');
+        $product = $control->getById((int) $id);
+        $exist = (bool) $control->getById((int) $id)->getId();
+
+        FrontController::build($control->getById((int) $id)->summmarize(), 'detail', $exist);
         FrontController::setPage($control->view()->call());
         break;
 

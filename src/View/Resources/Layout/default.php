@@ -11,8 +11,8 @@
         <div class="header-link-menu">
             <ul class="link-menu">
                 <li><a href="?page=home">Home</a></li>
+                <li><a href="?page=category">Kategorie</a></li>
                 <li><a href="?page=detail">Details</a></li>
-<!--                <li><a href="?page=list">Listing</a></li>-->
             </ul>
         </div>
     </div>
