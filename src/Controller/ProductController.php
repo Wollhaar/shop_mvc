@@ -47,33 +47,47 @@ class ProductController
         ],
     );
 
-    public $collection = [];
+    private int $activeId = 0;
+    private string $output = self::page . '<br/><br/>';
+
+    public array $collection = [];
 
 
     public function __construct()
     {
+        $request = $_REQUEST;
+        $this->activeId = (int) ($request['id'] ?? 0);
+
         foreach (self::products as $id => $product) {
             if (empty($product)) {
                 continue;
             }
-            $this->collection[] = new Product((int) $id, $product['name'], $product['size'], $product['category'], (float) $product['price']);
+            $this->collection[$id] = new Product($id, $product['name'], $product['size'], $product['category'], (float) $product['price']);
         }
     }
 
-    public function view():Response
+    public function build():void
     {
-        return new Response('detail');
-    }
+        $product = $this->collection[$this->activeId] ?? new Product(0, 'none', 'none', 'none', 0.0);
+        $exist = (bool) $product->getId();
 
-    public function getById(int $id): Product
-    {
-
-        foreach ($this->collection as $product) {
-            if ($product->getId() === $id) {
-                return $product;
+        if ($exist) {
+            foreach ($product->summarize() as $key => $value) {
+                $this->output .= "$key: $value<br/>";
             }
         }
+        else {
+            foreach ($this->collection as $content) {
+                $this->output .= '<a href="?page=' . self::page . '&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
+            }
+        }
+    }
 
-        return new Product(0, 'none', 'none', 'none', 0.0);
+    public function view():void
+    {
+        $this->build();
+        $test = $this->output;
+
+        include ROOT_PATH . '/src/View/home.php';
     }
 }

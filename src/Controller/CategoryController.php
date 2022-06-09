@@ -3,7 +3,6 @@
 namespace Controller;
 
 use Model\Shop\Category;
-use View\Engine\Response;
 
 class CategoryController
 {
@@ -16,41 +15,44 @@ class CategoryController
         4 => 'Sportswear',
     ];
 
-    public $collection = [];
+    private int $activeId = 0;
+    private string $output = self::page . '<br/><br/>';
+
+    public array $collection = [];
 
 
     public function __construct()
     {
+        $request = $_REQUEST;
+        $this->activeId = (int) ($request['id'] ?? 0);
+
         foreach (self::categories as $id => $name) {
-            $this->collection[] = new Category((int) $id, $name);
+            $this->collection[$id] = new Category($id, $name);
         }
     }
 
-    public function view():Response
+    public function build():void
     {
-        return new Response('category');
-    }
+        $category = $this->collection[$this->activeId] ?? new Category(0, 'none');
+        $exist = (bool)$category->getId();
 
-    public function getById(int $id): Category
-    {
-        foreach ($this->collection as $category) {
-            if ($category->getId() === $id) {
-                return $category;
+        if ($exist) {
+            foreach ($category->summarize() as $key => $value) {
+                $this->output .= "$key: $value<br/>";
             }
         }
-
-        return new Category(0, 'none');
+        else {
+            foreach ($this->collection as $content) {
+                $this->output .= '<a href="?page=' . self::page . '&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
+            }
+        }
     }
 
-    public function getByName($name): Category
+    public function view():void
     {
-        foreach ($this->collection as $category) {
-            if ($category->getName() === $name) {
-                return $category;
-            }
+        $this->build();
+        $test = $this->output;
 
-        }
-
-        return new Category(0, 'none');
+        include ROOT_PATH . '/src/View/home.php';
     }
 }
