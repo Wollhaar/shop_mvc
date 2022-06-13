@@ -6,8 +6,10 @@
 
 define("ROOT_PATH", __DIR__);
 
-require_once ROOT_PATH . '/src/Model/Shop/Category.php';
-require_once ROOT_PATH . '/src/Model/Shop/Product.php';
+require_once ROOT_PATH . '/vars.php';
+require_once ROOT_PATH . '/src/Model/Category.php';
+require_once ROOT_PATH . '/src/Model/Product.php';
+require_once ROOT_PATH . '/src/Controller/BasicController.php';
 require_once ROOT_PATH . '/src/Controller/HomeController.php';
 require_once ROOT_PATH . '/src/Controller/CategoryController.php';
 require_once ROOT_PATH . '/src/Controller/ProductController.php';

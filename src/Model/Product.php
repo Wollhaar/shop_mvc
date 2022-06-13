@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Model\Shop;
+namespace Model;
 
 class Product
 {

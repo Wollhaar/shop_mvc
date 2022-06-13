@@ -12,7 +12,7 @@
         <li><a href="?page=category">Kategorie</a></li>
     </ul></header>
 <h1>
-    <?php echo $home; ?>
+    <?php echo $category; ?>
 </h1>
 </body>
 </html>

@@ -2,57 +2,80 @@
 
 namespace Controller;
 
-use Model\Shop\Category;
+use Model\Category;
+use Model\Product;
 
-class CategoryController
+class CategoryController implements BasicController
 {
-    private const page = 'category';
+    private Category $activeCategory;
 
-    private const categories = [
-        1 => 'T-Shirt',
-        2 => 'Pullover',
-        3 => 'Hosen',
-        4 => 'Sportswear',
-    ];
+    private string $output = '<span style="color:cadetblue">Kategorie</span> ';
 
-    private int $activeId = 0;
-    private string $output = self::page . '<br/><br/>';
-
-    public array $collection = [];
+    private array $collection = [];
 
 
     public function __construct()
     {
         $request = $_REQUEST;
-        $this->activeId = (int) ($request['id'] ?? 0);
 
-        foreach (self::categories as $id => $name) {
-            $this->collection[$id] = new Category($id, $name);
+        foreach ($this->getCategories() as $id => $category) {
+            $this->collection[$id] = $category;
         }
-    }
+        $this->activeCategory = $this->collection[(int) ($request['id'] ?? 0)] ??
+            new Category(0, 'none');
 
-    public function build():void
-    {
-        $category = $this->collection[$this->activeId] ?? new Category(0, 'none');
-        $exist = (bool)$category->getId();
-
-        if ($exist) {
-            foreach ($category->summarize() as $key => $value) {
-                $this->output .= "$key: $value<br/>";
-            }
-        }
-        else {
-            foreach ($this->collection as $content) {
-                $this->output .= '<a href="?page=' . self::page . '&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
-            }
-        }
+        $this->build();
     }
 
     public function view():void
     {
-        $this->build();
-        $test = $this->output;
+        $category = $this->output;
+        include ROOT_PATH . '/src/View/category.php';
+    }
 
-        include ROOT_PATH . '/src/View/home.php';
+    private function getCategories(): array
+    {
+        global $categoryCollection;
+        $categories = [];
+
+        foreach ($categoryCollection as $id => $category) {
+            $categories[$id] = new Category($id, $category);
+        }
+
+        return $categories;
+    }
+
+    private function getProductsByCategory(): array
+    {
+        global $productCollection;
+        $products = [];
+
+        foreach ($productCollection as $id => $product) {
+            if ($this->activeCategory->getName() === $product['category']) {
+                $products[$id] = new Product($id, $product['name'], $product['size'], $product['category'], (float) $product['price']);
+            }
+        }
+
+        return $products;
+    }
+
+    private function build():void
+    {
+        if ($this->activeCategory->getId() !== 0) {
+            $this->output .= $this->activeCategory->getName();
+
+            $this->output .= '<p>';
+            foreach ($this->getProductsByCategory() as $content) {
+                $this->output .= '<a href="?page=detail&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
+            }
+            $this->output .= '</p>';
+        }
+        else {
+            $this->output .= '<p>';
+            foreach ($this->collection as $content) {
+                $this->output .= '<a href="?page=category&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
+            }
+            $this->output .= '</p>';
+        }
     }
 }
