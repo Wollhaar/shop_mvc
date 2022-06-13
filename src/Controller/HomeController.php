@@ -6,7 +6,7 @@ use Model\Category;
 
 class HomeController implements BasicController
 {
-    private const page = 'home';
+    private const PAGE = 'home';
 
     private string $output = '<span style="color: chartreuse">Shop</span><br/>';
 
@@ -17,13 +17,13 @@ class HomeController implements BasicController
 
     public function __destruct()
     {
-        inputHTML('###' . self::page . '###', ROOT_PATH . '/src/View/home.php', $this->output);
+        inputHTML('###' . self::PAGE . '###', ROOT_PATH . '/src/View/home.html', $this->output);
     }
 
     public function view():void
     {
-        inputHTML($this->output, ROOT_PATH . '/src/View/home.php', '###' . self::page . '###');
-        include ROOT_PATH . '/src/View/home.php';
+        inputHTML($this->output, ROOT_PATH . '/src/View/home.html', '###' . self::PAGE . '###');
+        include ROOT_PATH . '/src/View/home.html';
     }
 
     private function getCategories():array

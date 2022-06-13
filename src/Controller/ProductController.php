@@ -6,7 +6,7 @@ use Model\Product;
 
 class ProductController implements BasicController
 {
-    private const page = 'detailed';
+    private const PAGE = 'detailed';
 
     private Product $activeProduct;
 
@@ -35,13 +35,13 @@ class ProductController implements BasicController
 
     public function __destruct()
     {
-        inputHTML('###' . self::page . '###', ROOT_PATH . '/src/View/detail.php', $this->output);
+        inputHTML('###' . self::PAGE . '###', ROOT_PATH . '/src/View/detail.html', $this->output);
     }
 
     public function view():void
     {
-        inputHTML($this->output, ROOT_PATH . '/src/View/detail.php', '###' . self::page . '###');
-        include ROOT_PATH . '/src/View/detail.php';
+        inputHTML($this->output, ROOT_PATH . '/src/View/detail.html', '###' . self::PAGE . '###');
+        include ROOT_PATH . '/src/View/detail.html';
     }
 
     private function build():void

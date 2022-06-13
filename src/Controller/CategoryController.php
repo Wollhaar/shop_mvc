@@ -2,12 +2,11 @@
 
 namespace Controller;
 
-use Model\Category;
-use Model\Product;
+use Model\{Category, Product};
 
 class CategoryController implements BasicController
 {
-    private const page = 'category';
+    private const PAGE = 'category';
 
     private Category $activeCategory;
 
@@ -31,13 +30,13 @@ class CategoryController implements BasicController
 
     public function __destruct()
     {
-        inputHTML('###' . self::page . '###', ROOT_PATH . '/src/View/category.php', $this->output);
+        inputHTML('###' . self::PAGE . '###', ROOT_PATH . '/src/View/category.html', $this->output);
     }
 
     public function view():void
     {
-        inputHTML($this->output, ROOT_PATH . '/src/View/category.php', '###' . self::page . '###');
-        include ROOT_PATH . '/src/View/category.php';
+        inputHTML($this->output, ROOT_PATH . '/src/View/category.html', '###' . self::PAGE . '###');
+        include ROOT_PATH . '/src/View/category.html';
     }
 
     private function getCategories(): array
