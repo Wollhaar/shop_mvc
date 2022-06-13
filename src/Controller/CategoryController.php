@@ -7,6 +7,8 @@ use Model\Product;
 
 class CategoryController implements BasicController
 {
+    private const page = 'category';
+
     private Category $activeCategory;
 
     private string $output = '<span style="color:cadetblue">Kategorie</span> ';
@@ -27,9 +29,14 @@ class CategoryController implements BasicController
         $this->build();
     }
 
+    public function __destruct()
+    {
+        inputHTML('###' . self::page . '###', ROOT_PATH . '/src/View/category.php', $this->output);
+    }
+
     public function view():void
     {
-        $category = $this->output;
+        inputHTML($this->output, ROOT_PATH . '/src/View/category.php', '###' . self::page . '###');
         include ROOT_PATH . '/src/View/category.php';
     }
 

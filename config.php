@@ -7,6 +7,7 @@
 define("ROOT_PATH", __DIR__);
 
 require_once ROOT_PATH . '/vars.php';
+require_once ROOT_PATH . '/helper.php';
 require_once ROOT_PATH . '/src/Model/Category.php';
 require_once ROOT_PATH . '/src/Model/Product.php';
 require_once ROOT_PATH . '/src/Controller/BasicController.php';

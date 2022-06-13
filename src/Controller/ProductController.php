@@ -6,6 +6,8 @@ use Model\Product;
 
 class ProductController implements BasicController
 {
+    private const page = 'detailed';
+
     private Product $activeProduct;
 
     private string $output = '<span style="color: brown">Produkt</span><p>';
@@ -31,15 +33,21 @@ class ProductController implements BasicController
         $this->build();
     }
 
+    public function __destruct()
+    {
+        inputHTML('###' . self::page . '###', ROOT_PATH . '/src/View/detail.php', $this->output);
+    }
+
     public function view():void
     {
-        $detailed = $this->output;
+        inputHTML($this->output, ROOT_PATH . '/src/View/detail.php', '###' . self::page . '###');
         include ROOT_PATH . '/src/View/detail.php';
     }
 
     private function build():void
     {
         global $productCollection;
+
         if ($this->activeProduct->getId()) {
             foreach ($this->activeProduct->summarize() as $key => $value) {
                 $this->output .= "$key: $value<br/>";

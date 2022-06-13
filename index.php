@@ -24,3 +24,6 @@ switch ($page)
 
 
 $controller->view();
+flush();
+
+unset ($controller);
