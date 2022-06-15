@@ -4,3 +4,9 @@ vendor/
 
 #files
 composer.lock
+
+#frameworks
+#smarty
+cache/
+configs/
+templates_c/

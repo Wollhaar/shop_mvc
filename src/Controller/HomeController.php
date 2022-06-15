@@ -2,11 +2,12 @@
 
 namespace Controller;
 
+use Core\View;
 use Model\Category;
 
 class HomeController implements BasicController
 {
-    private const PAGE = 'home';
+    private const TPL = 'HomeView.tpl';
 
     private string $output = '<span style="color: chartreuse">Shop</span><br/>';
 
@@ -15,15 +16,11 @@ class HomeController implements BasicController
         $this->build();
     }
 
-    public function __destruct()
-    {
-        inputHTML('###' . self::PAGE . '###', ROOT_PATH . '/src/View/home.html', $this->output);
-    }
-
     public function view():void
     {
-        inputHTML($this->output, ROOT_PATH . '/src/View/home.html', '###' . self::PAGE . '###');
-        include ROOT_PATH . '/src/View/home.html';
+        $renderer = new View();
+        $renderer->addTemplateParameter($this->output, 'output');
+        $renderer->display(self::TPL);
     }
 
     private function getCategories():array

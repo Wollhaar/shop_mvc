@@ -2,11 +2,12 @@
 
 namespace Controller;
 
+use Core\View;
 use Model\{Category, Product};
 
 class CategoryController implements BasicController
 {
-    private const PAGE = 'category';
+    private const TPL = 'CategoryView.tpl';
 
     private Category $activeCategory;
 
@@ -28,15 +29,11 @@ class CategoryController implements BasicController
         $this->build();
     }
 
-    public function __destruct()
-    {
-        inputHTML('###' . self::PAGE . '###', ROOT_PATH . '/src/View/category.html', $this->output);
-    }
-
     public function view():void
     {
-        inputHTML($this->output, ROOT_PATH . '/src/View/category.html', '###' . self::PAGE . '###');
-        include ROOT_PATH . '/src/View/category.html';
+        $renderer = new View();
+        $renderer->addTemplateParameter($this->output, 'output');
+        $renderer->display(self::TPL);
     }
 
     private function getCategories(): array

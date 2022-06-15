@@ -12,7 +12,7 @@
         <li><a href="?page=category">Kategorie</a></li>
     </ul></header>
 <h1>
-    ###category###
+    {$output}
 </h1>
 </body>
 </html>

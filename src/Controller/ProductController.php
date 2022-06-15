@@ -2,11 +2,12 @@
 
 namespace Controller;
 
+use Core\View;
 use Model\Product;
 
 class ProductController implements BasicController
 {
-    private const PAGE = 'detailed';
+    private const TPL = 'DetailView.tpl';
 
     private Product $activeProduct;
 
@@ -33,15 +34,11 @@ class ProductController implements BasicController
         $this->build();
     }
 
-    public function __destruct()
-    {
-        inputHTML('###' . self::PAGE . '###', ROOT_PATH . '/src/View/detail.html', $this->output);
-    }
-
     public function view():void
     {
-        inputHTML($this->output, ROOT_PATH . '/src/View/detail.html', '###' . self::PAGE . '###');
-        include ROOT_PATH . '/src/View/detail.html';
+        $renderer = new View();
+        $renderer->addTemplateParameter($this->output, 'output');
+        $renderer->display(self::TPL);
     }
 
     private function build():void
