@@ -1,18 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace Controller;
+namespace Shop\Controller;
 
-use Core\View;
-use Model\Category;
+use Shop\Controller\Data\DataHandler;
+use Shop\Core\View;
+use Shop\Model\Category;
 
 class HomeController implements BasicController
 {
     private const TPL = 'HomeView.tpl';
 
+    private DataHandler $dataHandler;
+
     private string $output = '<span style="color: chartreuse">Shop</span><br/>';
 
     public function __construct()
     {
+        $this->dataHandler = DataHandler::getInstance();
         $this->build();
     }
 
@@ -23,18 +27,6 @@ class HomeController implements BasicController
         $renderer->display(self::TPL);
     }
 
-    private function getCategories():array
-    {
-        global $categoryCollection;
-        $categories = [];
-
-        foreach ($categoryCollection as $id => $category) {
-            $categories[$id] = new Category((int) $id, $category);
-        }
-
-        return $categories;
-    }
-
     private function build():void
     {
         $this->output .= '<p>';
@@ -42,5 +34,16 @@ class HomeController implements BasicController
             $this->output .= '<a href="?page=category&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
         }
         $this->output .= '</p>';
+    }
+
+    private function getCategories():array
+    {
+        $categories = [];
+
+        foreach ($this->dataHandler->get('categories') as $id => $category) {
+            $categories[$id] = new Category($id, $category['name']);
+        }
+
+        return $categories;
     }
 }

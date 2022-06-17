@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Model;
+namespace Shop\Model;
 
-class Category
+class Category implements Data
 {
     private int $id = 0;
     private string $name = '';
@@ -16,7 +16,7 @@ class Category
     /**
      * @return int
      */
-    public function getId()
+    public function getId():int
     {
         return $this->id;
     }
@@ -24,7 +24,7 @@ class Category
     /**
      * @return string
      */
-    public function getName()
+    public function getName():string
     {
         return $this->name;
     }

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Model;
+namespace Shop\Model;
 
-class Product
+class Product implements Data
 {
     private int $id = 0;
     private string $name = '';

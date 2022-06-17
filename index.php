@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 include_once './config.php';
 
-use Controller\{HomeController, CategoryController, ProductController};
+use Shop\Controller\{HomeController, CategoryController, ProductController};
 
 $request = $_REQUEST;
-$page = $request['page'];
+$page = $request['page'] ?? '';
 
 switch ($page)
 {

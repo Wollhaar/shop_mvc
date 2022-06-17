@@ -1,15 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Controller;
+namespace Shop\Controller;
 
-use Core\View;
-use Model\Product;
+use Shop\Controller\Data\DataHandler;
+use Shop\Core\View;
+use Shop\Model\Product;
 
 class ProductController implements BasicController
 {
     private const TPL = 'DetailView.tpl';
 
     private Product $activeProduct;
+
+    private DataHandler $dataHandler;
 
     private string $output = '<span style="color: brown">Produkt</span><p>';
 
@@ -18,15 +21,10 @@ class ProductController implements BasicController
 
     public function __construct()
     {
-        global $productCollection;
         $request = $_REQUEST;
+        $this->dataHandler = DataHandler::getInstance();
 
-        foreach ($productCollection as $id => $product) {
-            if (empty($product)) {
-                continue;
-            }
-            $this->collection[$id] = new Product($id, $product['name'], $product['size'], $product['category'], (float) $product['price']);
-        }
+        $this->getProducts();
 
         $this->activeProduct = $this->collection[(int)($request['id'] ?? 0)] ??
             new Product(0, 'none', 'none', 'none', 0.0);
@@ -43,13 +41,21 @@ class ProductController implements BasicController
 
     private function build():void
     {
-        global $productCollection;
-
         if ($this->activeProduct->getId()) {
             foreach ($this->activeProduct->summarize() as $key => $value) {
                 $this->output .= "$key: $value<br/>";
             }
-            $this->output .= 'Anzahl: ' . $productCollection[$this->activeProduct->getId()]['amount'] . '</p>';
+            $this->output .= 'Anzahl: ' . $this->dataHandler->getIntegerData('products', $this->activeProduct->getId(), 'amount') . '</p>';
+        }
+    }
+
+    private function getProducts():void
+    {
+        foreach ($this->dataHandler->get('products') as $id => $product) {
+            if (empty($product)) {
+                continue;
+            }
+            $this->collection[$id] = new Product($id, $product['name'], $product['size'], $product['category'], (float) $product['price']);
         }
     }
 }

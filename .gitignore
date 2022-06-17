@@ -4,6 +4,7 @@ vendor/
 
 #files
 composer.lock
+.phpunit.result.cache
 
 #frameworks
 #smarty

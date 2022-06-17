@@ -2,10 +2,10 @@
 
 
 $categoryCollection = [
-    1 => 'T-Shirt',
-    2 => 'Pullover',
-    3 => 'Hosen',
-    4 => 'Sportswear',
+    1 => ['id'=> 1,'name' => 'T-Shirt'],
+    2 => ['id'=> 2,'name' => 'Pullover'],
+    3 => ['id'=> 3,'name' => 'Hosen'],
+    4 => ['id'=> 4,'name' => 'Sportswear'],
 ];
 
 $productCollection = array(
