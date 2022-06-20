@@ -2,7 +2,6 @@
 
 namespace Shop\Controller;
 
-use Shop\Controller\Data\DataHandler;
 use Shop\Core\View;
 use Shop\Model\{Category, Product};
 
@@ -12,73 +11,60 @@ class CategoryController implements BasicController
 
     private Category $activeCategory;
 
-    private DataHandler $dataHandler;
-
-    private string $output = '<span style="color:cadetblue">Kategorie</span> ';
-
-    private array $collection = [];
+    private array $output = [];
 
 
     public function __construct()
     {
-        $this->dataHandler = DataHandler::getInstance();
         $request = $_REQUEST;
 
-        foreach ($this->getCategories() as $id => $category) {
-            $this->collection[$id] = $category;
-        }
-        $this->activeCategory = $this->collection[(int) ($request['id'] ?? 0)] ??
-            new Category(0, 'none');
-
-        $this->build();
+        $activeId = (int) ($request['id'] ?? 0);
+        $this->activeCategory = new Category($activeId);
     }
 
     public function view():void
     {
+        $this->build();
+        $activeCategory = false;
+
+        if ($this->activeCategory->getId() !== 0) {
+            $activeCategory = true;
+        }
         $renderer = new View();
-        $renderer->addTemplateParameter($this->output, 'output');
+        $renderer->addTemplateParameter($this->activeCategory->getName(), 'title');
+        $renderer->addTemplateParameterBoolean($activeCategory, 'activeCategory');
+        $renderer->addTemplateParameterArray($this->output, 'output');
         $renderer->display(self::TPL);
     }
 
     private function build():void
     {
         if ($this->activeCategory->getId() !== 0) {
-            $this->output .= $this->activeCategory->getName();
-
-            $this->output .= '<p>';
-            foreach ($this->getProductsByCategory() as $content) {
-                $this->output .= '<a href="?page=detail&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
-            }
-            $this->output .= '</p>';
+            $this->output = $this->getProductsByCategory();
         }
         else {
-            $this->output .= '<p>';
-            foreach ($this->collection as $content) {
-                $this->output .= '<a href="?page=category&id=' . $content->getId() . '">' . $content->getName() . '</a><br/>';
+            foreach ($this->getCategories() as $category) {
+                $this->output[$category['id']] = $category['name'];
             }
-            $this->output .= '</p>';
         }
     }
 
     private function getCategories(): array
     {
-        $categories = [];
-        foreach ($this->dataHandler->get('categories') as $id => $category) {
-            $categories[$id] = new Category($id, $category['name']);
-        }
-
-        return $categories;
+        return (new Category())->getAll();
     }
 
     private function getProductsByCategory(): array
     {
-        $products = [];
-        foreach ($this->dataHandler->get('products') as $id => $product) {
+        $products = new Product();
+
+        $selection = [];
+        foreach ($products->getAll() as $product) {
             if ($this->activeCategory->getName() === $product['category']) {
-                $products[$id] = new Product($id, $product['name'], $product['size'], $product['category'], (float) $product['price']);
+                $selection[$product['id']] = $product['name'];
             }
         }
 
-        return $products;
+        return $selection;
     }
 }

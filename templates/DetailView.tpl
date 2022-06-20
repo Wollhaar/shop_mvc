@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Test</title>
+    <title>Test{if isset($category)} | {$category}{/if}{if isset($name)} | {$name}{/if}</title>
 </head>
 <body>
-<header><ul>
-        <li><a href="?page=home">Home</a></li>
-        <li><a href="?page=category">Kategorie</a></li>
-    </ul></header>
-<h1>
-    {$output}
-</h1>
+<header style="padding-bottom:20px">
+    <ul style="list-style-type:none;display:inline-block;">
+        <li style="inline"><a href="?page=home">Home</a></li>
+        <li style="inline"><a href="?page=category">Kategorie</a></li>
+    </ul>
+</header>
+<b>Kategorie: {if isset($category)}{$category}{/if}</b>
+<h1>Produktdetailseite:{if isset($name)} - {$name}{/if}</h1>
+<p>{if isset($id)} ArtikelId: {$id}{/if}</p>
+<p>Produktpreis: {if isset($price)}{$price}{/if}</p>
+<p>Vorrat: {if isset($amount)}{$amount}{/if}</p>
 </body>
 </html>
