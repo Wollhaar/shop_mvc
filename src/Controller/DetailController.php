@@ -5,7 +5,7 @@ namespace Shop\Controller;
 use Shop\Core\View;
 use Shop\Model\Product;
 
-class ProductController implements BasicController
+class DetailController implements BasicController
 {
     private const TPL = 'DetailView.tpl';
 

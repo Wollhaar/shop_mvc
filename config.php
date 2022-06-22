@@ -5,46 +5,30 @@ define("ROOT_PATH", __DIR__);
 require __DIR__ . '/vendor/autoload.php';
 
 
-const requestClass_translation = [
-    'category' => 'CategoryController',
-    'home' => 'HomeController',
-    'detail' => 'ProductController',
-];
-
 
 // class functions
-function class_search(array $check): string
+function class_search(string $name): string
 {
     $provider = new \Shop\Service\ControllerProvider();
     $controllerList = $provider->getList();
-    $controller = $controllerList[$provider::HOME];
-
-    foreach ($check as $name) {
-        $controller = requestClass_translation[$name];
-    }
+    $controller = '';
 
     foreach ($controllerList as $controllerName) {
-        if (str_contains($controllerName, $controller)) {
+        if (str_contains($controllerName, ucfirst(strtolower($name)))) {
             $controller = $controllerName;
             break;
         }
     }
 
     if (!class_exists($controller)) {
-//        throw Error;
-        echo 'class not found';
-        $controller = $controllerList[$provider::HOME];
+        $controller = $controllerList[$provider::ERROR];
+        try {
+            throw new \Shop\Model\Error(404); // TODO: throwable
+        }
+        catch (\Shop\Model\Error $e) {
+            $e->setIssue($name);
+            \Shop\Controller\ErrorController::setError($e);
+        }
     }
     return $controller;
 }
-
-//elseif (array_key_exists($page, $request)) {
-//    $class = class_search($page);
-//    if (!in_array($class, $controllerList, true)) {
-//        die('Sorry, something went wrong');
-//    }
-//    $controller = new $controllerList[$page]();
-//}
-//else {
-//    $controller = new HomeController();
-//}

@@ -2,18 +2,20 @@
 
 namespace Shop\Service;
 
-use Shop\Controller\{CategoryController, HomeController, ProductController};
+use Shop\Controller\{CategoryController, ErrorController, DetailController, HomeController};
 
 class ControllerProvider
 {
-    public const HOME = 1;
+    public const ERROR = 2;
+    public const HOME = 3;
 
     public function getList(): array
     {
         return [
             CategoryController::class,
+            DetailController::class,
+            ErrorController::class,
             HomeController::class,
-            ProductController::class,
         ];
     }
 }
