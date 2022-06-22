@@ -11,6 +11,8 @@ class DetailController implements BasicController
 
     private Product $activeProduct;
 
+    private View $renderer;
+
 
     public function __construct()
     {
@@ -20,16 +22,31 @@ class DetailController implements BasicController
 
     public function view():void
     {
-        $renderer = new View();
+        $this->renderer = new View();
+        $products = (new Product())->getAll();
 
-        if ($this->activeProduct->getId()) {
-            $renderer->addTemplateParameterInteger($this->activeProduct->getId(), 'id');
-            $renderer->addTemplateParameter($this->activeProduct->getName(), 'name');
-            $renderer->addTemplateParameter($this->activeProduct->getCategory(), 'category');
-            $renderer->addTemplateParameterFloat($this->activeProduct->getPrice(), 'price');
-            $renderer->addTemplateParameterInteger((new Product())->getAll()[$this->activeProduct->getId()]['amount'], 'amount');
+        $id = $this->activeProduct->getId();
+        $amount = 0;
+
+        if ($id && $id < count($products)) {
+            $amount = $products[$id]['amount'];
         }
 
-        $renderer->display(self::TPL);
+        $this->renderer->addTemplateParameter($id, 'id');
+        $this->renderer->addTemplateParameter($this->activeProduct->getName(), 'name');
+        $this->renderer->addTemplateParameter($this->activeProduct->getSize(), 'size');
+        $this->renderer->addTemplateParameter($this->activeProduct->getCategory(), 'category');
+        $this->renderer->addTemplateParameter($this->activeProduct->getPrice(), 'price');
+        $this->renderer->addTemplateParameter($amount, 'amount');
+    }
+
+    public function display(): void
+    {
+        $this->renderer->display(self::TPL);
+    }
+
+    public function check(): array
+    {
+        return $this->renderer->getParams();
     }
 }

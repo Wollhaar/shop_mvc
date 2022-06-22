@@ -2,6 +2,8 @@
 
 namespace Shop\Model;
 
+use Shop\Controller\ErrorController;
+
 class Category implements Data
 {
     private const CATEGORIES = [
@@ -12,14 +14,18 @@ class Category implements Data
     ];
 
     private int $id = 0;
+
     private string $name = '';
 
-    public function __construct(int $id = 0, string $name = '')
+
+    public function __construct(int $id = 0, string $name = 'All')
     {
         $this->id = $id;
-        if ($id) {
-            $this->name = self::CATEGORIES[$id]['name'] ?? $name;
+        if ($id < 1 || $id > count(self::CATEGORIES)) {
+            $this->name = $name;
+            return;
         }
+        $this->name = self::CATEGORIES[$id]['name'];
     }
 
     /**

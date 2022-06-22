@@ -6,40 +6,29 @@ use Smarty;
 
 class View
 {
-    public Smarty $renderer;
+    private Smarty $renderer;
+
+    private array $params = [];
+
 
     public function __construct()
     {
         $this->renderer = new Smarty();
     }
 
-    public function addTemplateParameter(string $param, string $name):void
+    public function addTemplateParameter(mixed $param, string $name):void
     {
-        $this->renderer->assign($name, $param);
+        $this->params[$name] = $param;
     }
 
-    public function addTemplateParameterInteger(int $param, string $name):void
+    public function display(string $template): void
     {
-        $this->renderer->assign($name, $param);
+        $this->renderer->assign($this->params);
+        $this->renderer->display($template);
     }
 
-    public function addTemplateParameterFloat(float $param, string $name):void
+    public function getParams(): array
     {
-        $this->renderer->assign($name, $param);
-    }
-
-    public function addTemplateParameterBoolean(bool $param, string $name):void
-    {
-        $this->renderer->assign($name, $param);
-    }
-
-    public function addTemplateParameterArray(array $param, string $name):void
-    {
-        $this->renderer->assign($name, $param);
-    }
-
-    public function display(string $template, string $value = ''):void
-    {
-        $this->renderer->display($template, $value);
+        return $this->params;
     }
 }

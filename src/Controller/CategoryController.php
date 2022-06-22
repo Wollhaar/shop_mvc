@@ -13,6 +13,8 @@ class CategoryController implements BasicController
 
     private array $output = [];
 
+    private View $renderer;
+
 
     public function __construct()
     {
@@ -25,25 +27,37 @@ class CategoryController implements BasicController
     public function view():void
     {
         $this->build();
+        $this->renderer = new View();
         $activeCategory = false;
 
         if ($this->activeCategory->getId() !== 0) {
             $activeCategory = true;
         }
-        $renderer = new View();
-        $renderer->addTemplateParameter($this->activeCategory->getName(), 'title');
-        $renderer->addTemplateParameterBoolean($activeCategory, 'activeCategory');
-        $renderer->addTemplateParameterArray($this->output, 'output');
-        $renderer->display(self::TPL);
+        $this->renderer->addTemplateParameter($this->activeCategory->getName(), 'title');
+        $this->renderer->addTemplateParameter($activeCategory, 'activeCategory');
+        $this->renderer->addTemplateParameter($this->output, 'output');
+    }
+
+    public function display(): void
+    {
+        $this->renderer->display(self::TPL);
+    }
+
+    public function check(): array
+    {
+        return $this->renderer->getParams();
     }
 
     private function build():void
     {
-        if ($this->activeCategory->getId() !== 0) {
+        $categories = $this->getCategories();
+        $id = $this->activeCategory->getId();
+
+        if ($id !== 0 && $id < count($categories)) {
             $this->output = $this->getProductsByCategory();
         }
         else {
-            foreach ($this->getCategories() as $category) {
+            foreach ($categories as $category) {
                 $this->output[$category['id']] = $category['name'];
             }
         }

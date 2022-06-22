@@ -6,6 +6,7 @@ $request = $_REQUEST;
 $page = $request['page'] ?? 'home';
 
 $controller = class_search($page);
-
 $controller = new $controller();
+
 $controller->view();
+$controller->display();

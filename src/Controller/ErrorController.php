@@ -12,16 +12,26 @@ class ErrorController implements BasicController
 
     public static Error $error;
 
+    private View $renderer;
+
 
     public function view(): void
     {
-        $renderer = new View();
+        $this->renderer = new View();
 
+        $this->renderer->addTemplateParameter(self::$error->getNumber(), 'number');
+        $this->renderer->addTemplateParameter(self::$error->getMessage(), 'message');
+        $this->renderer->addTemplateParameter(self::$error->getIssue(), 'issue');
+    }
 
-        $renderer->addTemplateParameterInteger(self::$error->getNumber(), 'number');
-        $renderer->addTemplateParameter(self::$error->getMessage(), 'message');
-        $renderer->addTemplateParameter(self::$error->getIssue(), 'issue');
-        $renderer->display(self::TPL);
+    public function display(): void
+    {
+        $this->renderer->display(self::TPL);
+    }
+
+    public function check(): array
+    {
+        return $this->renderer->getParams();
     }
 
     public static function setError(Error $error): void

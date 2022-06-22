@@ -11,15 +11,27 @@ class HomeController implements BasicController
 
     private array $output = [];
 
+    private View $renderer;
+
 
     public function view():void
     {
         $this->build();
-        $renderer = new View();
+        $this->renderer = new View();
 
-        $renderer->addTemplateParameter('Shop', 'title');
-        $renderer->addTemplateParameterArray($this->output, 'output');
-        $renderer->display(self::TPL);
+        $this->renderer->addTemplateParameter('Shop', 'title');
+        $this->renderer->addTemplateParameter($this->output, 'output');
+    }
+
+    public function display(): void
+    {
+        $this->renderer->display(self::TPL);
+    }
+
+
+    public function check(): array
+    {
+        return $this->renderer->getParams();
     }
 
     private function build():void

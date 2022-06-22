@@ -15,8 +15,9 @@
 </header>
 <b>Kategorie: {if isset($category)}{$category}{/if}</b>
 <h1>Produktdetailseite:{if isset($name)} {$name}{/if}</h1>
-<p>{if isset($id)} ArtikelId: {$id}{/if}</p>
-<p>Produktpreis: {if isset($price)}{$price} &euro;{/if}</p>
+<p>ArtikelId:{if isset($id)} {$id}{/if}</p>
+<p>Gr&ouml;ße: {if isset($size)}{$size}{/if}</p>
+<p>Preis: {if isset($price)}{$price} &euro;{/if}</p>
 <p>Vorrat: {if isset($amount)}{$amount}{/if}</p>
 </body>
 </html>

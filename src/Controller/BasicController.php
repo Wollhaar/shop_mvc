@@ -6,4 +6,5 @@ namespace Shop\Controller;
 interface BasicController
 {
     public function view():void;
+    public function display():void;
 }

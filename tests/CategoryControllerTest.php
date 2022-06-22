@@ -1,26 +1,25 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ShopTest;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\HomeController;
+use Shop\Controller\CategoryController;
 
-class HomeControllerTest extends TestCase
+class CategoryControllerTest extends TestCase
 {
     public function testCheck()
     {
-        $home = new HomeController();
-        $home->view();
-
+        $controller = new CategoryController();
+        $controller->view();
         self::assertSame([
-            'title' => 'Shop',
+            'title' => 'All',
+            'activeCategory' => false,
             'output' => [
                 1 => 'T-Shirt',
                 2 => 'Pullover',
                 3 => 'Hosen',
                 4 => 'Sportswear'
             ]
-        ], $home->check());
+        ], $controller->check());
     }
 }

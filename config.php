@@ -23,7 +23,7 @@ function class_search(string $name): string
     if (!class_exists($controller)) {
         $controller = $controllerList[$provider::ERROR];
         try {
-            throw new \Shop\Model\Error(404); // TODO: throwable
+            throw new \Shop\Model\Error(404);
         }
         catch (\Shop\Model\Error $e) {
             $e->setIssue($name);
