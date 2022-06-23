@@ -53,7 +53,7 @@ class CategoryController implements BasicController
         $categories = $this->getCategories();
         $id = $this->activeCategory->getId();
 
-        if ($id !== 0 && $id < count($categories)) {
+        if ($id !== 0 && $id <= count($categories)) {
             $this->output = $this->getProductsByCategory();
         }
         else {
