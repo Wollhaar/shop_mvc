@@ -24,12 +24,12 @@
 </h1>
 <p>
 {if $activeCategory}
-    {foreach key=id item=detail from=$output}
+    {foreach key=id item=detail from=$build}
         <a href="?page=detail&id={$id}">{$detail}</a><br/>
     {/foreach}
 {else}
-    {foreach key=id item=category from=$output}
-        <a href="?page=category&id={$id}">{$category}</a><br/>
+    {foreach key=id item=category from=$build}
+        <a href="?page=category&id={$id}">{$category['name']}</a><br/>
     {/foreach}
 {/if}
 </p>

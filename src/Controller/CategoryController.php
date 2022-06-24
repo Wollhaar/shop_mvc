@@ -27,7 +27,7 @@ class CategoryController implements BasicController
 
     public function view():void
     {
-        $this->build();
+        $build = $this->build();
         $activeCategory = false;
 
         if ($this->activeCategory->getId() !== 0) {
@@ -35,7 +35,7 @@ class CategoryController implements BasicController
         }
         $this->renderer->addTemplateParameter($this->activeCategory->getName(), 'title');
         $this->renderer->addTemplateParameter($activeCategory, 'activeCategory');
-        $this->renderer->addTemplateParameter($this->output, 'output');
+        $this->renderer->addTemplateParameter($build, 'build');
     }
 
     public function display(): void
@@ -43,29 +43,16 @@ class CategoryController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-    public function getView(): View
+    private function build(): array
     {
-        return $this->renderer;
-    }
-
-    private function build():void
-    {
-        $categories = $this->getCategories();
         $id = $this->activeCategory->getId();
+        $categories = (new Category())->getAll();
 
         if ($id !== 0 && $id <= count($categories)) {
-            $this->output = $this->getProductsByCategory();
+            return $this->getProductsByCategory();
         }
-        else {
-            foreach ($categories as $category) {
-                $this->output[$category['id']] = $category['name'];
-            }
-        }
-    }
 
-    private function getCategories(): array
-    {
-        return (new Category())->getAll();
+        return $categories;
     }
 
     private function getProductsByCategory(): array

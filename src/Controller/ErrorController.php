@@ -32,11 +32,6 @@ class ErrorController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-    public function getView(): View
-    {
-        return $this->renderer;
-    }
-
     public static function setError(Error $error): void
     {
         self::$error = $error;

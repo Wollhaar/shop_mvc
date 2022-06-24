@@ -43,9 +43,4 @@ class DetailController implements BasicController
     {
         $this->renderer->display(self::TPL);
     }
-
-    public function getView(): View
-    {
-        return $this->renderer;
-    }
 }
