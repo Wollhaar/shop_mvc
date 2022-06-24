@@ -15,10 +15,13 @@ class ErrorController implements BasicController
     private View $renderer;
 
 
+    public function __construct(View $renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
     public function view(): void
     {
-        $this->renderer = new View();
-
         $this->renderer->addTemplateParameter(self::$error->getNumber(), 'number');
         $this->renderer->addTemplateParameter(self::$error->getMessage(), 'message');
         $this->renderer->addTemplateParameter(self::$error->getIssue(), 'issue');
@@ -29,9 +32,9 @@ class ErrorController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-    public function check(): array
+    public function getView(): View
     {
-        return $this->renderer->getParams();
+        return $this->renderer;
     }
 
     public static function setError(Error $error): void

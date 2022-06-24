@@ -1,4 +1,4 @@
-#genreal #generated
+#general #generated
 .idea/
 vendor/
 
@@ -7,6 +7,9 @@ composer.lock
 .phpunit.result.cache
 
 #frameworks
+#phpunit
+coverage
+
 #smarty
 cache/
 configs/

@@ -16,18 +16,18 @@ class CategoryController implements BasicController
     private View $renderer;
 
 
-    public function __construct()
+    public function __construct(View $renderer)
     {
         $request = $_REQUEST;
 
         $activeId = (int) ($request['id'] ?? 0);
         $this->activeCategory = new Category($activeId);
+        $this->renderer = $renderer;
     }
 
     public function view():void
     {
         $this->build();
-        $this->renderer = new View();
         $activeCategory = false;
 
         if ($this->activeCategory->getId() !== 0) {
@@ -43,9 +43,9 @@ class CategoryController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-    public function check(): array
+    public function getView(): View
     {
-        return $this->renderer->getParams();
+        return $this->renderer;
     }
 
     private function build():void

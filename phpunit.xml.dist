@@ -3,4 +3,9 @@
     <testsuite name="Shop">
         <directory>tests/</directory>
     </testsuite>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
 </phpunit>

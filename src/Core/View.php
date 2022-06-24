@@ -16,7 +16,7 @@ class View
         $this->renderer = new Smarty();
     }
 
-    public function addTemplateParameter(mixed $param, string $name):void
+    public function addTemplateParameter(mixed $param, string $name): void
     {
         $this->params[$name] = $param;
     }

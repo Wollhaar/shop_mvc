@@ -82,27 +82,11 @@ class Product implements Data
     }
 
     /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return string
      */
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 
     /**
@@ -114,14 +98,6 @@ class Product implements Data
     }
 
     /**
-     * @param string $size
-     */
-    public function setSize(string $size): void
-    {
-        $this->size = $size;
-    }
-
-    /**
      * @return string
      */
     public function getCategory(): string
@@ -130,38 +106,11 @@ class Product implements Data
     }
 
     /**
-     * @param string $category
-     */
-    public function setCategory(string $category): void
-    {
-        $this->category = $category;
-    }
-
-    /**
      * @return float
      */
     public function getPrice(): float
     {
         return $this->price;
-    }
-
-    /**
-     * @param float $price
-     */
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
-    }
-
-    public function summarize():array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'size' => $this->size,
-            'category' => $this->category,
-            'price' => $this->price
-        ];
     }
 
     public function getAll(): array

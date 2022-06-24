@@ -14,20 +14,19 @@ class DetailController implements BasicController
     private View $renderer;
 
 
-    public function __construct()
+    public function __construct(View $renderer)
     {
         $request = $_REQUEST;
         $this->activeProduct = new Product((int)($request['id'] ?? 0));
+        $this->renderer = $renderer;
     }
 
     public function view():void
     {
-        $this->renderer = new View();
         $products = (new Product())->getAll();
 
         $id = $this->activeProduct->getId();
         $amount = 0;
-
         if ($id && $id < count($products)) {
             $amount = $products[$id]['amount'];
         }
@@ -45,8 +44,8 @@ class DetailController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-    public function check(): array
+    public function getView(): View
     {
-        return $this->renderer->getParams();
+        return $this->renderer;
     }
 }

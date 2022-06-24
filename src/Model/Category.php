@@ -44,14 +44,6 @@ class Category implements Data
         return $this->name;
     }
 
-    public function summarize():array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name
-        ];
-    }
-
     public function getAll():array
     {
         return self::CATEGORIES;

@@ -2,11 +2,8 @@
 include_once './config.php';
 
 
-$request = $_REQUEST;
-$page = $request['page'] ?? 'home';
+$service = new \Shop\Service\MainService();
+$service->action();
 
-$controller = class_search($page);
-$controller = new $controller();
-
-$controller->view();
+$controller = $service->getController();
 $controller->display();

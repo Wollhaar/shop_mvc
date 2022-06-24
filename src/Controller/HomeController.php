@@ -14,10 +14,14 @@ class HomeController implements BasicController
     private View $renderer;
 
 
+    public function __construct(View $renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
     public function view():void
     {
         $this->build();
-        $this->renderer = new View();
 
         $this->renderer->addTemplateParameter('Shop', 'title');
         $this->renderer->addTemplateParameter($this->output, 'output');
@@ -28,10 +32,9 @@ class HomeController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-
-    public function check(): array
+    public function getView(): View
     {
-        return $this->renderer->getParams();
+        return $this->renderer;
     }
 
     private function build():void
