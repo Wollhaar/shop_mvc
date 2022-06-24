@@ -15,8 +15,8 @@
 </header>
 <h1>Shop</h1>
 <p>
-{foreach key=id item=category from=$output}
-    <a href="?page=category&id={$id}">{$category}</a><br/>
+{foreach item=category from=$categories}
+    <a href="?page=category&id={$category['id']}">{$category['name']}</a><br/>
 {/foreach}
 </p>
 </body>

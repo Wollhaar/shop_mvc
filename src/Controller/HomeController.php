@@ -9,8 +9,6 @@ class HomeController implements BasicController
 {
     private const TPL = 'HomeView.tpl';
 
-    private array $output = [];
-
     private View $renderer;
 
 
@@ -21,31 +19,13 @@ class HomeController implements BasicController
 
     public function view():void
     {
-        $this->build();
-
+        $categories = (new Category())->getAll();
         $this->renderer->addTemplateParameter('Shop', 'title');
-        $this->renderer->addTemplateParameter($this->output, 'output');
+        $this->renderer->addTemplateParameter($categories, 'categories');
     }
 
     public function display(): void
     {
         $this->renderer->display(self::TPL);
-    }
-
-    public function getView(): View
-    {
-        return $this->renderer;
-    }
-
-    private function build():void
-    {
-        foreach ($this->getCategories() as $category) {
-            $this->output[$category['id']] = $category['name'];
-        }
-    }
-
-    private function getCategories():array
-    {
-        return (new Category())->getAll();
     }
 }
