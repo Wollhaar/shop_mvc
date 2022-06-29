@@ -5,6 +5,8 @@ namespace ShopTest\Controller;
 use PHPUnit\Framework\TestCase;
 use Shop\Controller\CategoryController;
 use Shop\Core\View;
+use Shop\Model\Repository\CategoryRepository;
+use Shop\Model\Repository\ProductRepository;
 
 class CategoryControllerTest extends TestCase
 {
@@ -13,7 +15,7 @@ class CategoryControllerTest extends TestCase
         $_REQUEST['page'] = 'category';
 
         $view = new View();
-        $controller = new CategoryController($view);
+        $controller = new CategoryController($view, new CategoryRepository(), new ProductRepository());
         $controller->view();
 
         self::assertSame([
@@ -46,7 +48,7 @@ class CategoryControllerTest extends TestCase
         $_REQUEST['id'] = 4;
 
         $view = new View();
-        $controller = new CategoryController($view);
+        $controller = new CategoryController($view, new CategoryRepository(), new ProductRepository());
         $controller->view();
 
         self::assertSame([
@@ -64,7 +66,7 @@ class CategoryControllerTest extends TestCase
         $_REQUEST['id'] = 1;
 
         $view = new View();
-        $controller = new CategoryController($view);
+        $controller = new CategoryController($view, new CategoryRepository(), new ProductRepository());
         $controller->view();
 
         self::assertSame([

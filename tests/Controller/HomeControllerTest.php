@@ -6,13 +6,20 @@ namespace ShopTest\Controller;
 use PHPUnit\Framework\TestCase;
 use Shop\Controller\HomeController;
 use Shop\Core\View;
+use Shop\Model\Repository\CategoryRepository;
+use Shop\Model\Repository\ProductRepository;
 
 class HomeControllerTest extends TestCase
 {
     public function testView()
     {
         $view = new View();
-        $controller = new HomeController($view);
+        $controller = new HomeController($view, new CategoryRepository());
+        $injections = [];
+        foreach ($controller->getDependencies() as $dependency) {
+            $injections[$dependency] = new $dependency();
+        }
+        $controller->injection($injections);
         $controller->view();
 
         self::assertSame([

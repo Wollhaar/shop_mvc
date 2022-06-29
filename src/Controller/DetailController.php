@@ -3,44 +3,58 @@
 namespace Shop\Controller;
 
 use Shop\Core\View;
+use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 use Shop\Model\Product;
 
 class DetailController implements BasicController
 {
+
     private const TPL = 'DetailView.tpl';
 
-    private Product $activeProduct;
+    private ProductRepository $prodRepository;
 
     private View $renderer;
 
+    private Product $activeProduct;
 
-    public function __construct(View $renderer)
+    private int $productAmount = 0;
+
+
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
     {
         $request = $_REQUEST;
-        $this->activeProduct = new Product((int)($request['id'] ?? 0));
+        $activeId = (int) ($request['id'] ?? 0);
+        $this->activeProduct = new Product($activeId);
         $this->renderer = $renderer;
+        $this->prodRepository = $prodRepository;
     }
 
-    public function view():void
+    public function view(): void
     {
-        $products = (new Product())->getAll();
+        $this->build();
 
-        $id = $this->activeProduct->getId();
-        $amount = 0;
-        if ($id && $id < count($products)) {
-            $amount = $products[$id]['amount'];
-        }
-
-        $this->renderer->addTemplateParameter($id, 'id');
+        $this->renderer->addTemplateParameter($this->activeProduct->getId(), 'id');
         $this->renderer->addTemplateParameter($this->activeProduct->getName(), 'name');
         $this->renderer->addTemplateParameter($this->activeProduct->getSize(), 'size');
         $this->renderer->addTemplateParameter($this->activeProduct->getCategory(), 'category');
         $this->renderer->addTemplateParameter($this->activeProduct->getPrice(), 'price');
-        $this->renderer->addTemplateParameter($amount, 'amount');
+        $this->renderer->addTemplateParameter($this->productAmount, 'amount');
     }
 
     public function display(): void
     {
         $this->renderer->display(self::TPL);
+    }
+
+    private function build(): void
+    {
+        if ($this->activeProduct->getId() && $this->activeProduct->getId() <= count($this->prodRepository->getAll())) {
+            $activeProduct = $this->prodRepository->findProductById($this->activeProduct->getId());
+            $this->activeProduct->setName($activeProduct['name']);
+            $this->activeProduct->setSize($activeProduct['size']);
+            $this->activeProduct->setCategory($activeProduct['categoryName']);
+            $this->activeProduct->setPrice($activeProduct['price']);
+            $this->productAmount = $activeProduct['amount'];
+        }
     }
 }

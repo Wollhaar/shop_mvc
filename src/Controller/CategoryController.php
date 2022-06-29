@@ -3,7 +3,8 @@
 namespace Shop\Controller;
 
 use Shop\Core\View;
-use Shop\Model\{Category, Product};
+use Shop\Model\Category;
+use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 
 class CategoryController implements BasicController
 {
@@ -11,21 +12,27 @@ class CategoryController implements BasicController
 
     private Category $activeCategory;
 
-    private array $output = [];
+    private CategoryRepository $catRepository;
+
+    private ProductRepository $prodRepository;
 
     private View $renderer;
 
 
-    public function __construct(View $renderer)
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
     {
         $request = $_REQUEST;
 
         $activeId = (int) ($request['id'] ?? 0);
         $this->activeCategory = new Category($activeId);
         $this->renderer = $renderer;
+
+        $this->catRepository = $catRepository;
+        $this->prodRepository = $prodRepository;
+
     }
 
-    public function view():void
+    public function view(): void
     {
         $build = $this->build();
         $activeCategory = false;
@@ -45,27 +52,18 @@ class CategoryController implements BasicController
 
     private function build(): array
     {
-        $id = $this->activeCategory->getId();
-        $categories = (new Category())->getAll();
+        if ($this->activeCategory->getId()) {
+            $foundCategory = $this->catRepository->findCategoryById($this->activeCategory->getId());
 
-        if ($id !== 0 && $id <= count($categories)) {
-            return $this->getProductsByCategory();
-        }
-
-        return $categories;
-    }
-
-    private function getProductsByCategory(): array
-    {
-        $products = new Product();
-
-        $selection = [];
-        foreach ($products->getAll() as $product) {
-            if ($this->activeCategory->getName() === $product['category']) {
-                $selection[$product['id']] = $product['name'];
+            if (!empty($foundCategory)) {
+                $this->activeCategory->setName($foundCategory['name'] ?? 'none');
+                $products = $this->prodRepository->findProductsByCategoryId($this->activeCategory->getId());
+                foreach ($products as $key => $product) {
+                    $products[$key] = $product['name'];
+                }
+                return $products;
             }
         }
-
-        return $selection;
+        return $this->catRepository->getAll();
     }
 }

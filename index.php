@@ -6,6 +6,7 @@ $request = $_REQUEST;
 $page = $request['page'] ?? 'home';
 
 $controllerName = class_search($page);
-$controller = new $controllerName(new \Shop\Core\View());
+$controller = new $controllerName(new \Shop\Core\View(), new \Shop\Model\Repository\CategoryRepository(), new \Shop\Model\Repository\ProductRepository());
+
 $controller->view();
 $controller->display();

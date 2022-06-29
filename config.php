@@ -17,7 +17,7 @@ function class_search(string $name): string
         }
     }
 
-    if (!class_exists($controller)) {
+    if ($controller === \Shop\Controller\ErrorController::class || !class_exists($controller)) {
         $controller = $controllerList[$provider::ERROR];
         try {
             throw new \Shop\Model\Error(404);

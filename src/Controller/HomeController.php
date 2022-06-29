@@ -3,7 +3,7 @@
 namespace Shop\Controller;
 
 use Shop\Core\View;
-use Shop\Model\Category;
+use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 
 class HomeController implements BasicController
 {
@@ -11,15 +11,32 @@ class HomeController implements BasicController
 
     private View $renderer;
 
+    private CategoryRepository $catRepository;
 
-    public function __construct(View $renderer)
+
+    public function __construct(View $renderer, CategoryRepository $catRepository)
     {
         $this->renderer = $renderer;
+        $this->catRepository = $catRepository;
+    }
+
+    public function getDependencies(): array
+    {
+        return [CategoryRepository::class];
+    }
+
+    public function injection(array $repositories): void
+    {
+        foreach ($repositories as $key => $instance){
+            if ($key === CategoryRepository::class) {
+                $this->catRepository = $instance;
+            }
+        }
     }
 
     public function view():void
     {
-        $categories = (new Category())->getAll();
+        $categories = $this->catRepository->getAll();
         $this->renderer->addTemplateParameter('Shop', 'title');
         $this->renderer->addTemplateParameter($categories, 'categories');
     }

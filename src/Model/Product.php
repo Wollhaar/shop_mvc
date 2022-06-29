@@ -6,49 +6,6 @@ use Shop\Controller\ErrorController;
 
 class Product implements Data
 {
-    private const PRODUCTS = array(
-        1 => [
-            'id' => 1,
-            'name' => 'shirt no.1',
-            'size' => 'L',
-            'category' => 'T-Shirt',
-            'price' => 20,
-            'amount' => 200,
-        ],
-        2 => [
-            'id' => 2,
-            'name' => 'HSV - Home-Jersey',
-            'size' => 'M',
-            'category' => 'Sportswear',
-            'price' => 80.90,
-            'amount' => 200,
-        ],
-        3 => [
-            'id' => 3,
-            'name' => 'Hoodie - Kapuzenpulli',
-            'size' => 'L',
-            'category' => 'Pullover',
-            'price' => 30,
-            'amount' => 30,
-        ],
-        4 => [
-            'id' => 4,
-            'name' => 'Denim',
-            'size' => 'W:32 L:32',
-            'category' => 'Hosen',
-            'price' => 45,
-            'amount' => 100,
-        ],
-        5 => [
-            'id' => 5,
-            'name' => 'Bandshirt - Outkast',
-            'size' => 'M',
-            'category' => 'T-Shirt',
-            'price' => 5.90,
-            'amount' => 50,
-        ],
-    );
-
     private int $id = 0;
     private string $name = '';
     private string $size = '';
@@ -59,19 +16,11 @@ class Product implements Data
     public function __construct(int $id = 0, string $name = 'none', string $size = 'none', string $category = 'none', float $price = 0.0)
     {
         $this->id = $id;
-        if ($id < 1 || $id > count(self::PRODUCTS)) {
-            $this->name = $name;
-            $this->size = $size;
-            $this->category = $category;
-            $this->price = $price;
-            return;
-        }
-
-        $this->name = self::PRODUCTS[$id]['name'];
-        $this->size = self::PRODUCTS[$id]['size'];
-        $this->category = self::PRODUCTS[$id]['category'];
-        $this->price = self::PRODUCTS[$id]['price'];
-    }
+        $this->name = $name;
+        $this->size = $size;
+        $this->category = $category;
+        $this->price = $price;
+   }
 
     /**
      * @return int
@@ -113,8 +62,35 @@ class Product implements Data
         return $this->price;
     }
 
-    public function getAll(): array
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
     {
-        return self::PRODUCTS;
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $size
+     */
+    public function setSize(string $size): void
+    {
+        $this->size = $size;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory(string $category): void
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price): void
+    {
+        $this->price = $price;
     }
 }

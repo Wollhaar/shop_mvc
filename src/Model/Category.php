@@ -6,13 +6,6 @@ use Shop\Controller\ErrorController;
 
 class Category implements Data
 {
-    private const CATEGORIES = [
-        1 => ['id'=> 1,'name' => 'T-Shirt'],
-        2 => ['id'=> 2,'name' => 'Pullover'],
-        3 => ['id'=> 3,'name' => 'Hosen'],
-        4 => ['id'=> 4,'name' => 'Sportswear'],
-    ];
-
     private int $id = 0;
 
     private string $name = '';
@@ -21,11 +14,7 @@ class Category implements Data
     public function __construct(int $id = 0, string $name = 'All')
     {
         $this->id = $id;
-        if ($id < 1 || $id > count(self::CATEGORIES)) {
-            $this->name = $name;
-            return;
-        }
-        $this->name = self::CATEGORIES[$id]['name'];
+        $this->name = $name;
     }
 
     /**
@@ -44,8 +33,11 @@ class Category implements Data
         return $this->name;
     }
 
-    public function getAll():array
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
     {
-        return self::CATEGORIES;
+        $this->name = $name;
     }
 }
