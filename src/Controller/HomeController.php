@@ -20,20 +20,6 @@ class HomeController implements BasicController
         $this->catRepository = $catRepository;
     }
 
-    public function getDependencies(): array
-    {
-        return [CategoryRepository::class];
-    }
-
-    public function injection(array $repositories): void
-    {
-        foreach ($repositories as $key => $instance){
-            if ($key === CategoryRepository::class) {
-                $this->catRepository = $instance;
-            }
-        }
-    }
-
     public function view():void
     {
         $categories = $this->catRepository->getAll();
