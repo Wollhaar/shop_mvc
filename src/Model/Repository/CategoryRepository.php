@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Shop\Model\Repository;
 
+use Shop\Model\Dto\CategoryDataTransferObject;
+
 class CategoryRepository
 {
     private array $categories;
@@ -12,13 +14,25 @@ class CategoryRepository
         $data = file_get_contents(__DIR__ . '/categories.json');
         $this->categories = json_decode($data, true);
     }
-    public function findCategoryById(int $id): array
+    public function findCategoryById(int $id): CategoryDataTransferObject
     {
-        return $this->categories[$id] ?? [];
+        $category = $this->categories[$id] ?? [];
+
+        if (!empty($category)) {
+            $category = new CategoryDataTransferObject(
+                $category['id'],
+                $category['name']
+            );
+        }
+        return empty($category) ? new CategoryDataTransferObject(0, 'All') : $category;
     }
 
     public function getAll(): array
     {
-        return $this->categories ?? [];
+        $categories = [];
+        foreach ($this->categories as $category) {
+            $categories[$category['id']] = new CategoryDataTransferObject($category['id'], $category['name']);
+        }
+        return $categories;
     }
 }

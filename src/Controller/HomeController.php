@@ -3,7 +3,7 @@
 namespace Shop\Controller;
 
 use Shop\Core\View;
-use Shop\Model\Repository\{CategoryRepository, ProductRepository};
+use Shop\Model\Repository\{CategoryRepository};
 
 class HomeController implements BasicController
 {
@@ -24,7 +24,7 @@ class HomeController implements BasicController
     {
         $categories = $this->catRepository->getAll();
         $this->renderer->addTemplateParameter('Shop', 'title');
-        $this->renderer->addTemplateParameter($categories, 'categories');
+        $this->renderer->addTemplateParameterObjectArray($categories, 'categories');
     }
 
     public function display(): void

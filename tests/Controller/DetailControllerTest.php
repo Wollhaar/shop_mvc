@@ -21,12 +21,14 @@ class DetailControllerTest extends TestCase
         $controller->view();
 
         self::assertSame([
-            'id' => 2,
-            'name' => 'HSV - Home-Jersey',
-            'size' => 'M',
-            'category' => 'Sportswear',
-            'price' => 80.9,
-            'amount' => 200
+            'product' => [
+                'id' => 2,
+                'name' => 'HSV - Home-Jersey',
+                'size' => 'M',
+                'category' => 'Sportswear',
+                'price' => 80.9,
+                'amount' => 200
+            ]
         ], $view->getParams());
     }
 
@@ -40,12 +42,14 @@ class DetailControllerTest extends TestCase
         $controller->view();
 
         self::assertSame([
-            'id' => 0,
-            'name' => 'none',
-            'size' => 'none',
-            'category' => 'none',
-            'price' => 0.0,
-            'amount' => 0
+            'product' => [
+                'id' => 0,
+                'name' => 'none',
+                'size' => 'none',
+                'category' => 'none',
+                'price' => 0.0,
+                'amount' => 0
+            ]
         ], $view->getParams());
     }
 }

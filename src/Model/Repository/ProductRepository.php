@@ -2,6 +2,8 @@
 
 namespace Shop\Model\Repository;
 
+use Shop\Model\Dto\ProductDataTransferObject;
+
 class ProductRepository
 {
     private array $products;
@@ -15,28 +17,42 @@ class ProductRepository
         $this->categories = json_decode($data, true);
     }
 
-    public function findProductById(int $id): array
+    public function findProductById(int $id): ProductDataTransferObject
     {
         $product = $this->products[$id] ?? [];
         if (!empty($product)) {
-            $product['categoryName'] = $this->categories[$product['category']]['name'] ?? 'none';
+            $product = new ProductDataTransferObject(
+                $product['id'],
+                $product['name'],
+                $product['size'],
+                $this->categories[$product['category']]['name'],
+                $product['price'],
+                $product['amount']
+            );
         }
-        return $product;
+        return empty($product) ?
+            new ProductDataTransferObject(0, 'none', 'none', 'none', 0, 0) :
+            $product;
     }
 
     public function findProductsByCategoryId(int $id): array
     {
         $products = $this->products;
-        foreach ($products as $key => $item) {
-            if ($item['category'] !== $id) {
+        foreach ($products as $key => $product) {
+            if ($product['category'] === $id) {
+                $products[$key] = new ProductDataTransferObject(
+                    $product['id'],
+                    $product['name'],
+                    $product['size'],
+                    $this->categories[$product['category']]['name'],
+                    $product['price'],
+                    $product['amount']
+                );
+            }
+            else {
                 unset($products[$key]);
             }
         }
         return $products;
-    }
-
-    public function getAll(): array
-    {
-        return $this->products ?? [];
     }
 }

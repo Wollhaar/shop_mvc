@@ -3,14 +3,14 @@
 namespace Shop\Controller;
 
 use Shop\Core\View;
-use Shop\Model\Category;
 use Shop\Model\Repository\{CategoryRepository, ProductRepository};
+use Shop\Model\Dto\CategoryDataTransferObject;
 
 class CategoryController implements BasicController
 {
     private const TPL = 'CategoryView.tpl';
 
-    private Category $activeCategory;
+    private CategoryDataTransferObject $activeCategory;
 
     private CategoryRepository $catRepository;
 
@@ -21,15 +21,9 @@ class CategoryController implements BasicController
 
     public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
     {
-        $request = $_REQUEST;
-
-        $activeId = (int) ($request['id'] ?? 0);
-        $this->activeCategory = new Category($activeId);
         $this->renderer = $renderer;
-
         $this->catRepository = $catRepository;
         $this->prodRepository = $prodRepository;
-
     }
 
     public function view(): void
@@ -42,7 +36,13 @@ class CategoryController implements BasicController
         }
         $this->renderer->addTemplateParameter($this->activeCategory->getName(), 'title');
         $this->renderer->addTemplateParameter($activeCategory, 'activeCategory');
-        $this->renderer->addTemplateParameter($build, 'build');
+
+        if ($this->activeCategory->getId()) {
+            $this->renderer->addTemplateParameter($build, 'build');
+        }
+        else {
+        $this->renderer->addTemplateParameterObjectArray($build, 'build', ['id', 'name']);
+        }
     }
 
     public function display(): void
@@ -52,17 +52,16 @@ class CategoryController implements BasicController
 
     private function build(): array
     {
-        if ($this->activeCategory->getId()) {
-            $foundCategory = $this->catRepository->findCategoryById($this->activeCategory->getId());
+        $request = $_REQUEST;
+        $activeId = (int) ($request['id'] ?? 0);
+        $this->activeCategory = $this->catRepository->findCategoryById($activeId);
 
-            if (!empty($foundCategory)) {
-                $this->activeCategory->setName($foundCategory['name'] ?? 'none');
-                $products = $this->prodRepository->findProductsByCategoryId($this->activeCategory->getId());
-                foreach ($products as $key => $product) {
-                    $products[$key] = $product['name'];
-                }
-                return $products;
+        if ($this->activeCategory->getId()) {
+            $products = $this->prodRepository->findProductsByCategoryId($this->activeCategory->getId());
+            foreach ($products as $key => $product) {
+                $products[$key] = $product->getName();
             }
+            return $products;
         }
         return $this->catRepository->getAll();
     }

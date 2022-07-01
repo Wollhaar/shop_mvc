@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Test</title>
+    <title>{$title}</title>
 </head>
 <body>
 <header>
@@ -13,10 +13,10 @@
         <li><a href="?page=category">Kategorie</a></li>
     </ul>
 </header>
-<h1>Shop</h1>
+<h1>{$title}</h1>
 <p>
 {foreach item=category from=$categories}
-    <a href="?page=category&id={$category['id']}">{$category['name']}</a><br/>
+    <a href="?page=category&id={$id}">{$category['name']}</a><br/>
 {/foreach}
 </p>
 </body>
