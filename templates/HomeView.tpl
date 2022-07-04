@@ -16,7 +16,7 @@
 <h1>{$title}</h1>
 <p>
 {foreach item=category from=$categories}
-    <a href="?page=category&id={$id}">{$category->name}</a><br/>
+    <a href="?page=category&id={$category->id}">{$category->name}</a><br/>
 {/foreach}
 </p>
 </body>
