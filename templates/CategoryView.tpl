@@ -29,7 +29,7 @@
     {/foreach}
 {else}
     {foreach key=id item=category from=$build}
-        <a href="?page=category&id={$id}">{$category['name']}</a><br/>
+        <a href="?page=category&id={$id}">{$category->name}</a><br/>
     {/foreach}
 {/if}
 </p>

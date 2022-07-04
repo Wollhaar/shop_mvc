@@ -13,11 +13,11 @@
         <li style="inline"><a href="?page=category">Kategorie</a></li>
     </ul>
 </header>
-<b>Kategorie: {if isset($product.category)}{$product.category}{/if}</b>
-<h1>Produktdetailseite:{if isset($product.name)} {$product.name}{/if}</h1>
-<p>ArtikelId:{if isset($product.id)} {$product.id}{/if}</p>
-<p>Gr&ouml;ße: {if isset($product.size)}{$product.size}{/if}</p>
-<p>Preis: {if isset($product.price)}{$product.price} &euro;{/if}</p>
-<p>Vorrat: {if isset($product.amount)}{$product.amount}{/if}</p>
+<b>Kategorie: {if isset($product->category)}{$product->category}{/if}</b>
+<h1>Produktdetailseite:{if isset($product->name)} {$product->name}{/if}</h1>
+<p>ArtikelId:{if isset($product->id)} {$product->id}{/if}</p>
+<p>Gr&ouml;ße: {if isset($product->size)}{$product->size}{/if}</p>
+<p>Preis: {if isset($product->price)}{$product->price} &euro;{/if}</p>
+<p>Vorrat: {if isset($product->amount)}{$product->amount}{/if}</p>
 </body>
 </html>

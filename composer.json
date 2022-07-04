@@ -1,6 +1,6 @@
 {
   "name": "davidgoraj/shop_mvc",
-  "version": "0.8",
+  "version": "0.9",
   "time": "2022-06-07",
   "require": {
     "php": ">=8.1",

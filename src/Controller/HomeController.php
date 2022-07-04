@@ -23,8 +23,9 @@ class HomeController implements BasicController
     public function view():void
     {
         $categories = $this->catRepository->getAll();
+
         $this->renderer->addTemplateParameter('Shop', 'title');
-        $this->renderer->addTemplateParameterObjectArray($categories, 'categories');
+        $this->renderer->addTemplateParameter($categories, 'categories');
     }
 
     public function display(): void

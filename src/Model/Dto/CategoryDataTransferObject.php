@@ -4,53 +4,12 @@ namespace Shop\Model\Dto;
 
 class CategoryDataTransferObject
 {
-    private int $id;
-    private string $name;
+    public readonly int $id;
+    public readonly string $name;
 
-
-    public function __construct(int $id, string $name)
+    public function __construct(int $id = 0, string $name = 'All')
     {
         $this->id = $id;
         $this->name = $name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function summarize(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name
-        ];
     }
 }

@@ -31,18 +31,13 @@ class CategoryController implements BasicController
         $build = $this->build();
         $activeCategory = false;
 
-        if ($this->activeCategory->getId() !== 0) {
+        if ($this->activeCategory->id !== 0) {
             $activeCategory = true;
         }
-        $this->renderer->addTemplateParameter($this->activeCategory->getName(), 'title');
-        $this->renderer->addTemplateParameter($activeCategory, 'activeCategory');
 
-        if ($this->activeCategory->getId()) {
-            $this->renderer->addTemplateParameter($build, 'build');
-        }
-        else {
-        $this->renderer->addTemplateParameterObjectArray($build, 'build', ['id', 'name']);
-        }
+        $this->renderer->addTemplateParameter($this->activeCategory->name, 'title');
+        $this->renderer->addTemplateParameter($activeCategory, 'activeCategory');
+        $this->renderer->addTemplateParameter($build, 'build');
     }
 
     public function display(): void
@@ -56,13 +51,14 @@ class CategoryController implements BasicController
         $activeId = (int) ($request['id'] ?? 0);
         $this->activeCategory = $this->catRepository->findCategoryById($activeId);
 
-        if ($this->activeCategory->getId()) {
-            $products = $this->prodRepository->findProductsByCategoryId($this->activeCategory->getId());
+        if ($this->activeCategory->id) {
+            $products = $this->prodRepository->findProductsByCategoryId($this->activeCategory->id);
             foreach ($products as $key => $product) {
-                $products[$key] = $product->getName();
+                $products[$key] = $product->name;
             }
             return $products;
         }
+
         return $this->catRepository->getAll();
     }
 }

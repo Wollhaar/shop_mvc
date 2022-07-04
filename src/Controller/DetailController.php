@@ -15,8 +15,6 @@ class DetailController implements BasicController
 
     private View $renderer;
 
-    private ProductDataTransferObject $activeProduct;
-
 
     public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
     {
@@ -30,7 +28,7 @@ class DetailController implements BasicController
         $activeId = (int) ($request['id'] ?? 0);
         $activeProduct = $this->prodRepository->findProductById($activeId);
 
-        $this->renderer->addTemplateParameterObject($activeProduct, 'product');
+        $this->renderer->addTemplateParameter($activeProduct, 'product');
     }
 
     public function display(): void
