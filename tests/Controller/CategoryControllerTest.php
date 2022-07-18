@@ -5,6 +5,7 @@ namespace ShopTest\Controller;
 use PHPUnit\Framework\TestCase;
 use Shop\Controller\CategoryController;
 use Shop\Core\View;
+use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Repository\CategoryRepository;
@@ -22,29 +23,48 @@ class CategoryControllerTest extends TestCase
             new ProductRepository(new ProductsMapper())
         );
         $controller->view();
+        $results = $view->getParams();
 
         self::assertSame([
             'title' => 'All',
             'activeCategory' => false,
             'build' => [
-                1 => [
-                    'id' => 1,
-                    'name' => 'T-Shirt'
-                ],
+                1 => [1,'T-Shirt'],
                 2 => [
-                    'id' => 2,
-                    'name' => 'Pullover'
+                    2,
+                    'Pullover'
                 ],
                 3 => [
-                    'id' => 3,
-                    'name' => 'Hosen'
+                    3,
+                    'Hosen'
                 ],
                 4 => [
-                    'id'=> 4,
-                    'name' => 'Sportswear'
+                    4,
+                    'Sportswear'
                 ]
             ]
-        ], $view->getParams());
+        ], [
+            'title' => $results['title'],
+            'activeCategory' => $results['activeCategory'],
+            'build' => [
+                1 => [
+                    $results['build'][0]->id,
+                    $results['build'][0]->name
+                ],
+                2 => [
+                    $results['build'][1]->id,
+                    $results['build'][1]->name
+                ],
+                3 => [
+                    $results['build'][2]->id,
+                    $results['build'][2]->name
+                ],
+                4 => [
+                    $results['build'][3]->id,
+                    $results['build'][3]->name
+                ],
+            ]
+        ]);
     }
 
     public function testProductCategoryView()
@@ -86,6 +106,7 @@ class CategoryControllerTest extends TestCase
             'build' => [
                 1 => 'shirt no.1',
                 5 => 'Bandshirt - Outkast',
+                7 => 'plain white',
             ]
         ], $view->getParams());
     }

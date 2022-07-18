@@ -44,4 +44,55 @@ class ProductRepository
         }
         return $products;
     }
+
+    public function addProduct(array $data): ProductDataTransferObject
+    {
+        $data['id'] = count($this->products) + 1;
+        $data['category'] = (int)$data['category'];
+        $data['price'] = (float)$data['price'];
+        $data['amount'] = (int)$data['amount'];
+        $data['active'] = true;
+
+        $this->products[$data['id']] = $data;
+        $this->write();
+
+        $data['category'] = $this->categories[$data['category']]['name'];
+        return $this->mapper->mapToDto($data);
+    }
+
+    public function saveProduct(array $data): ProductDataTransferObject
+    {
+        $data['id'] = (int)$data['id'];
+        $data['category'] = (int)$data['category'];
+        $data['price'] = (float)$data['price'];
+        $data['amount'] = (int)$data['amount'];
+
+        $this->products[$data['id']] = $data;
+        $this->write();
+
+        $data['category'] = $this->categories[$data['category']]['name'];
+        return $this->mapper->mapToDto($data);
+    }
+
+    public function deleteProductById(int $id): void
+    {
+        unset($this->products[$id]);
+        $this->write();
+    }
+
+    public function getAll(): array
+    {
+        $products = $this->products;
+        foreach ($products as $key => $product) {
+            $product['category'] = $this->categories[$product['category']]['name'];
+            $products[$key] = $this->mapper->mapToDto($product);
+        }
+        return $products;
+    }
+
+    private function write(): void
+    {
+        $data = json_encode($this->products);
+        file_put_contents(__DIR__ . '/products.json', $data);
+    }
 }

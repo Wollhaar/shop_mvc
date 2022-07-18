@@ -1,18 +1,1 @@
-{
-  "1": {
-    "id": 1,
-    "name": "T-Shirt"
-  },
-  "2": {
-    "id": 2,
-    "name": "Pullover"
-  },
-  "3": {
-    "id": 3,
-    "name": "Hosen"
-  },
-  "4": {
-    "id": 4,
-    "name": "Sportswear"
-  }
-}
+{"1":{"id":1,"name":"T-Shirt","active":true},"2":{"id":2,"name":"Pullover","active":true},"3":{"id":3,"name":"Hosen","active":true},"4":{"name":"Sportswear","id":4,"active":true},"5":{"name":"Jacken","id":5,"active":true}}

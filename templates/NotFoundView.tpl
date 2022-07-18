@@ -9,8 +9,8 @@
 <body>
 <header>
     <ul>
-        <li><a href="?page=home">Home</a></li>
-        <li><a href="?page=category">Kategorie</a></li>
+        <li><a href="/?page=home">Home</a></li>
+        <li><a href="/?page=category">Kategorie</a></li>
     </ul>
 </header>
 <h1>ERROR: {$number}</h1>

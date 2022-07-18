@@ -3,9 +3,26 @@ include_once './config.php';
 
 
 $request = $_REQUEST;
+$path = explode('/', $_SERVER['PATH_INFO'] ?? '');
+
 $page = $request['page'] ?? 'home';
 
-$controllerName = class_search($page);
+$session = new \Shop\Service\Session();
+if ($page === 'logout') {
+    $session->logout();
+}
+
+if ($path[1] === 'backend') {
+    $backend = true;
+    $page = array_pop($path);
+}
+
+
+$userRepository = new \Shop\Model\Repository\UserRepository(new \Shop\Model\Mapper\UsersMapper());
+$authenticator = new \Shop\Core\Authenticator($session, $userRepository);
+
+
+$controllerName = class_search($page, $backend ?? false);
 $controller = new $controllerName(
     new \Shop\Core\View(),
     new \Shop\Model\Repository\CategoryRepository(
@@ -13,7 +30,9 @@ $controller = new $controllerName(
     ),
     new \Shop\Model\Repository\ProductRepository(
         new \Shop\Model\Mapper\ProductsMapper()
-    )
+    ),
+    $userRepository,
+    $authenticator
 );
 
 $controller->view();

@@ -11,8 +11,9 @@ class ProductDataTransferObject
     public readonly string $category;
     public readonly float $price;
     public readonly int $amount;
+    public readonly bool $active;
 
-    public function __construct(int $id = 0, string $name = 'none', string $size = 'none', string $category = 'none', float $price = 0.0, int $amount = 0)
+    public function __construct(int $id, string $name, string $size, string $category, float $price, int $amount, bool $active)
     {
         $this->id = $id;
         $this->name = $name;
@@ -20,5 +21,6 @@ class ProductDataTransferObject
         $this->category = $category;
         $this->price = $price;
         $this->amount = $amount;
+        $this->active = $active;
     }
 }

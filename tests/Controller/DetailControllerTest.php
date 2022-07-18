@@ -24,15 +24,21 @@ class DetailControllerTest extends TestCase
             new ProductRepository(new ProductsMapper())
         );
         $controller->view();
+        $results = $view->getParams();
 
         self::assertSame([
-            'id' => 2,
-            'name' => 'HSV - Home-Jersey',
-            'size' => 'M',
-            'category' => 'Sportswear',
-            'price' => 80.9,
-            'amount' => 200
-        ], $view->getParams());
+            'product' => [2, 'HSV - Home-Jersey', 'M', 'Sportswear', 80.9, 200, true]
+        ], [
+            'product' => [
+                $results['product']->id,
+                $results['product']->name,
+                $results['product']->size,
+                $results['product']->category,
+                $results['product']->price,
+                $results['product']->amount,
+                $results['product']->active,
+            ]
+        ]);
     }
 
     public function testNegative()
@@ -46,14 +52,21 @@ class DetailControllerTest extends TestCase
             new ProductRepository(new ProductsMapper())
         );
         $controller->view();
+        $results = $view->getParams();
 
         self::assertSame([
-            'id' => 0,
-            'name' => 'none',
-            'size' => 'none',
-            'category' => 'none',
-            'price' => 0.0,
-            'amount' => 0
-        ], $view->getParams());
+            'product' => [0, 'none', 'none', 'none', 0.0, 0, false]
+        ],
+            [
+            'product' => [
+                $results['product']->id,
+                $results['product']->name,
+                $results['product']->size,
+                $results['product']->category,
+                $results['product']->price,
+                $results['product']->amount,
+                $results['product']->active,
+            ]
+        ]);
     }
 }

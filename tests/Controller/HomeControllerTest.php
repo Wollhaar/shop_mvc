@@ -18,27 +18,48 @@ class HomeControllerTest extends TestCase
             new CategoryRepository(new CategoriesMapper())
         );
         $controller->view();
+        $results = $view->getParams();
+
 
         self::assertSame([
             'title' => 'Shop',
             'categories' => [
-                1 => [
-                    'id' => 1,
-                    'name' => 'T-Shirt'
-                ],
+                1 => [1,'T-Shirt'],
                 2 => [
-                    'id' => 2,
-                    'name' => 'Pullover'
+                    2,
+                    'Pullover'
                 ],
                 3 => [
-                    'id' => 3,
-                    'name' => 'Hosen'
+                    3,
+                    'Hosen'
                 ],
                 4 => [
-                    'id'=> 4,
-                    'name' => 'Sportswear'
+                    4,
+                    'Sportswear'
                 ]
             ]
-        ], $view->getParams());
+        ], [
+            'title' => $results['title'],
+            'activeCategory' => $results['activeCategory'],
+            'build' => [
+                1 => [
+                    $results['build'][0]->id,
+                    $results['build'][0]->name
+                ],
+                2 => [
+                    $results['build'][1]->id,
+                    $results['build'][1]->name
+                ],
+                3 => [
+                    $results['build'][2]->id,
+                    $results['build'][2]->name
+                ],
+                4 => [
+                    $results['build'][3]->id,
+                    $results['build'][3]->name
+                ],
+            ]
+        ]
+        );
     }
 }
