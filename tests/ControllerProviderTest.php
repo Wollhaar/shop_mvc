@@ -22,7 +22,6 @@ class ControllerProviderTest extends TestCase
     {
         $provider = new ControllerProvider();
         self::assertSame([
-            ErrorController::class,
             CategoryController::class,
             DetailController::class,
             HomeController::class,
@@ -32,7 +31,6 @@ class ControllerProviderTest extends TestCase
     {
         $provider = new ControllerProvider();
         self::assertSame([
-            ErrorController::class,
             BackendController::class,
             CreateController::class,
             ListController::class,

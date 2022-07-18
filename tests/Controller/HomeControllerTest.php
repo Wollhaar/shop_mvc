@@ -20,46 +20,17 @@ class HomeControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-
-        self::assertSame([
-            'title' => 'Shop',
-            'categories' => [
-                1 => [1,'T-Shirt'],
-                2 => [
-                    2,
-                    'Pullover'
-                ],
-                3 => [
-                    3,
-                    'Hosen'
-                ],
-                4 => [
-                    4,
-                    'Sportswear'
-                ]
-            ]
-        ], [
-            'title' => $results['title'],
-            'activeCategory' => $results['activeCategory'],
-            'build' => [
-                1 => [
-                    $results['build'][0]->id,
-                    $results['build'][0]->name
-                ],
-                2 => [
-                    $results['build'][1]->id,
-                    $results['build'][1]->name
-                ],
-                3 => [
-                    $results['build'][2]->id,
-                    $results['build'][2]->name
-                ],
-                4 => [
-                    $results['build'][3]->id,
-                    $results['build'][3]->name
-                ],
-            ]
-        ]
-        );
+        self::assertSame('All', $results['title']);
+        self::assertFalse(false, $results['activeCategory']);
+        self::assertSame(1, $results['build'][0]->id);
+        self::assertSame('T-Shirt', $results['build'][0]->name);
+        self::assertSame(2, $results['build'][1]->id);
+        self::assertSame('Pullover', $results['build'][1]->name);
+        self::assertSame(3, $results['build'][2]->id);
+        self::assertSame('Hosen', $results['build'][2]->name);
+        self::assertSame(4, $results['build'][3]->id);
+        self::assertSame('Sportswear', $results['build'][3]->name);
+        self::assertSame(5, $results['build'][4]->id);
+        self::assertSame('Jacken', $results['build'][4]->name);
     }
 }

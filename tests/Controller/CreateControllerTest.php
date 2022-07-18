@@ -5,7 +5,7 @@ namespace ShopTest\Controller;
 
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
-use Shop\Controller\Backend\SaveController;
+use Shop\Controller\Backend\CreateController;
 use Shop\Core\View;
 
 class CreateControllerTest extends \PHPUnit\Framework\TestCase
@@ -23,7 +23,7 @@ class CreateControllerTest extends \PHPUnit\Framework\TestCase
         ];
 
         $view = new View();
-        $controller = new SaveController($view,
+        $controller = new CreateController($view,
             new CategoryRepository(new CategoriesMapper()),
             new ProductRepository(new ProductsMapper()),
             new UserRepository(new UsersMapper()),
@@ -54,7 +54,7 @@ class CreateControllerTest extends \PHPUnit\Framework\TestCase
         ];
 
         $view = new View();
-        $controller = new SaveController($view,
+        $controller = new CreateController($view,
             new CategoryRepository(new CategoriesMapper()),
             new ProductRepository(new ProductsMapper()),
             new UserRepository(new UsersMapper()),
@@ -76,12 +76,11 @@ class CreateControllerTest extends \PHPUnit\Framework\TestCase
     {
         $_REQUEST['page'] = 'category';
         $_REQUEST['category'] = [
-            'name' => 'testKategorie1',
-            'active' => true,
+            'name' => 'testKategorie1'
         ];
 
         $view = new View();
-        $controller = new SaveController($view,
+        $controller = new CreateController($view,
             new CategoryRepository(new CategoriesMapper()),
             new ProductRepository(new ProductsMapper()),
             new UserRepository(new UsersMapper()),
@@ -91,6 +90,5 @@ class CreateControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('Category', $results['title']);
         self::assertSame('testKategorie1', $results['category']->name);
-        self::assertTrue($results['category']->active);
     }
 }
