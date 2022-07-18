@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Shop\Controller;
+namespace Shop\Controller\Backend;
 
+use Shop\Controller\BasicController;
 use Shop\Core\View;
 use Shop\Model\Dto\ProductDataTransferObject;
 use Shop\Model\Dto\UserDataTransferObject;
@@ -34,7 +35,7 @@ class SaveController implements BasicController
         $product = $this->buildProduct();
         $categories = $this->catRepository->getAll();
 
-        $active =  $request['save'] ?? '';
+        $active =  $request['page'] ?? '';
         $this->renderer->addTemplateParameter(ucfirst($active), 'title');
         $this->renderer->addTemplateParameter($active, 'active');
         $this->renderer->addTemplateParameter($user, 'user');

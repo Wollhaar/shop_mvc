@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ShopTest\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\HomeController;
+use Shop\Controller\Frontend\HomeController;
 use Shop\Core\View;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;

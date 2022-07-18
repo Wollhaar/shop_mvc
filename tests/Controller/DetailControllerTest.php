@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ShopTest\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\DetailController;
+use Shop\Controller\Frontend\DetailController;
 use Shop\Core\View;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Mapper\ProductsMapper;
@@ -26,19 +26,13 @@ class DetailControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame([
-            'product' => [2, 'HSV - Home-Jersey', 'M', 'Sportswear', 80.9, 200, true]
-        ], [
-            'product' => [
-                $results['product']->id,
-                $results['product']->name,
-                $results['product']->size,
-                $results['product']->category,
-                $results['product']->price,
-                $results['product']->amount,
-                $results['product']->active,
-            ]
-        ]);
+        self::assertSame(2, $results['product']->id);
+        self::assertSame('HSV - Home-Jersey', $results['product']->name);
+        self::assertSame('M,L', $results['product']->size);
+        self::assertSame('Sportswear', $results['product']->category);
+        self::assertSame(80.9, $results['product']->price);
+        self::assertSame(200, $results['product']->amount);
+        self::assertTrue($results['product']->active);
     }
 
     public function testNegative()
@@ -54,19 +48,12 @@ class DetailControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame([
-            'product' => [0, 'none', 'none', 'none', 0.0, 0, false]
-        ],
-            [
-            'product' => [
-                $results['product']->id,
-                $results['product']->name,
-                $results['product']->size,
-                $results['product']->category,
-                $results['product']->price,
-                $results['product']->amount,
-                $results['product']->active,
-            ]
-        ]);
+        self::assertSame(0, $results['product']->id);
+        self::assertSame('none', $results['product']->name);
+        self::assertSame('none', $results['product']->size);
+        self::assertSame('none', $results['product']->category);
+        self::assertSame(0.0, $results['product']->price);
+        self::assertSame(0, $results['product']->amount);
+        self::assertTrue($results['product']->active);
     }
 }

@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace ShopTest;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\{BackendController,
-    CategoryController,
-    CreateController,
+use Shop\Controller\{Backend\BackendController,
+    Backend\CreateController,
+    Backend\ListController,
+    Backend\LoginController,
+    Backend\ProfileController,
+    Backend\SaveController,
     ErrorController,
-    HomeController,
-    DetailController,
-    ListController,
-    LoginController,
-    ProfileController,
-    SaveController};
+    Frontend\CategoryController,
+    Frontend\DetailController,
+    Frontend\HomeController};
 use Shop\Service\ControllerProvider;
 
 class ControllerProviderTest extends TestCase

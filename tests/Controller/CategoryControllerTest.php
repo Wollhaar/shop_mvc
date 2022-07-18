@@ -3,9 +3,8 @@
 namespace ShopTest\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\CategoryController;
+use Shop\Controller\Frontend\CategoryController;
 use Shop\Core\View;
-use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Repository\CategoryRepository;
@@ -25,46 +24,18 @@ class CategoryControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame([
-            'title' => 'All',
-            'activeCategory' => false,
-            'build' => [
-                1 => [1,'T-Shirt'],
-                2 => [
-                    2,
-                    'Pullover'
-                ],
-                3 => [
-                    3,
-                    'Hosen'
-                ],
-                4 => [
-                    4,
-                    'Sportswear'
-                ]
-            ]
-        ], [
-            'title' => $results['title'],
-            'activeCategory' => $results['activeCategory'],
-            'build' => [
-                1 => [
-                    $results['build'][0]->id,
-                    $results['build'][0]->name
-                ],
-                2 => [
-                    $results['build'][1]->id,
-                    $results['build'][1]->name
-                ],
-                3 => [
-                    $results['build'][2]->id,
-                    $results['build'][2]->name
-                ],
-                4 => [
-                    $results['build'][3]->id,
-                    $results['build'][3]->name
-                ],
-            ]
-        ]);
+        self::assertSame('All', $results['title']);
+        self::assertFalse(false, $results['activeCategory']);
+        self::assertSame(1, $results['build'][0]->id);
+        self::assertSame('T-Shirt', $results['build'][0]->name);
+        self::assertSame(2, $results['build'][1]->id);
+        self::assertSame('Pullover', $results['build'][1]->name);
+        self::assertSame(3, $results['build'][2]->id);
+        self::assertSame('Hosen', $results['build'][2]->name);
+        self::assertSame(4, $results['build'][3]->id);
+        self::assertSame('Sportswear', $results['build'][3]->name);
+        self::assertSame(5, $results['build'][4]->id);
+        self::assertSame('Jacken', $results['build'][4]->name);
     }
 
     public function testProductCategoryView()
@@ -78,14 +49,11 @@ class CategoryControllerTest extends TestCase
             new ProductRepository(new ProductsMapper())
         );
         $controller->view();
+        $results = $view->getParams();
 
-        self::assertSame([
-            'title' => 'Sportswear',
-            'activeCategory' => true,
-            'build' => [
-                2 => 'HSV - Home-Jersey'
-            ]
-        ], $view->getParams());
+        self::assertSame('Sportswear', $results['title']);
+        self::assertTrue($results['activeCategory']);
+        self::assertSame('HSV - Home-Jersey', $results['build'][2]);
     }
 
     public function testProductCategoryView2nd()
@@ -99,15 +67,12 @@ class CategoryControllerTest extends TestCase
             new ProductRepository(new ProductsMapper())
         );
         $controller->view();
+        $results = $view->getParams();
 
-        self::assertSame([
-            'title' => 'T-Shirt',
-            'activeCategory' => true,
-            'build' => [
-                1 => 'shirt no.1',
-                5 => 'Bandshirt - Outkast',
-                7 => 'plain white',
-            ]
-        ], $view->getParams());
+        self::assertSame('T-Shirt', $results['title']);
+        self::assertSame('T-Shirt', $results['activeCategory']);
+        self::assertSame('shirt no.1', $results['build'][1]);
+        self::assertSame('Bandshirt - Outkast', $results['build'][5]);
+        self::assertSame('plain white', $results['build'][7]);
     }
 }

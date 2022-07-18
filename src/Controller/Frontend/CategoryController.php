@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Shop\Controller;
+namespace Shop\Controller\Frontend;
 
+use Shop\Controller\BasicController;
 use Shop\Core\View;
-use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 use Shop\Model\Dto\CategoryDataTransferObject;
+use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 
 class CategoryController implements BasicController
 {

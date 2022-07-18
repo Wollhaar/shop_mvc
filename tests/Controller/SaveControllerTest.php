@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ShopTest\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\ProfileController;
+use Shop\Controller\Backend\SaveController;
 use Shop\Core\View;
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
@@ -14,10 +14,18 @@ class SaveControllerTest extends TestCase
     public function testSaveProductView()
     {
         $_REQUEST['page'] = 'product';
-        $_REQUEST['id'] = 1;
+        $_REQUEST['product'] = [
+            'id' => 1,
+            'name' => 'shirt no.1',
+            'size' => 'M,L,XL',
+            'category' => 1,
+            'price' => 21,
+            'amount' => 220,
+            'active' => true,
+        ];;
 
         $view = new View();
-        $controller = new ProfileController($view,
+        $controller = new SaveController($view,
             new CategoryRepository(new CategoriesMapper()),
             new ProductRepository(new ProductsMapper()),
             new UserRepository(new UsersMapper()),
@@ -25,29 +33,31 @@ class SaveControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame([
-            'product' => [1, 'shirt no.1', 'M,L', 'T-Shirt', 21, 220, true]
-        ],
-            [
-                'product' => [
-                    $results['product']->id,
-                    $results['product']->name,
-                    $results['product']->size,
-                    $results['product']->category,
-                    $results['product']->price,
-                    $results['product']->amount,
-                    $results['product']->active,
-                ]
-            ]);
+        self::assertSame('Product', $results['title']);
+        self::assertSame(1, $results['product']->id);
+        self::assertSame('shirt no.1', $results['product']->name);
+        self::assertSame('M,L,XL', $results['product']->size);
+        self::assertSame('T-Shirt', $results['product']->category);
+        self::assertSame(21.0, $results['product']->price);
+        self::assertSame(220, $results['product']->amount);
+        self::assertTrue($results['product']->active);
     }
 
     public function testSaveUserView()
     {
         $_REQUEST['page'] = 'user';
-        $_REQUEST['id'] = 3;
+        $_REQUEST['user'] = [
+            'id' => 3,
+            'username' => 'maxi',
+            'firstname' => 'Test',
+            'lastname' => 'Tester',
+            'created' => '2022-07-13',
+            'birthday' => '1997-04-11',
+            'active' => true,
+        ];
 
         $view = new View();
-        $controller = new ProfileController($view,
+        $controller = new SaveController($view,
             new CategoryRepository(new CategoriesMapper()),
             new ProductRepository(new ProductsMapper()),
             new UserRepository(new UsersMapper()),
@@ -55,22 +65,14 @@ class SaveControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame([
-            'title' => 'User',
-            'user' => [2, 'maxi', 'Chuck', 'Tester', 1657664319, 1657711119, 863301600, true]
-        ],
-            [
-                'title' => $results['title'],
-                'user' => [
-                    $results['user']->id,
-                    $results['user']->username,
-                    $results['user']->firstname,
-                    $results['user']->lastname,
-                    $results['user']->created,
-                    $results['user']->updated,
-                    $results['user']->birthday,
-                    $results['user']->active,
-                ]
-            ]);
+        self::assertSame('User', $results['title']);
+        self::assertSame(3, $results['user']->id);
+        self::assertSame('maxi', $results['user']->username);
+        self::assertSame('Test', $results['user']->firstname);
+        self::assertSame('Tester', $results['user']->lastname);
+        self::assertSame(1657664319, $results['user']->created);
+        self::assertSame(1657711119, $results['user']->updated);
+        self::assertSame(860709600, $results['user']->birthday);
+        self::assertTrue($results['user']->active);
     }
 }

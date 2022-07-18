@@ -64,7 +64,8 @@ class UserRepository
     {
         $data['id'] = (int)$data['id'];
         $user = $this->findUserById($data['id']);
-        $data['password'] = $this->getPasswordByUser($user);
+        $data['password'] = $data['password'] !== '' ?
+            $data['password'] : $this->getPasswordByUser($user);
 
         $created = strtotime($data['created']);
         $created = is_int($created) ? $created : mktime(0);

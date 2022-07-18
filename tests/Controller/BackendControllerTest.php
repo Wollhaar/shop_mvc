@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ShopTest\Controller;
 
-use Shop\Controller\BackendController;
+use Shop\Controller\Backend\BackendController;
 use Shop\Core\Authenticator;
 use Shop\Core\View;
 use Shop\Model\Mapper\CategoriesMapper;

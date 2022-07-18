@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ShopTest\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\LoginController;
+use Shop\Controller\Backend\LoginController;
 use Shop\Core\Authenticator;
 use Shop\Core\View;
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};

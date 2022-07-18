@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Shop\Controller;
+namespace Shop\Controller\Backend;
 
+use Shop\Controller\BasicController;
 use Shop\Core\{Authenticator, View};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
 

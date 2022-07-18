@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ShopTest\Controller;
 
-use Shop\Controller\ProfileController;
+use Shop\Controller\Backend\ProfileController;
 use Shop\Core\View;
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
