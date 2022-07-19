@@ -7,17 +7,10 @@
     <title>{$title}</title>
 </head>
 <body>
-{if $active == 'product'}
-    {$backLink = 'products'}
-{elseif $active == 'category'}
-    {$backLink = 'categories'}
-{elseif $active == 'user'}
-    {$backLink = 'users'}
-{/if}
 <header>
     <ul>
         <li><a href="/backend">Zur&uuml;ck zum Dashboard</a></li>
-        <li><a href="/backend/list?page={$backLink}">Zur&uuml;ck zur Kategorie</a></li>
+        <li><a href="/backend/list?page=product">Zur&uuml;ck zur Kategorie</a></li>
     </ul>
 </header>
 <h1>{$title}</h1>

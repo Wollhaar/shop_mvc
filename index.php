@@ -10,11 +10,11 @@ $page = $request['page'] ?? 'home';
 $session = new \Shop\Service\Session();
 if ($page === 'logout') {
     $session->logout();
+    $page = 'home';
 }
 
 if ($path[1] === 'backend') {
-    $backend = true;
-    $page = array_pop($path);
+    $backend = array_pop($path);
 }
 
 
@@ -22,7 +22,7 @@ $userRepository = new \Shop\Model\Repository\UserRepository(new \Shop\Model\Mapp
 $authenticator = new \Shop\Core\Authenticator($session, $userRepository);
 
 
-$controllerName = class_search($page, $backend ?? false);
+$controllerName = class_search($page, $backend ?? '');
 $controller = new $controllerName(
     new \Shop\Core\View(),
     new \Shop\Model\Repository\CategoryRepository(

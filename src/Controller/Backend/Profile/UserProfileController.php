@@ -26,14 +26,11 @@ class UserProfileController implements BasicController
     {
         $user = $this->build();
 
-        if ((int)($request['create'] ?? 0) === 1) {
+        if ((int)($_REQUEST['create'] ?? 0) === 1) {
             $create = true;
         }
-        if ($user->username !== '') {
-            $name = $user->username;
-        }
         $this->renderer->addTemplateParameter('User', 'title');
-        $this->renderer->addTemplateParameter($name ?? '', 'subtitle');
+        $this->renderer->addTemplateParameter($user->username, 'subtitle');
         $this->renderer->addTemplateParameter($create ?? false, 'create');
         $this->renderer->addTemplateParameter($user, 'users');
     }

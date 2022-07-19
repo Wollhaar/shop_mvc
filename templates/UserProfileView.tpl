@@ -2,6 +2,16 @@
 <html>
 <head></head>
 <body>
+<header>
+    <ul>
+        <li><a href="/backend">Zur&uuml;ck zum Dashboard</a></li>
+        <li><a href="/backend/list?page=user">Zur&uuml;ck zur Kategorie</a></li>
+    </ul>
+</header>
+<h1>{$title}</h1>
+{if isset($subtitle)}
+    <h2>{$subtitle}</h2>
+{/if}
 <div>
 {if $create}
     {$id = 0}

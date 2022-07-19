@@ -26,6 +26,8 @@ class UserCreateController implements \Shop\Controller\BasicController
         $user = $this->build();
 
         $this->renderer->addTemplateParameter('User', 'title');
+        $this->renderer->addTemplateParameter($user->username, 'subtitle');
+        $this->renderer->addTemplateParameter(false, 'create');
         $this->renderer->addTemplateParameter($user, 'user');
     }
 

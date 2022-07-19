@@ -4,17 +4,22 @@ define("ROOT_PATH", __DIR__);
 
 require __DIR__ . '/vendor/autoload.php';
 
-function class_search(string $name, bool $backend): string
+function class_search(string $name, string $backend): string
 {
+    $name = ucfirst(strtolower($name));
     $provider = new \Shop\Service\ControllerProvider();
     $controllerList = $provider->getFrontendList();
-    if ($backend) {
+    if ($backend !== '') {
         $controllerList = $provider->getBackendList();
+        if ($name === 'Home') {
+            $name = '';
+        }
+        $name .= ucfirst(strtolower($backend));
     }
     $controller = '';
 
     foreach ($controllerList as $controllerName) {
-        if (str_contains($controllerName, ucfirst(strtolower($name)))) {
+        if (str_contains($controllerName, $name)) {
             $controller = $controllerName;
             break;
         }

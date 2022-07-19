@@ -23,10 +23,12 @@ class CategoryCreateController implements \Shop\Controller\BasicController
 
     public function view(): void
     {
-        $users = $this->build();
+        $category = $this->build();
 
         $this->renderer->addTemplateParameter('Users', 'title');
-        $this->renderer->addTemplateParameter($users, 'users');
+        $this->renderer->addTemplateParameter(false, 'create');
+        $this->renderer->addTemplateParameter($category->name, 'subtitle');
+        $this->renderer->addTemplateParameter($category, 'category');
     }
 
     public function display(): void

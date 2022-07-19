@@ -11,9 +11,9 @@
 <h2>Hello, {$user->firstname}</h2>
 <ul>
     <li><a href="/backend?page=dashboard">Übersicht</a></li>
-    <li><a href="/backend/list?page=categories">Kategorien</a></li>
-    <li><a href="/backend/list?page=products">Produkte</a></li>
-    <li><a href="/backend/list?page=users">Userliste</a></li>
+    <li><a href="/backend/list?page=category">Kategorien</a></li>
+    <li><a href="/backend/list?page=product">Produkte</a></li>
+    <li><a href="/backend/list?page=user">Userliste</a></li>
     <li><a href="/backend?page=logout">Logout</a></li>
 </ul>
 </body>

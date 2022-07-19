@@ -14,24 +14,28 @@ class ProductProfileController implements \Shop\Controller\BasicController
     private const TPL = 'ProductProfileView.tpl';
     private View $renderer;
     private ProductRepository $prodRepository;
+    private CategoryRepository $catRepository;
 
     public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository)
     {
         $this->renderer = $renderer;
         $this->prodRepository = $prodRepository;
+        $this->catRepository = $catRepository;
     }
 
     public function view(): void
     {
         $product = $this->build();
+        $categories = $this->catRepository->getAll();
 
-        if ((int)($request['create'] ?? 0) === 1) {
+        if ((int)($_REQUEST['create'] ?? 0) === 1) {
             $create = true;
         }
-        $this->renderer->addTemplateParameter('Users', 'title');
+        $this->renderer->addTemplateParameter('Product', 'title');
         $this->renderer->addTemplateParameter($product->name, 'subtitle');
         $this->renderer->addTemplateParameter($create ?? false, 'create');
         $this->renderer->addTemplateParameter($product, 'product');
+        $this->renderer->addTemplateParameter($categories, 'categories');
     }
 
     public function display(): void
