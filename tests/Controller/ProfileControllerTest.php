@@ -24,20 +24,13 @@ class ProfileControllerTest extends \PHPUnit\Framework\TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame([
-            'product' => [1, 'shirt no.1', 'M,L', 'T-Shirt', 21, 220, true]
-        ],
-            [
-                'product' => [
-                    $results['product']->id,
-                    $results['product']->name,
-                    $results['product']->size,
-                    $results['product']->category,
-                    $results['product']->price,
-                    $results['product']->amount,
-                    $results['product']->active,
-                ]
-            ]);
+        self::assertSame(1, $results['product']->id);
+        self::assertSame('shirt no.1', $results['product']->name);
+        self::assertSame('M,L', $results['product']->size);
+        self::assertSame('T-Shirt', $results['product']->category);
+        self::assertSame(21.0, $results['product']->price);
+        self::assertSame(220, $results['product']->amount);
+        self::assertTrue($results['product']->active);
     }
 
     public function testUserView()

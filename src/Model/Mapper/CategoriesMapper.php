@@ -8,6 +8,6 @@ class CategoriesMapper
 {
     public function mapToDto(array $category): CategoryDataTransferObject
     {
-        return new CategoryDataTransferObject($category['id'] ?? 0, $category['name'] ?? 'All');
+        return new CategoryDataTransferObject($category['id'] ?? 0, $category['name'] ?? 'All', $category['active'] ?? false);
     }
 }

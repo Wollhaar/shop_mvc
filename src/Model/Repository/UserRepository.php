@@ -87,7 +87,9 @@ class UserRepository
 
     public function deleteUserById(int $id): void
     {
-        $this->users[$id]['active'] = false;
+        $user = $this->users[$id] ?? [];
+        $user['active'] = false;
+        $this->users[$id] = $user;
         $this->write();
     }
 

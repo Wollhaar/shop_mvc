@@ -76,7 +76,9 @@ class ProductRepository
 
     public function deleteProductById(int $id): void
     {
-        unset($this->products[$id]);
+        $product = $this->products[$id] ?? [];
+        $product['active'] = false;
+        $this->products[$id] = $product;
         $this->write();
     }
 

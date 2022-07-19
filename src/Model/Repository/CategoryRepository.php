@@ -37,7 +37,9 @@ class CategoryRepository
 
     public function deleteCategoryById(int $id): void
     {
-        $this->categories[$id]['active'] = false;
+        $category = $this->categories[$id] ?? [];
+        $category['active'] = false;
+        $this->categories[$id] = $category;
         $this->write();
     }
 
