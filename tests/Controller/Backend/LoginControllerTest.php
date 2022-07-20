@@ -59,15 +59,11 @@ class LoginControllerTest extends TestCase
         $results = $view->getParams();
         $object = $results['user'];
 
-//                'authenticated' => ['username' => true, 'password' => false],
-//                'user' => [2, , , , 0, 0, 0, false]
-//                'authenticated' => $results['authenticated'],
         self::assertSame(2, $object->id);
         self::assertSame('test', $object->username);
         self::assertSame('Chuck', $object->firstname);
         self::assertSame('Tester', $object->lastname);
         self::assertSame(1657664319, $object->created);
-        self::assertSame(1657711119, $object->updated);
         self::assertSame(863301600, $object->birthday);
         self::assertTrue($object->active);
     }

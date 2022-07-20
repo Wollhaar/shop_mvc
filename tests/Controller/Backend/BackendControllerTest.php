@@ -31,26 +31,15 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
             new Authenticator($session, $usrRepository)
         );
         $controller->view();
-
         $results = $view->getParams();
-        self::assertSame(
-            [
-                'Dashboard',
-                [2,'test', 'Test', 'Tester', 0, 0, 0],
-            ],
-            [
-                $results['title'],
-                [
-                    $results['user']->id,
-                    $results['user']->username,
-                    $results['user']->firstname,
-                    $results['user']->lastname,
-                    $results['user']->created,
-                    $results['user']->updated,
-                    $results['user']->birthday,
-                    $results['user']->active,
-                ]
-            ]
-        );
+
+        self::assertSame('Dashboard', $results['title']);
+        self::assertSame(2, $results['user']->id);
+        self::assertSame('test', $results['user']->username);
+        self::assertSame('Chuck', $results['user']->firstname);
+        self::assertSame('Tester', $results['user']->lastname);
+        self::assertSame(1657664319, $results['user']->created);
+        self::assertSame(863301600, $results['user']->birthday);
+        self::assertTrue($results['user']->active);
     }
 }
