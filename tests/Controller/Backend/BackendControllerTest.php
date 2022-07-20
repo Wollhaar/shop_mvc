@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ShopTest\Controller;
+namespace ShopTest\Controller\Backend;
 
 use Shop\Controller\Backend\BackendController;
 use Shop\Core\Authenticator;

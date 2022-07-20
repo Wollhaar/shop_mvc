@@ -22,7 +22,7 @@ class CategoryDeleteController implements \Shop\Controller\BasicController
     {
         $categories = $this->build();
 
-        $this->renderer->addTemplateParameter('Category', 'title');
+        $this->renderer->addTemplateParameter('Categories', 'title');
         $this->renderer->addTemplateParameter($categories, 'categories');
     }
 

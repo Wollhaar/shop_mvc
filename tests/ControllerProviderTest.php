@@ -4,16 +4,13 @@ declare(strict_types=1);
 namespace ShopTest;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\{Backend\BackendController,
-    Backend\CreateController,
-    Backend\ListController,
-    Backend\LoginController,
-    Backend\ProfileController,
-    Backend\SaveController,
-    ErrorController,
-    Frontend\CategoryController,
-    Frontend\DetailController,
-    Frontend\HomeController};
+use Shop\Controller\Frontend\{CategoryController, DetailController, HomeController};
+use Shop\Controller\Backend\{BackendController, LoginController};
+use Shop\Controller\Backend\Create\{CategoryCreateController, ProductCreateController, UserCreateController};
+use Shop\Controller\Backend\Delete\{CategoryDeleteController, ProductDeleteController, UserDeleteController};
+use Shop\Controller\Backend\Listing\{CategoryListController, ProductListController, UserListController};
+use Shop\Controller\Backend\Profile\{CategoryProfileController, ProductProfileController, UserProfileController};
+use Shop\Controller\Backend\Save\{ProductSaveController, UserSaveController};
 use Shop\Service\ControllerProvider;
 
 class ControllerProviderTest extends TestCase
@@ -32,11 +29,21 @@ class ControllerProviderTest extends TestCase
         $provider = new ControllerProvider();
         self::assertSame([
             BackendController::class,
-            CreateController::class,
-            ListController::class,
+            CategoryCreateController::class,
+            ProductCreateController::class,
+            UserCreateController::class,
+            CategoryDeleteController::class,
+            ProductDeleteController::class,
+            UserDeleteController::class,
+            CategoryListController::class,
+            ProductListController::class,
+            UserListController::class,
             LoginController::class,
-            ProfileController::class,
-            SaveController::class,
+            CategoryProfileController::class,
+            ProductProfileController::class,
+            UserProfileController::class,
+            ProductSaveController::class,
+            UserSaveController::class,
         ], $provider->getBackendList());
     }
 }

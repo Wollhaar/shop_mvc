@@ -66,6 +66,7 @@ class ProductRepository
         $data['category'] = (int)$data['category'];
         $data['price'] = (float)$data['price'];
         $data['amount'] = (int)$data['amount'];
+        $data['active'] = (bool)$data['active'];
 
         $this->products[$data['id']] = $data;
         $this->write();
@@ -86,6 +87,10 @@ class ProductRepository
     {
         $products = $this->products;
         foreach ($products as $key => $product) {
+            if (!$product['active']) {
+                unset($products[$key]);
+                continue;
+            }
             $product['category'] = $this->categories[$product['category']]['name'];
             $products[$key] = $this->mapper->mapToDto($product);
         }

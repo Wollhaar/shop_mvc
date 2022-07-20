@@ -46,8 +46,9 @@ class CategoryRepository
     public function getAll(): array
     {
         $categories = [];
-        foreach ($this->categories as $category) {
+        foreach ($this->categories as $key => $category) {
             if (!$category['active']) {
+                unset($categories[$key]);
                 continue;
             }
             $categories[$category['id']] = $this->mapper->mapToDto($category);

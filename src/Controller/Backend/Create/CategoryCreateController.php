@@ -25,7 +25,7 @@ class CategoryCreateController implements \Shop\Controller\BasicController
     {
         $category = $this->build();
 
-        $this->renderer->addTemplateParameter('Users', 'title');
+        $this->renderer->addTemplateParameter('Category', 'title');
         $this->renderer->addTemplateParameter(false, 'create');
         $this->renderer->addTemplateParameter($category->name, 'subtitle');
         $this->renderer->addTemplateParameter($category, 'category');

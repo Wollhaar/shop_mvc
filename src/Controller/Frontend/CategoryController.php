@@ -53,11 +53,7 @@ class CategoryController implements BasicController
         $this->activeCategory = $this->catRepository->findCategoryById($activeId);
 
         if ($this->activeCategory->id) {
-            $products = $this->prodRepository->findProductsByCategoryId($this->activeCategory->id);
-            foreach ($products as $key => $product) {
-                $products[$key] = $product->name;
-            }
-            return $products;
+            return $this->prodRepository->findProductsByCategoryId($this->activeCategory->id);
         }
 
         return $this->catRepository->getAll();

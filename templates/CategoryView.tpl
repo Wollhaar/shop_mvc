@@ -25,7 +25,7 @@
 <p>
 {if $activeCategory}
     {foreach key=id item=detail from=$build}
-        <a href="?page=detail&id={$id}">{$detail}</a><br/>
+        <a href="?page=detail&id={$id}">{$detail->name}</a><br/>
     {/foreach}
 {else}
     {foreach key=id item=category from=$build}

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ShopTest\Controller;
+namespace ShopTest\Controller\Frontend;
 
 use PHPUnit\Framework\TestCase;
 use Shop\Controller\Frontend\DetailController;
@@ -37,7 +37,6 @@ class DetailControllerTest extends TestCase
 
     public function testNegative()
     {
-        $_REQUEST['page'] = 'detail';
         $_REQUEST['id'] = 0;
 
         $view = new View();
@@ -54,6 +53,6 @@ class DetailControllerTest extends TestCase
         self::assertSame('none', $results['product']->category);
         self::assertSame(0.0, $results['product']->price);
         self::assertSame(0, $results['product']->amount);
-        self::assertTrue($results['product']->active);
+        self::assertFalse($results['product']->active);
     }
 }

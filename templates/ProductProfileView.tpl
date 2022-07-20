@@ -30,7 +30,7 @@
     {$id = $product->id}
     {$name = $product->name}
     {$size = $product->size}
-    {$selected = $product->category == $category->name}
+    {$selected = $product->category}
     {$price = $product->price}
     {$amount = $product->amount}
     {$active = $product->active}
@@ -63,7 +63,7 @@
         </div>
         {if $active}
             <div class="profile-user--active">
-                <input type="hidden" id="active" name="user[active]" value="{$active}" />
+                <input type="hidden" id="active" name="product[active]" value="{$active}" />
                 <label for="active">active</label>
                 <span>Aktiv</span>
             </div>

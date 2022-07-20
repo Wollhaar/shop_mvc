@@ -7,7 +7,7 @@ use Shop\Controller\Backend\{BackendController, LoginController};
 use Shop\Controller\Backend\Create\{CategoryCreateController, ProductCreateController, UserCreateController};
 use Shop\Controller\Backend\Delete\{CategoryDeleteController, ProductDeleteController, UserDeleteController};
 use Shop\Controller\Backend\Listing\{CategoryListController, ProductListController, UserListController};
-use Shop\Controller\Backend\Profile\{ProductProfileController, UserProfileController};
+use Shop\Controller\Backend\Profile\{CategoryProfileController, ProductProfileController, UserProfileController};
 use Shop\Controller\Backend\Save\{ProductSaveController, UserSaveController};
 use Shop\Controller\Frontend\{CategoryController, DetailController, HomeController};
 
@@ -38,6 +38,7 @@ class ControllerProvider
             ProductListController::class,
             UserListController::class,
             LoginController::class,
+            CategoryProfileController::class,
             ProductProfileController::class,
             UserProfileController::class,
             ProductSaveController::class,

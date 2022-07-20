@@ -10,7 +10,7 @@
 <h1>{$title}</h1>
 <h2>Hello, {$user->firstname}</h2>
 <ul>
-    <li><a href="/backend?page=dashboard">Übersicht</a></li>
+    <li><a href="/backend">Übersicht</a></li>
     <li><a href="/backend/list?page=category">Kategorien</a></li>
     <li><a href="/backend/list?page=product">Produkte</a></li>
     <li><a href="/backend/list?page=user">Userliste</a></li>

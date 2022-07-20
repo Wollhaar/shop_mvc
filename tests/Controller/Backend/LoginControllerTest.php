@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ShopTest\Controller;
+namespace ShopTest\Controller\Backend;
 
 use PHPUnit\Framework\TestCase;
 use Shop\Controller\Backend\LoginController;
@@ -32,16 +32,14 @@ class LoginControllerTest extends TestCase
         $results = $view->getParams();
         $object = $results['user'];
 
-        self::assertSame(
-            [
-                'user' => [
-                    2, 'test', 'Test', 'Tester', 0, 0, 0, false
-                ]
-            ],
-            [
-                'user' => [$object->id, $object->username, $object->firstname, $object->lastname, $object->created, $object->updated, $object->birthday, $object->active]
-            ]
-        );
+        self::assertSame(2, $object->id);
+        self::assertSame('test', $object->username);
+        self::assertSame('Test', $object->firstname);
+        self::assertSame('Tester', $object->lastname);
+        self::assertSame(0, $object->created);
+        self::assertSame(0, $object->updated);
+        self::assertSame(0, $object->birthday);
+        self::assertSame(0, $object->active);
     }
 
     public function testFailedLogin()
@@ -61,15 +59,16 @@ class LoginControllerTest extends TestCase
         $results = $view->getParams();
         $object = $results['user'];
 
-        self::assertSame(
-            [
-                'authenticated' => ['username' => true, 'password' => false],
-                'user' => [2, 'test', 'Test', 'Tester', 0, 0, 0, false]
-            ],
-            [
-                'authenticated' => $results['authenticated'],
-                'user' => [$object->id, $object->username, $object->firstname, $object->lastname, $object->created, $object->updated, $object->birthday, $object->active]
-            ]
-        );
+//                'authenticated' => ['username' => true, 'password' => false],
+//                'user' => [2, , , , 0, 0, 0, false]
+//                'authenticated' => $results['authenticated'],
+        self::assertSame(2, $object->id);
+        self::assertSame('test', $object->username);
+        self::assertSame('Chuck', $object->firstname);
+        self::assertSame('Tester', $object->lastname);
+        self::assertSame(1657664319, $object->created);
+        self::assertSame(1657711119, $object->updated);
+        self::assertSame(863301600, $object->birthday);
+        self::assertTrue($object->active);
     }
 }
