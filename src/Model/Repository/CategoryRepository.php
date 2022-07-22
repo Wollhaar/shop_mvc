@@ -5,23 +5,28 @@ namespace Shop\Model\Repository;
 
 use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Mapper\CategoriesMapper;
+use Shop\Service\SQLConnector;
 
 class CategoryRepository
 {
     private CategoriesMapper $mapper;
     private array $categories;
+    private SQLConnector $database;
 
-    public function __construct(CategoriesMapper $mapper)
+    public function __construct(CategoriesMapper $mapper, SQLConnector $connection)
     {
         $data = file_get_contents(__DIR__ . '/categories.json');
         $this->categories = json_decode($data, true);
 
         $this->mapper = $mapper;
+        $this->database = $connection;
     }
 
     public function findCategoryById(int $id): CategoryDataTransferObject|null
     {
-        $category = $this->categories[$id] ?? [];
+//        $category = $this->categories[$id] ?? [];
+        $category = $this->database->get('categories', $id);
+        var_dump($category);
         return $this->mapper->mapToDto($category);
     }
 

@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: pass123
+      MYSQL_USER: babo
+      MYSQL_PASSWORD: pass123
+      restart: always
+      DATABASE: shop
+    ports:
+      - '3306:3306'
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      - PMA_ARBITRARY
