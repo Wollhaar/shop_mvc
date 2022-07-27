@@ -5,6 +5,8 @@ namespace Shop\Controller\Backend\Save;
 use Shop\Core\View;
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
 use Shop\Model\Dto\ProductDataTransferObject;
+use Shop\Model\Mapper\CategoriesMapper;
+use Shop\Model\Mapper\ProductsMapper;
 
 class ProductSaveController implements \Shop\Controller\BasicController
 {
@@ -12,12 +14,14 @@ class ProductSaveController implements \Shop\Controller\BasicController
     private View $renderer;
     private ProductRepository $prodRepository;
     private CategoryRepository $catRepository;
+    private ProductsMapper $mapper;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository)
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper, ProductsMapper $prodMapper)
     {
         $this->renderer = $renderer;
         $this->prodRepository = $prodRepository;
         $this->catRepository = $catRepository;
+        $this->mapper = $prodMapper;
     }
 
     public function view(): void
@@ -39,7 +43,13 @@ class ProductSaveController implements \Shop\Controller\BasicController
 
     private function build(): ProductDataTransferObject
     {
-        $product = $_REQUEST['product'] ?? [];
+        $product = $_POST['product'];
+        $product['id'] = (int)$product['id'];
+        $product['price'] = (float)$product['price'];
+        $product['amount'] = (int)$product['amount'];
+        $product['active'] = (bool)$product['active'];
+
+        $product = $this->mapper->mapToDto($product);
         return $this->prodRepository->saveProduct($product);
     }
 }

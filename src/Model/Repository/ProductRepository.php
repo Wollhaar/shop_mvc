@@ -2,104 +2,116 @@
 
 namespace Shop\Model\Repository;
 
+use phpDocumentor\Reflection\Types\This;
 use Shop\Model\Dto\ProductDataTransferObject;
 use Shop\Model\Mapper\ProductsMapper;
+use Shop\Service\SQLConnector;
+use function PHPUnit\Framework\stringContains;
 
 class ProductRepository
 {
     private ProductsMapper $mapper;
-    private array $products;
-    private array $categories;
+    private SQLConnector $connector;
 
-    public function __construct(ProductsMapper $mapper)
+    public function __construct(ProductsMapper $mapper, SQLConnector $connector)
     {
-        $data = file_get_contents(__DIR__ . '/products.json');
-        $this->products = json_decode($data, true);
-        $data = file_get_contents(__DIR__ . '/categories.json');
-        $this->categories = json_decode($data, true);
-
         $this->mapper = $mapper;
+        $this->connector = $connector;
     }
 
     public function findProductById(int $id): ProductDataTransferObject
     {
-        $product = $this->products[$id] ?? [];
-        $categoryId = $product['category'] ?? 0;
-        $product['category'] = $this->categories[$categoryId]['name'] ?? 'none';
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p LEFT JOIN categories as c ON p.`category` = c.`id` WHERE p.`id` = :id AND p.`active` = 1 LIMIT 1';
+        $product = $this->connector->get($sql, $id);
+        var_dump($product); // TODO: BUG - receiving empty record
+        $product['category'] = $product['categoryName'];
+//        $product['color'] = utf8_encode($product['color']);
+        $product['active'] = (bool)$product['active'];
+
         return $this->mapper->mapToDto($product);
     }
 
     public function findProductsByCategoryId(int $id): array
     {
-        $products = $this->products;
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p LEFT JOIN categories as c ON p.`category` = c.`id` WHERE c.id = :id;';
+        $products = $this->connector->get($sql, $id);
+
         foreach ($products as $key => $product) {
-            if ($product['category'] === $id) {
-                $categoryId = $product['category'] ?? 0;
-                $product['category'] = $this->categories[$categoryId]['name'] ?? 'none';
-                $products[$key] = $this->mapper->mapToDto($product);
-            }
-            else {
-                unset($products[$key]);
-            }
+            $product['category'] = $product['categoryName'];
+            $product['color'] = utf8_encode($product['color']);
+            $product['active'] = (bool)$product['active'];
+            $products[$key] = $this->mapper->mapToDto($product);
         }
         return $products;
     }
 
     public function addProduct(array $data): ProductDataTransferObject
     {
-        $data['id'] = count($this->products) + 1;
+        $sql = 'INSERT INTO products (`name`, `size`, `color`, `category`, `price`, `amount`) VALUES(`name`, :size, :color, :category, :price, :amount);';
+
         $data['category'] = (int)$data['category'];
         $data['price'] = (float)$data['price'];
         $data['amount'] = (int)$data['amount'];
-        $data['active'] = true;
 
-        $this->products[$data['id']] = $data;
-        $this->write();
+        $this->connector->set($sql, $data);
 
-        $data['category'] = $this->categories[$data['category']]['name'];
-        return $this->mapper->mapToDto($data);
+        return $this->mapper->mapToDto($this->getLastInsert());
     }
 
-    public function saveProduct(array $data): ProductDataTransferObject
+    public function saveProduct(ProductDataTransferObject $data): ProductDataTransferObject
     {
-        $data['id'] = (int)$data['id'];
-        $data['category'] = (int)$data['category'];
-        $data['price'] = (float)$data['price'];
-        $data['amount'] = (int)$data['amount'];
-        $data['active'] = (bool)$data['active'];
+        $sql = 'UPDATE products SET 
+                    `name` = :name, 
+                    `size`= :size, 
+                    `color`= :color, 
+                    `category`= :category, 
+                    `price`= :price, 
+                    `amount`= :amount, 
+                    `active`= :active 
+                WHERE `id` = :id LIMIT 1;';
 
-        $this->products[$data['id']] = $data;
-        $this->write();
+        $attributes = [
+            'id' => ['key' => ':id', 'type' => \PDO::PARAM_INT],
+            'name' => ['key' => ':name', 'type' => \PDO::PARAM_STR],
+            'size' => ['key' => ':size', 'type' => \PDO::PARAM_STR],
+            'color' => ['key' => ':color', 'type' => \PDO::PARAM_STR],
+            'category' => ['key' => ':category', 'type' => \PDO::PARAM_INT],
+            'price' => ['key' => ':price', 'type' => \PDO::PARAM_STR],
+            'amount' => ['key' => ':amount', 'type' => \PDO::PARAM_INT],
+            'active' => ['key' => ':active', 'type' => \PDO::PARAM_INT],
+        ];
 
-        $data['category'] = $this->categories[$data['category']]['name'];
-        return $this->mapper->mapToDto($data);
+        $this->connector->set($sql, (array)$data, $attributes);
+        return $this->findProductById($data->id);
     }
 
     public function deleteProductById(int $id): void
     {
-        $product = $this->products[$id] ?? [];
-        $product['active'] = false;
-        $this->products[$id] = $product;
-        $this->write();
+        $sql = 'UPDATE products SET `active` = 0 WHERE `id` = ? LIMIT 1;';
+        $this->connector->delete($sql, 'i', $id);
     }
 
     public function getAll(): array
     {
-        $products = $this->products;
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
+                LEFT JOIN categories as c ON p.`category` = c.`id` 
+                WHERE p.`active` = 1;';
+        $products = $this->connector->get($sql);
         foreach ($products as $key => $product) {
-            if (!$product['active']) {
-                unset($products[$key]);
-                continue;
-            }
-            $product['category'] = $this->categories[$product['category']]['name'];
+            $product['category'] = $product['categoryName'];
+            $product['active'] = (bool)$product['active'];
             $products[$key] = $this->mapper->mapToDto($product);
         }
         return $products;
     }
 
-    private function write(): void
+    private function getLastInsert(): array
     {
-        $data = json_encode($this->products);
-        file_put_contents(__DIR__ . '/products.json', $data);
+        $sql = 'SELECT *, p.`name` as name, c.`name` as categoryName FROM products as p LEFT JOIN categories as c ON p.`category` = c.`id` WHERE c.id = LAST_INSERT_ID() LIMIT 1;';
+        $product = current($this->connector->get($sql));
+
+        $product['category'] = $product['categoryName'];
+        $product['active'] = (bool)$product['active'];
+        return $product;
     }
 }

@@ -22,6 +22,7 @@
     {$id = 0}
     {$name = ''}
     {$size = ''}
+    {$color = ''}
     {$selected = ''}
     {$price = 0}
     {$amount = 0}
@@ -30,6 +31,7 @@
     {$id = $product->id}
     {$name = $product->name}
     {$size = $product->size}
+    {$color = $product->color}
     {$selected = $product->category}
     {$price = $product->price}
     {$amount = $product->amount}
@@ -44,6 +46,10 @@
         <div class="profile-product--size">
             <label for="size">size</label>
             <input type="text" id="size" name="product[size]" value="{$size}" />
+        </div>
+        <div class="profile-product--color">
+            <label for="size">color</label>
+            <input type="text" id="size" name="product[color]" value="{$color}" />
         </div>
         <div class="profile-product--category">
             <label for="category">category</label>

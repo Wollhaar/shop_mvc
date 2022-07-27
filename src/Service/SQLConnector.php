@@ -5,112 +5,63 @@ namespace Shop\Service;
 
 class SQLConnector
 {
-    private const HOST = 'shop_mvc_default';
-    private const USER = 'babo';
+    private const HOST = '127.0.0.1';
+    private const USER = 'root';
     private const PASSWORD = 'pass123';
     private const DATABASE = 'shop';
     private const PORT = 3306;
 
-    private \mysqli $connector;
+    private \PDO $connector;
 
     public function __construct()
     {
-        $this->connector = mysqli_connect(
-            self::HOST,
+        $dsn = 'mysql:host=' . self::HOST . ';dbname=' . self::DATABASE . ';port=' . self::PORT . ';charset=UTF8';
+        $this->connector = new \PDO(
+            $dsn,
             self::USER,
-            self::PASSWORD,
-            self::DATABASE,
-            self::PORT
+            self::PASSWORD
         );
     }
 
     public function __destruct()
     {
-        mysqli_close($this->connector);
+        unset($this->connector);
     }
 
-    public function connect(): bool
+    public function get(string $query, int $id = 0): array
     {
-        return is_string(mysqli_stat($this->connector)) ? true : false;
-    }
+        $stmt = $this->connector->prepare($query);
 
-    public function get(string $entity, int $id = 0): array
-    {
-        $where = '';
         if ($id) {
-            $where = ' WHERE id = ?;';
+            $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         }
-        $sql = 'SELECT * FROM ' . $entity . $where;
-        $stmt = $this->connector->prepare($sql);
-        if ($id) {
-            $stmt->bind_param('i', $id);
+
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function set(string $query, array $properties, array $attributes): void
+    {
+        var_dump($properties);
+        $stmt = $this->connector->prepare($query);
+
+        foreach ($properties as $key => $property) {
+            $stmt->bindParam($attributes[$key]['key'], $property, $attributes[$key]['type']);
         }
         $stmt->execute();
-        $result = $stmt->get_result();
-
-        $retArray = [];
-        while ($row = $result->fetch_assoc()) {
-            $retArray[] = $row;
-        }
-        return $retArray;
     }
 
-    public function getBy(string $entity, string $from, string $reference, string $name): array
+    public function update(string $query, string $type, int $id): void
     {
-        $sql = 'SELECT * FROM ? as t1 LEFT JOIN ? as t2 ON t1.? = t2.`id` WHERE t2.`name` = ?;';
-        $stmt = $this->connector->prepare($sql);
-        $amount = 4;
-        $stmt->bind_param('ssss',
-            $amount,
-            $entity,
-            $from,
-            $referencem,
-            $name
-        );
+        $stmt = $this->connector->prepare($query);
+        $stmt->bind_param($type, $id);
         $stmt->execute();
-        $result = $stmt->get_result();
-
-        $retArray = [];
-        while ($row = $result->fetch_assoc()) {
-            $retArray[] = $row;
-        }
-        return $retArray;
     }
 
-    public function set(string $entity, array $properties): void
+    public function delete(string $query, string $type, int $id): void
     {
-        $sql = 'INSERT INTO ?';
-        $attr = ' (';
-        $values = ' VALUES(';
-        $types = 's';
-        foreach ($properties as $key => $value) {
-            if (is_string($value)) {
-                $types .= 's';
-            }
-            elseif (is_int($value)) {
-                $types .= 'i';
-            }
-            elseif (is_float($value)) {
-                $types .= 'd';
-            }
-            $attr .= $key . ', ';
-            $values .= '?, ';
-        }
-        $sql .= rtrim(', ', $attr) . ')';
-        $sql .= rtrim(', ', $values) . ');';
-
-        $amnt = array_unshift($properties, $entity);
-        $stmt = $this->connector->prepare($sql);
-        $stmt->bind_param($types, $amnt, $properties);
-    }
-
-    public function update(): void
-    {
-
-    }
-
-    public function delete(): void
-    {
-
+        $stmt = $this->connector->prepare($query);
+        $stmt->bind_param($type, $id);
+        $stmt->execute();
     }
 }

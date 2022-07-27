@@ -12,6 +12,7 @@ class ProductsMapper
             $product['id'] ?? 0,
             $product['name'] ?? 'none',
             $product['size'] ?? 'none',
+            $product['color'] ?? 'none',
             $product['category'] ?? 'none',
             $product['price'] ?? 0.0,
             $product['amount'] ?? 0,

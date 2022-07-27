@@ -24,9 +24,12 @@ class CategoryRepository
 
     public function findCategoryById(int $id): CategoryDataTransferObject|null
     {
-//        $category = $this->categories[$id] ?? [];
-        $category = $this->database->get('categories', $id);
-        var_dump($category);
+        $sql = 'SELECT * FROM categories WHERE `id` = ? AND `active` = 1 LIMIT 1';
+        $category = $this->database->get($sql, $id);
+
+        $category = $category[$id];
+        $category['active'] = (bool)$category['active'];
+
         return $this->mapper->mapToDto($category);
     }
 

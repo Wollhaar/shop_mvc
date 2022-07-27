@@ -18,7 +18,7 @@ class BackendController implements BasicController
     private Session $session;
 
     public function __construct(View $view, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, Authenticator $authenticator)
-    {
+    {//TODO: change of dependencies
         $this->renderer = $view;
         $this->authenticator = $authenticator;
         $this->session = $authenticator->getSession();
