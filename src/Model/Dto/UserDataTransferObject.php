@@ -9,9 +9,9 @@ class UserDataTransferObject
     public readonly string $username;
     public readonly string $firstname;
     public readonly string $lastname;
-    public readonly int $created;
-    public readonly int $updated;
-    public readonly int $birthday;
+    public readonly string $created;
+    public readonly string $updated;
+    public readonly string $birthday;
     public readonly bool $active;
 
     public function __construct(
@@ -19,9 +19,9 @@ class UserDataTransferObject
         string $username,
         string $firstname,
         string $lastname,
-        int $created,
-        int $updated,
-        int $birthday,
+        string $created,
+        string $updated,
+        string $birthday,
         bool $active
     )
     {

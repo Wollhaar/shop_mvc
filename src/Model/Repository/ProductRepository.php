@@ -21,11 +21,14 @@ class ProductRepository
 
     public function findProductById(int $id): ProductDataTransferObject
     {
-        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p LEFT JOIN categories as c ON p.`category` = c.`id` WHERE p.`id` = :id AND p.`active` = 1 LIMIT 1';
-        $product = $this->connector->get($sql, $id);
-        var_dump($product); // TODO: BUG - receiving empty record
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
+                LEFT JOIN categories as c 
+                    ON p.`category` = c.`id` 
+                   WHERE p.`id` = :id AND p.`active` = 1 LIMIT 1';
+        $product = $this->connector->get($sql, $id)[0];
+
         $product['category'] = $product['categoryName'];
-//        $product['color'] = utf8_encode($product['color']);
+        $product['color'] = utf8_encode($product['color']);
         $product['active'] = (bool)$product['active'];
 
         return $this->mapper->mapToDto($product);
@@ -47,7 +50,8 @@ class ProductRepository
 
     public function addProduct(array $data): ProductDataTransferObject
     {
-        $sql = 'INSERT INTO products (`name`, `size`, `color`, `category`, `price`, `amount`) VALUES(`name`, :size, :color, :category, :price, :amount);';
+        $sql = 'INSERT INTO products (`name`, `size`, `color`, `category`, `price`, `amount`) 
+                VALUES(:name, :size, :color, :category, :price, :amount);';
 
         $data['category'] = (int)$data['category'];
         $data['price'] = (float)$data['price'];
@@ -87,8 +91,8 @@ class ProductRepository
 
     public function deleteProductById(int $id): void
     {
-        $sql = 'UPDATE products SET `active` = 0 WHERE `id` = ? LIMIT 1;';
-        $this->connector->delete($sql, 'i', $id);
+        $sql = 'UPDATE products SET `active` = 0 WHERE `id` = :id LIMIT 1;';
+        $this->connector->set($sql, [$id], ['id'=>['key'=>':id','type'=>\PDO::PARAM_INT]]);
     }
 
     public function getAll(): array

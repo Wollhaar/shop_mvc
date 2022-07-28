@@ -8,6 +8,7 @@ use Shop\Core\Authenticator;
 use Shop\Core\View;
 use Shop\Model\Dto\UserDataTransferObject;
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 use Shop\Service\Session;
 
 class BackendController implements BasicController
@@ -17,8 +18,8 @@ class BackendController implements BasicController
     private Authenticator $authenticator;
     private Session $session;
 
-    public function __construct(View $view, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, Authenticator $authenticator)
-    {//TODO: change of dependencies
+    public function __construct(View $view, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper, ProductsMapper $prodMapper, UsersMapper $usrMapper, Authenticator $authenticator)
+    {
         $this->renderer = $view;
         $this->authenticator = $authenticator;
         $this->session = $authenticator->getSession();

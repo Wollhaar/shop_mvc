@@ -24,7 +24,7 @@ class CategoryRepository
 
     public function findCategoryById(int $id): CategoryDataTransferObject|null
     {
-        $sql = 'SELECT * FROM categories WHERE `id` = ? AND `active` = 1 LIMIT 1';
+        $sql = 'SELECT * FROM categories WHERE `id` = :id AND `active` = 1 LIMIT 1';
         $category = $this->database->get($sql, $id);
 
         $category = $category[$id];

@@ -40,15 +40,24 @@ class SQLConnector
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getByString(string $query, string $str, string $attr): array
+    {
+        $stmt = $this->connector->prepare($query);
+        $stmt->bindParam($attr, $str);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function set(string $query, array $properties, array $attributes): void
     {
         var_dump($properties);
         $stmt = $this->connector->prepare($query);
-
         foreach ($properties as $key => $property) {
-            $stmt->bindParam($attributes[$key]['key'], $property, $attributes[$key]['type']);
+            $stmt->bindParam($attributes[$key]->key, $property, $attributes[$key]->type);
         }
         $stmt->execute();
+        var_dump($stmt->debugDumpParams());
     }
 
     public function update(string $query, string $type, int $id): void
