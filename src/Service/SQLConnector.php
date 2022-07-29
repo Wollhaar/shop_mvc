@@ -51,17 +51,10 @@ class SQLConnector
 
     public function set(string $query, array $properties, array $attributes): void
     {
-//        var_dump($query, $properties, $attributes);
         $stmt = $this->connector->prepare($query);
         foreach ($attributes as $key => $attr) {
             $stmt->bindParam($attr->key, $properties[$key], $attr->type);
         }
         $stmt->execute();
-//        var_dump($stmt->debugDumpParams());
-    }
-
-    public function getLastInsert()
-    {
-        return $this->connector->lastInsertId();
     }
 }
