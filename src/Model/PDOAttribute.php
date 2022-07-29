@@ -12,7 +12,7 @@ class PDOAttribute
     ];
 
     public readonly string $key;
-    public readonly string $type;
+    public readonly int $type;
 
     public function __construct(string $key, string $type)
     {

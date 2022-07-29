@@ -51,26 +51,17 @@ class SQLConnector
 
     public function set(string $query, array $properties, array $attributes): void
     {
-        var_dump($properties);
+//        var_dump($query, $properties, $attributes);
         $stmt = $this->connector->prepare($query);
-        foreach ($properties as $key => $property) {
-            $stmt->bindParam($attributes[$key]->key, $property, $attributes[$key]->type);
+        foreach ($attributes as $key => $attr) {
+            $stmt->bindParam($attr->key, $properties[$key], $attr->type);
         }
         $stmt->execute();
-        var_dump($stmt->debugDumpParams());
+//        var_dump($stmt->debugDumpParams());
     }
 
-    public function update(string $query, string $type, int $id): void
+    public function getLastInsert()
     {
-        $stmt = $this->connector->prepare($query);
-        $stmt->bind_param($type, $id);
-        $stmt->execute();
-    }
-
-    public function delete(string $query, string $type, int $id): void
-    {
-        $stmt = $this->connector->prepare($query);
-        $stmt->bind_param($type, $id);
-        $stmt->execute();
+        return $this->connector->lastInsertId();
     }
 }

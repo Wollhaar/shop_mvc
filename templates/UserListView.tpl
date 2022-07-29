@@ -16,7 +16,7 @@
         {foreach item=user from=$users}
             <li>
                 <a href="/backend/profile?page=user&id={$user->id}">{$user->username}: {$user->lastname}, {$user->firstname}</a>
-                <a href="/backend/delete?page=user&id={$user->id}">Delete</a>
+                <a href="/backend/list?action=delete&page=user&id={$user->id}">Delete</a>
             </li>
         {/foreach}
         <br/>
