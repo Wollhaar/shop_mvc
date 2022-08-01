@@ -5,7 +5,8 @@ namespace Shop\Controller\Frontend;
 use Shop\Controller\BasicController;
 use Shop\Core\View;
 use Shop\Model\Dto\CategoryDataTransferObject;
-use Shop\Model\Repository\{CategoryRepository, ProductRepository};
+use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\CategoriesMapper;
 
 class CategoryController implements BasicController
 {
@@ -20,11 +21,12 @@ class CategoryController implements BasicController
     private View $renderer;
 
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper)
     {
         $this->renderer = $renderer;
         $this->catRepository = $catRepository;
         $this->prodRepository = $prodRepository;
+        $this->activeCategory = $catMapper->mapToDto([]);
     }
 
     public function view(): void
@@ -50,9 +52,9 @@ class CategoryController implements BasicController
     {
         $request = $_REQUEST;
         $activeId = (int) ($request['id'] ?? 0);
-        $this->activeCategory = $this->catRepository->findCategoryById($activeId);
 
-        if ($this->activeCategory->id) {
+        if ($activeId) {
+            $this->activeCategory = $this->catRepository->findCategoryById($activeId);
             return $this->prodRepository->findProductsByCategoryId($this->activeCategory->id);
         }
 

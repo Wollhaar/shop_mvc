@@ -20,7 +20,7 @@ class UserListController implements \Shop\Controller\BasicController
 
     public function view(): void
     {
-        $this->action($_REQUEST['action'] ?? '');
+        $this->action();
         $users = $this->usrRepository->getAll();
 
         $this->renderer->addTemplateParameter('Users', 'title');
@@ -32,12 +32,12 @@ class UserListController implements \Shop\Controller\BasicController
         $this->renderer->display(self::TPL);
     }
 
-    private function action($do): void
+    private function action(): void
     {
-        switch ($do) {
-            case 'delete':
-                $id = (int)($_REQUEST['id'] ?? 0);
-                $this->usrRepository->deleteUserById($id);
+        $do = $_REQUEST['action'] ?? '';
+        if ($do === 'delete') {
+            $id = (int)($_REQUEST['id'] ?? 0);
+            $this->usrRepository->deleteUserById($id);
         }
     }
 }

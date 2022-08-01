@@ -25,7 +25,7 @@ class UserProfileController implements BasicController
 
     public function view(): void
     {
-        $user = $this->build();
+        $user = $this->action();
         $name = $user->username;
 
         if ((int)($_REQUEST['create'] ?? 0) === 1) {
@@ -43,13 +43,9 @@ class UserProfileController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-    private function build(): UserDataTransferObject
+    private function action(): UserDataTransferObject
     {
-        return $this->action($_REQUEST['action'] ?? '');
-    }
-
-    private function action($do): UserDataTransferObject
-    {
+        $do = $_REQUEST['action'] ?? '';
         switch ($do) {
             case 'create':
                 $user = $_REQUEST['user'] ?? [];

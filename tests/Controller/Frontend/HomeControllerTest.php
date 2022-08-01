@@ -8,6 +8,7 @@ use Shop\Controller\Frontend\HomeController;
 use Shop\Core\View;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;
+use Shop\Service\SQLConnector;
 
 class HomeControllerTest extends TestCase
 {
@@ -15,7 +16,7 @@ class HomeControllerTest extends TestCase
     {
         $view = new View();
         $controller = new HomeController($view,
-            new CategoryRepository(new CategoriesMapper())
+            new CategoryRepository(new CategoriesMapper(), new SQLConnector())
         );
         $controller->view();
         $results = $view->getParams();

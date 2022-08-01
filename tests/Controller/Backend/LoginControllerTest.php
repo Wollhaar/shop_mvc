@@ -10,6 +10,7 @@ use Shop\Core\View;
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
 use Shop\Service\Session;
+use Shop\Service\SQLConnector;
 
 class LoginControllerTest extends TestCase
 {
@@ -45,13 +46,21 @@ class LoginControllerTest extends TestCase
     public function testFailedLogin()
     {
         $_REQUEST = ['username' => 'test', 'password' => 'test1234'];
-        $usrRepository = new UserRepository(new UsersMapper());
+        $catMapper = new CategoriesMapper();
+        $prodMapper = new ProductsMapper();
+        $usrMapper = new UsersMapper();
+
+        $connector = new SQLConnector();
+        $usrRepository = new UserRepository($usrMapper, $connector);
         $view = new View();
 
         $controller = new LoginController($view,
-            new CategoryRepository(new CategoriesMapper()),
-            new ProductRepository(new ProductsMapper()),
+            new CategoryRepository($catMapper, $connector),
+            new ProductRepository($prodMapper, $connector),
             $usrRepository,
+            $catMapper,
+            $prodMapper,
+            $usrMapper,
             new Authenticator(new Session(true), $usrRepository)
         );
 

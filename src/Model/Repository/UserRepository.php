@@ -107,7 +107,6 @@ class UserRepository
         $sql = 'SELECT `password` FROM users WHERE `id` = :id AND `active` = 1 LIMiT 1;';
         $password = $this->connector->get($sql, $user->id)[0] ?? [];
         return $password['password'] ?? '';
-
     }
 
     public function getAll(): array

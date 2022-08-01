@@ -19,6 +19,7 @@ class ProductListController implements \Shop\Controller\BasicController
 
     public function view(): void
     {
+        $this->action();
         $products = $this->prodRepository->getAll();
 
         $this->renderer->addTemplateParameter('Product', 'title');
@@ -28,5 +29,14 @@ class ProductListController implements \Shop\Controller\BasicController
     public function display(): void
     {
         $this->renderer->display(self::TPL);
+    }
+
+    private function action(): void
+    {
+        $do = $_REQUEST['action'] ?? '';
+        if ($do === 'delete') {
+            $id = (int)($_REQUEST['id'] ?? 0);
+            $this->prodRepository->deleteProductById($id);
+        }
     }
 }

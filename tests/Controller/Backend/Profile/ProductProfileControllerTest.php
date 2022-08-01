@@ -6,6 +6,7 @@ use Shop\Controller\Backend\Profile\ProductProfileController;
 use Shop\Core\View;
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Service\SQLConnector;
 
 class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
@@ -14,11 +15,18 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $_REQUEST['id'] = 1;
 
         $view = new View();
+        $catMapper = new CategoriesMapper();
+        $prodMapper = new ProductsMapper();
+        $connector = new SQLConnector();
+
         $controller = new ProductProfileController($view,
-            new CategoryRepository(new CategoriesMapper()),
-            new ProductRepository(new ProductsMapper()),
-            new UserRepository(new UsersMapper()),
+            new CategoryRepository($catMapper, $connector),
+            new ProductRepository($prodMapper, $connector),
+            new UserRepository(new UsersMapper(), $connector),
+            $catMapper,
+            $prodMapper
         );
+
         $controller->view();
         $results = $view->getParams();
 
@@ -37,11 +45,18 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $_REQUEST['id'] = '';
 
         $view = new View();
+        $catMapper = new CategoriesMapper();
+        $prodMapper = new ProductsMapper();
+        $connector = new SQLConnector();
+
         $controller = new ProductProfileController($view,
-            new CategoryRepository(new CategoriesMapper()),
-            new ProductRepository(new ProductsMapper()),
-            new UserRepository(new UsersMapper()),
+            new CategoryRepository($catMapper, $connector),
+            new ProductRepository($prodMapper, $connector),
+            new UserRepository(new UsersMapper(), $connector),
+            $catMapper,
+            $prodMapper
         );
+
         $controller->view();
         $results = $view->getParams();
 
@@ -55,5 +70,80 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(0.0, $results['product']->price);
         self::assertSame(0, $results['product']->amount);
         self::assertFalse($results['product']->active);
+    }
+
+    public function testCreateView()
+    {
+        $_REQUEST['product'] = [
+            'name' => 'Testhose',
+            'size' => 'W:30;L:34',
+            'category' => 3,
+            'price' => 34.55,
+            'amount' => 130,
+            'active' => true,
+        ];
+
+        $view = new View();
+        $catMapper = new CategoriesMapper();
+        $prodMapper = new ProductsMapper();
+        $connector = new SQLConnector();
+
+        $controller = new ProductProfileController($view,
+            new CategoryRepository($catMapper, $connector),
+            new ProductRepository($prodMapper, $connector),
+            new UserRepository(new UsersMapper(), $connector),
+            $catMapper,
+            $prodMapper
+        );
+
+        $controller->view();
+        $results = $view->getParams();
+
+        self::assertSame('Product', $results['title']);
+        self::assertSame('Testhose', $results['product']->name);
+        self::assertSame('W:30;L:34', $results['product']->size);
+        self::assertSame('Hosen', $results['product']->category);
+        self::assertSame(34.55, $results['product']->price);
+        self::assertSame(130, $results['product']->amount);
+        self::assertTrue($results['product']->active);
+    }
+
+    public function testSaveView()
+    {
+        $_REQUEST['product'] = [
+            'id' => 9,
+            'name' => 'Testhose',
+            'size' => 'W:30;L:34',
+            'category' => 3,
+            'price' => 34.55,
+            'amount' => 130,
+            'active' => true,
+        ];
+
+
+        $view = new View();
+        $catMapper = new CategoriesMapper();
+        $prodMapper = new ProductsMapper();
+        $connector = new SQLConnector();
+
+        $controller = new ProductProfileController($view,
+            new CategoryRepository($catMapper, $connector),
+            new ProductRepository($prodMapper, $connector),
+            new UserRepository(new UsersMapper(), $connector),
+            $catMapper,
+            $prodMapper
+        );
+
+        $controller->view();
+        $results = $view->getParams();
+
+        self::assertSame('Product', $results['title']);
+        self::assertSame(9, $results['product']->id);
+        self::assertSame('Testhose', $results['product']->name);
+        self::assertSame('W:30;L:34', $results['product']->size);
+        self::assertSame('Hosen', $results['product']->category);
+        self::assertSame(34.55, $results['product']->price);
+        self::assertSame(130, $results['product']->amount);
+        self::assertTrue($results['product']->active);
     }
 }

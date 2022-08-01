@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Shop\Service;
 
+use const http\Client\Curl\Versions\IDN;
+
 class SQLConnector
 {
     private const HOST = '127.0.0.1';
@@ -31,7 +33,7 @@ class SQLConnector
     public function get(string $query, int $id = 0): array
     {
         $stmt = $this->connector->prepare($query);
-
+        var_dump($id);
         if ($id) {
             $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         }
@@ -53,8 +55,10 @@ class SQLConnector
     {
         $stmt = $this->connector->prepare($query);
         foreach ($attributes as $key => $attr) {
+//            var_dump($properties[$key], $attr);
             $stmt->bindParam($attr->key, $properties[$key], $attr->type);
         }
+//        $stmt->debugDumpParams();
         $stmt->execute();
     }
 }
