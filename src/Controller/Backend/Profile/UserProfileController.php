@@ -48,18 +48,18 @@ class UserProfileController implements BasicController
         $do = $_REQUEST['action'] ?? '';
         switch ($do) {
             case 'create':
-                $user = $_REQUEST['user'] ?? [];
+                $user = $_POST['user'] ?? [];
                 $password = $user['password'] ?? '';
 
                 return $this->usrRepository->addUser($this->usrMapper->mapToDto($user), $password);
 
             case 'save':
                 $user = $_POST['user'];
-                $password = $_POST['password'] ?? '';
+                $password = $user['password'] ?? '';
 
-                $user['id'] = (int)$user['id'];
-                $user['updated'] = date('Y-m-d');
-                $user['active'] = (bool)$user['active'];
+                $user['id'] = (int)($user['id'] ?? 0);
+                $user['updated'] = date('Y-m-d') ?? '';
+                $user['active'] = (bool)($user['active'] ?? 0);
 
                 $user = $this->usrMapper->mapToDto($user);
                 return $this->usrRepository->saveUser($user, $password);

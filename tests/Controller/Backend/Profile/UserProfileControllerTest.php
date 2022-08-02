@@ -13,8 +13,9 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreationView()
     {
+        $_REQUEST['action'] = '';
         $_REQUEST['create'] = 1;
-        $_REQUEST['id'] = '';
+//        $_REQUEST['id'] = '';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -48,22 +49,23 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        $uniqueName = 'test' . uniqid();
+        $sql = 'SELECT COUNT(*) as counted FROM users WHERE `username` LIKE "test%"';
+        $connector = new SQLConnector();
+        $count = $connector->get($sql)[0]['counted'] + 1;
+        $uniqueName = 'test' . $count;
 
         $_REQUEST['action'] = 'create';
-        $_REQUEST['user'] = [
+        $_POST['user'] = [
             'username' => $uniqueName,
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
             'birthday' => '2000-01-01',
-            'active' => true,
         ];
 
         $view = new View();
         $catMapper = new CategoriesMapper();
         $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
-        $connector = new SQLConnector();
 
         $controller = new UserProfileController($view,
             new CategoryRepository($catMapper, $connector),
@@ -88,11 +90,15 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($results['user']->active);
 
         $_REQUEST['id'] = $results['user']->id;
+        $_POST['user']['id'] = $results['user']->id;
+        $_POST['user']['created'] = $results['user']->created;
     }
 
     public function testView()
     {
         $_REQUEST['create'] = '';
+        $_REQUEST['action'] = '';
+        $user = $_POST['user'];
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -115,34 +121,35 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('User', $results['title']);
         self::assertFalse($results['create']);
         self::assertSame('test', $results['subtitle']);
-        self::assertSame(2, $results['user']->id);
-        self::assertSame('test', $results['user']->username);
-        self::assertSame('Chuck', $results['user']->firstname);
-        self::assertSame('Tester', $results['user']->lastname);
-        self::assertSame('2022-07-13', $results['user']->created);
-        self::assertSame('2022-07-13', $results['user']->updated);
-        self::assertSame('1997-11-05', $results['user']->birthday);
+        self::assertSame($user['id'], $results['user']->id);
+        self::assertSame($user['username'], $results['user']->username);
+        self::assertSame($user['firstname'], $results['user']->firstname);
+        self::assertSame($user['lastname'], $results['user']->lastname);
+        self::assertSame($user['created'], $results['user']->created);
+        self::assertSame($user['updated'], $results['user']->updated);
+        self::assertSame($user['birthday'], $results['user']->birthday);
         self::assertTrue($results['user']->active);
     }
 
     public function testSaveView()
     {
-        $uniqueName = $_REQUEST['user']['username'];
+        $sql = 'SELECT count(*) as counter From users WHERE `username` LIKE "test%"';
+        $connector = new SQLConnector();
+        $uniqueName = 'testSave' . $connector->get($sql)[0]['counter'] + 1;
 
-        $_REQUEST['action'] = 'create';
-        $_REQUEST['user'] = [
+        $_REQUEST['action'] = 'save';
+        $_POST['user'] = [
+            'id' => 19,
             'username' => $uniqueName,
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
             'birthday' => '2001-02-01',
-            'active' => true,
         ];
 
         $view = new View();
         $catMapper = new CategoriesMapper();
         $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
-        $connector = new SQLConnector();
 
         $controller = new UserProfileController($view,
             new CategoryRepository($catMapper, $connector),
@@ -162,7 +169,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame($uniqueName, $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
-        self::assertSame(date('Y-m-d'), $results['user']->created);
+        self::assertSame('2022-08-02', $results['user']->created);
         self::assertSame(date('Y-m-d'), $results['user']->updated);
         self::assertSame('2001-02-01', $results['user']->birthday);
         self::assertTrue($results['user']->active);

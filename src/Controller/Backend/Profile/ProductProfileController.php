@@ -52,8 +52,7 @@ class ProductProfileController implements \Shop\Controller\BasicController
         $do = $_REQUEST['action'] ?? '';
         switch ($do) {
             case 'create':
-                $product = $_REQUEST['product'] ?? [];
-                $product['category'] = (int)($product['category'] ?? 0);
+                $product = $_POST['product'] ?? [];
                 $product['price'] = (float)($product['price'] ?? 0);
                 $product['amount'] = (int)($product['amount'] ?? 0);
 

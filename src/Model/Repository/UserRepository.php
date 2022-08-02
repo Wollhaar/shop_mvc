@@ -63,7 +63,7 @@ class UserRepository
         ];
 
         $this->connector->set($sql, (array)$data, $attributes);
-        return $this->validateUser($this->getLastInsert() ?? []);
+        return $this->validateUser($this->getLastInsert());
     }
 
     public function saveUser(UserDataTransferObject $data, string $password): UserDataTransferObject
@@ -123,7 +123,10 @@ class UserRepository
 
     private function validateUser(array $user): UserDataTransferObject
     {
-        $user['active'] = (bool)$user['active'];
+        if (!empty($user)) {
+            $user['id'] = (int)$user['id'];
+            $user['active'] = (bool)$user['active'];
+        }
         return $this->mapper->mapToDto($user);
     }
 

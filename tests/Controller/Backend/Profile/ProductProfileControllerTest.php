@@ -12,6 +12,8 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
+        $_REQUEST['action'] = '';
+        $_POST['product'] = '';
         $_REQUEST['id'] = 1;
 
         $view = new View();
@@ -43,6 +45,7 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         $_REQUEST['create'] = 1;
         $_REQUEST['id'] = '';
+        $_POST['product'] = '';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -74,19 +77,24 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        $_REQUEST['product'] = [
-            'name' => 'Testhose',
+        $sql = 'SELECT COUNT(*) as counted FROM products WHERE `name` LIKE "Testhose%"';
+        $connector = new SQLConnector();
+        $count = $connector->get($sql)[0]['counted'] + 1;
+        $name = 'Testhose' . $count;
+
+        $_POST['product'] = [
+            'name' => $name,
             'size' => 'W:30;L:34',
-            'category' => 3,
+            'category' => '3',
             'price' => 34.55,
             'amount' => 130,
             'active' => true,
         ];
+        $_REQUEST['action'] = 'create';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
         $prodMapper = new ProductsMapper();
-        $connector = new SQLConnector();
 
         $controller = new ProductProfileController($view,
             new CategoryRepository($catMapper, $connector),
@@ -110,21 +118,24 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveView()
     {
-        $_REQUEST['product'] = [
-            'id' => 9,
-            'name' => 'Testhose',
+        $sql = 'SELECT COUNT(*) as counter FROM products WHERE `name` LIKE "Testhose%"';
+        $connector = new SQLConnector();
+        $name = 'TesthoseSAVE' . $connector->get($sql)[0]['counter'] + 1;
+
+        $_REQUEST['action'] = 'save';
+        $_POST['product'] = [
+            'id' => 12,
+            'name' => $name,
             'size' => 'W:30;L:34',
-            'category' => 3,
+            'category' => '3',
             'price' => 34.55,
             'amount' => 130,
             'active' => true,
         ];
 
-
         $view = new View();
         $catMapper = new CategoriesMapper();
         $prodMapper = new ProductsMapper();
-        $connector = new SQLConnector();
 
         $controller = new ProductProfileController($view,
             new CategoryRepository($catMapper, $connector),
@@ -139,7 +150,7 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('Product', $results['title']);
         self::assertSame(9, $results['product']->id);
-        self::assertSame('Testhose', $results['product']->name);
+        self::assertSame($name, $results['product']->name);
         self::assertSame('W:30;L:34', $results['product']->size);
         self::assertSame('Hosen', $results['product']->category);
         self::assertSame(34.55, $results['product']->price);

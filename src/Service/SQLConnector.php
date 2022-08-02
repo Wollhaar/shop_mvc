@@ -33,7 +33,6 @@ class SQLConnector
     public function get(string $query, int $id = 0): array
     {
         $stmt = $this->connector->prepare($query);
-        var_dump($id);
         if ($id) {
             $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
         }

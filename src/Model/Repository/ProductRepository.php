@@ -25,15 +25,17 @@ class ProductRepository
                     ON p.`category` = c.`id` 
                    WHERE p.`id` = :id AND p.`active` = 1 LIMIT 1';
 
-        $product = $this->connector->get($sql, $id)[0];
-        return $this->validateProduct($product);
+        if ($id) {
+            $product = $this->connector->get($sql, $id)[0];
+        }
+        return $this->validateProduct($product ?? []);
     }
 
     public function findProductsByCategoryId(int $id): array
     {
         $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
                 LEFT JOIN categories as c ON p.`category` = c.`id` 
-                   WHERE c.id = :id;';
+                   WHERE c.id = :id AND p.`active` = 1;';
         $products = $this->connector->get($sql, $id);
 
         foreach ($products as $key => $product) {
@@ -89,7 +91,7 @@ class ProductRepository
     public function deleteProductById(int $id): void
     {
         $sql = 'UPDATE products SET `active` = 0 WHERE `id` = :id LIMIT 1;';
-        $this->connector->set($sql, [$id], ['id'=>['key'=>':id','type'=>\PDO::PARAM_INT]]);
+        $this->connector->set($sql, ['id' => $id], ['id'=> new PDOAttribute(':id', 'integer')]);
     }
 
     public function getAll(): array
@@ -108,10 +110,11 @@ class ProductRepository
 
     private function validateProduct(array $product): ProductDataTransferObject
     {
-        $product['category'] = $product['categoryName'];
-        $product['color'] = utf8_encode($product['color']);
-        $product['active'] = (bool)$product['active'];
-
+        if (!empty($product)) {
+            $product['category'] = $product['categoryName'];
+            $product['color'] = utf8_encode($product['color']);
+            $product['active'] = (bool)$product['active'];
+        }
         return $this->mapper->mapToDto($product);
     }
 
@@ -120,7 +123,7 @@ class ProductRepository
         $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
                 LEFT JOIN categories as c ON p.`category` = c.`id` 
                    WHERE p.id = LAST_INSERT_ID() LIMIT 1;';
-        $product = current($this->connector->get($sql));
+        $product = $this->connector->get($sql)[0];
 
         $product['category'] = $product['categoryName'];
         $product['active'] = (bool)$product['active'];

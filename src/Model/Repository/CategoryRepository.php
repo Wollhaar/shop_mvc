@@ -21,12 +21,12 @@ class CategoryRepository
 
     public function findCategoryById(int $id): CategoryDataTransferObject|null
     {
-        $sql = 'SELECT `name`, `active` FROM categories WHERE `id` = :id AND `active` = 1 LIMIT 1';
-        $category = $this->connector->get($sql, $id)[0] ?? [];
-        $category['id'] = $id;
-        $category['active'] = (bool)($category['active'] ?? 0);
+        $sql = 'SELECT `id`, `name`, `active` FROM categories WHERE `id` = :id AND `active` = 1 LIMIT 1';
+        if ($id) {
+            $category = $this->connector->get($sql, $id)[0];
+        }
 
-        return $this->mapper->mapToDto($category);
+        return $this->validateCategory($category ?? []);
     }
 
     public function addCategory(CategoryDataTransferObject $data): CategoryDataTransferObject
@@ -59,7 +59,10 @@ class CategoryRepository
 
     private function validateCategory(array $category): CategoryDataTransferObject
     {
-        $category['active'] = (bool)$category['active'];
+        if (!empty($category)) {
+            $category['id'] = (int)$category['id'];
+            $category['active'] = (bool)$category['active'];
+        }
         return $this->mapper->mapToDto($category);
     }
 

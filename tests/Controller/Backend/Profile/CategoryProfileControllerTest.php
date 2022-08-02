@@ -62,12 +62,16 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
+        $sql = 'SELECT COUNT(*) as counter FROM categories WHERE `name` LIKE "testKategorie%"';
+        $connector = new SQLConnector();
+        $count = $connector->get($sql)[0]['counter'] + 1;
+        $name = 'testKategorie' . $count;
+
         $_REQUEST['action'] = 'create';
-        $_REQUEST['category'] = ['name'=>'testKategorie1'];
+        $_POST['category'] = ['name' => $name];
 
         $view = new View();
         $catMapper = new CategoriesMapper();
-        $connector = new SQLConnector();
 
         $controller = new CategoryProfileController($view,
             new CategoryRepository($catMapper, $connector),
@@ -80,7 +84,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
 
         self::assertSame('Category', $results['title']);
-        self::assertSame('testKategorie1', $results['category']->name);
+        self::assertSame($name, $results['category']->name);
         self::assertTrue($results['category']->active);
     }
 }

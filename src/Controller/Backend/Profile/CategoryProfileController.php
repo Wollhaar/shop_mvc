@@ -47,7 +47,7 @@ class CategoryProfileController implements \Shop\Controller\BasicController
         $do = $_REQUEST['action'] ?? '';
         switch ($do) {
             case 'create':
-                $category = $_REQUEST['category'] ?? [];
+                $category = $_POST['category'] ?? [];
                 $category = $this->catMapper->mapToDto($category);
                 return $this->catRepository->addCategory($category);
 
