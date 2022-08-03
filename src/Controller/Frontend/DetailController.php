@@ -16,7 +16,7 @@ class DetailController implements BasicController
     private View $renderer;
 
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
+    public function __construct(View $renderer, ProductRepository $prodRepository)
     {
         $this->renderer = $renderer;
         $this->prodRepository = $prodRepository;

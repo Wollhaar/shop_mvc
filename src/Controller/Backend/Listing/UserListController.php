@@ -12,7 +12,7 @@ class UserListController implements \Shop\Controller\BasicController
     private View $renderer;
     private UserRepository $usrRepository;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository)
+    public function __construct(View $renderer, UserRepository $usrRepository)
     {
         $this->renderer = $renderer;
         $this->usrRepository = $usrRepository;

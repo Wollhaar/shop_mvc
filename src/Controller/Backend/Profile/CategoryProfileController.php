@@ -15,7 +15,7 @@ class CategoryProfileController implements \Shop\Controller\BasicController
     private CategoryRepository $catRepository;
     private CategoriesMapper $catMapper;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper)
+    public function __construct(View $renderer, CategoryRepository $catRepository, CategoriesMapper $catMapper)
     {
         $this->renderer = $renderer;
         $this->catRepository = $catRepository;

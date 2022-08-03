@@ -17,7 +17,7 @@ class ProductProfileController implements \Shop\Controller\BasicController
     private ProductsMapper $prodMapper;
     private CategoryRepository $catRepository;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper, ProductsMapper $prodMapper)
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, ProductsMapper $prodMapper)
     {
         $this->renderer = $renderer;
         $this->prodRepository = $prodRepository;

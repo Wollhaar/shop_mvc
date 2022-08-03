@@ -12,7 +12,7 @@ class CategoryListController implements \Shop\Controller\BasicController
     private View $renderer;
     private CategoryRepository $catRepository;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository)
+    public function __construct(View $renderer, CategoryRepository $catRepository)
     {
         $this->renderer = $renderer;
         $this->catRepository = $catRepository;

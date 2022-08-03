@@ -18,7 +18,7 @@ class BackendController implements BasicController
     private Authenticator $authenticator;
     private Session $session;
 
-    public function __construct(View $view, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper, ProductsMapper $prodMapper, UsersMapper $usrMapper, Authenticator $authenticator)
+    public function __construct(View $view, Authenticator $authenticator)
     {
         $this->renderer = $view;
         $this->authenticator = $authenticator;

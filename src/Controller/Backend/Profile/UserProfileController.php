@@ -16,7 +16,7 @@ class UserProfileController implements BasicController
     private UserRepository $usrRepository;
     private UsersMapper $usrMapper;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper, ProductsMapper $prodMapper, UsersMapper $usrMapper)
+    public function __construct(View $renderer, UserRepository $usrRepository, UsersMapper $usrMapper)
     {
         $this->renderer = $renderer;
         $this->usrRepository = $usrRepository;

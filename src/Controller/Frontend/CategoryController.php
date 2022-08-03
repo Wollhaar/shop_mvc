@@ -7,6 +7,7 @@ use Shop\Core\View;
 use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
 use Shop\Model\Mapper\CategoriesMapper;
+use function PHPUnit\Framework\isNull;
 
 class CategoryController implements BasicController
 {
@@ -21,24 +22,27 @@ class CategoryController implements BasicController
     private View $renderer;
 
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper)
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
     {
         $this->renderer = $renderer;
         $this->catRepository = $catRepository;
         $this->prodRepository = $prodRepository;
-        $this->activeCategory = $catMapper->mapToDto([]);
     }
 
     public function view(): void
     {
         $build = $this->build();
         $activeCategory = false;
+        $name = 'All';
 
-        if ($this->activeCategory->id !== 0) {
-            $activeCategory = true;
+        if (!isNull($this->activeCategory)) {
+            if($this->activeCategory->id !== 0) {
+                $activeCategory = true;
+                $name = $this->activeCategory->name;
+            }
         }
 
-        $this->renderer->addTemplateParameter($this->activeCategory->name, 'title');
+        $this->renderer->addTemplateParameter($name, 'title');
         $this->renderer->addTemplateParameter($activeCategory, 'activeCategory');
         $this->renderer->addTemplateParameter($build, 'build');
     }
@@ -53,6 +57,7 @@ class CategoryController implements BasicController
         $request = $_REQUEST;
         $activeId = (int) ($request['id'] ?? 0);
 
+        $this->activeCategory = $this->catRepository->findCategoryById(0);
         if ($activeId) {
             $this->activeCategory = $this->catRepository->findCategoryById($activeId);
             return $this->prodRepository->findProductsByCategoryId($this->activeCategory->id);

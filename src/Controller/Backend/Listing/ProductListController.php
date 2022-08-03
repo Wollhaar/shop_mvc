@@ -11,7 +11,7 @@ class ProductListController implements \Shop\Controller\BasicController
     private View $renderer;
     private ProductRepository $prodRepository;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository)
+    public function __construct(View $renderer, ProductRepository $prodRepository)
     {
         $this->renderer = $renderer;
         $this->prodRepository = $prodRepository;

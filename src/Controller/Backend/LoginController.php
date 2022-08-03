@@ -15,7 +15,7 @@ class LoginController implements BasicController
     private UserRepository $usrRepository;
     private View $renderer;
 
-    public function __construct(View $view, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper, ProductsMapper $prodMapper, UsersMapper $usrMapper, Authenticator $authenticator)
+    public function __construct(View $view, UserRepository $usrRepository, Authenticator $authenticator)
     {
         $this->renderer = $view;
         $this->authentication = $authenticator;

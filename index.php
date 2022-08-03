@@ -7,43 +7,25 @@ $path = explode('/', $_SERVER['PATH_INFO'] ?? '');
 
 $page = $request['page'] ?? 'home';
 
-$session = new \Shop\Service\Session();
+
+$container = new \Shop\Service\Container();
+$dependencyProvider = new \Shop\Service\DependencyProvider();
+$dependencyProvider->provide($container);
+
+$session = $container->get(\Shop\Service\Session::class);
+
 if ($page === 'logout') {
     $session->logout();
     $page = 'home';
 }
 
-if ($path[1] === 'backend') {
+if (isset($path[1]) && $path[1] === 'backend') {
     $backend = array_pop($path);
 }
 
 
-$catMapper = new \Shop\Model\Mapper\CategoriesMapper();
-$prodMapper = new \Shop\Model\Mapper\ProductsMapper();
-$usrMapper = new \Shop\Model\Mapper\UsersMapper();
-
-
-$userRepository = new \Shop\Model\Repository\UserRepository($usrMapper, new \Shop\Service\SQLConnector());
-$authenticator = new \Shop\Core\Authenticator($session, $userRepository);
-
-
 $controllerName = class_search($page, $backend ?? '');
-$controller = new $controllerName(
-    new \Shop\Core\View(),
-    new \Shop\Model\Repository\CategoryRepository(
-        $catMapper,
-        new \Shop\Service\SQLConnector()
-    ),
-    new \Shop\Model\Repository\ProductRepository(
-        $prodMapper,
-        new \Shop\Service\SQLConnector()
-    ),
-    $userRepository,
-    $catMapper,
-    $prodMapper,
-    $usrMapper,
-    $authenticator
-);
+$controller = $container->get($controllerName);
 
 $controller->view();
 $controller->display();
