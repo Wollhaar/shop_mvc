@@ -29,12 +29,12 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
         $results = $view->getParams();
 
         self::assertSame('Users', $results['title']);
-        self::assertSame(1, $results['users'][1]->id);
-        self::assertSame('dave', $results['users'][1]->username);
-        self::assertSame(2, $results['users'][2]->id);
-        self::assertSame('test', $results['users'][2]->username);
-        self::assertSame(3, $results['users'][3]->id);
-        self::assertSame('maxi', $results['users'][3]->username);
+        self::assertSame(1, $results['users'][0]->id);
+        self::assertSame('dave', $results['users'][0]->username);
+        self::assertSame(2, $results['users'][1]->id);
+        self::assertSame('test', $results['users'][1]->username);
+        self::assertSame(3, $results['users'][2]->id);
+        self::assertSame('maxi', $results['users'][2]->username);
     }
 
     public function testDeleteView()

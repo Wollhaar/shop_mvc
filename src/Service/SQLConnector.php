@@ -55,7 +55,7 @@ class SQLConnector
         $stmt = $this->connector->prepare($query);
         foreach ($attributes as $key => $attr) {
 //            var_dump($properties[$key], $attr);
-            $stmt->bindParam($attr->key, $properties[$key], $attr->type);
+            $stmt->bindParam($attr['key'], $properties[$key], $attr['type']);
         }
 //        $stmt->debugDumpParams();
         $stmt->execute();

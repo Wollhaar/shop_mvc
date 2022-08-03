@@ -10,6 +10,12 @@ use Shop\Service\SQLConnector;
 
 class CategoryRepository
 {
+    private const PDO_ATTRIBUTE_TYPES = [
+        'integer' => \PDO::PARAM_INT,
+        'string' => \PDO::PARAM_STR,
+        'double' => \PDO::PARAM_STR,
+    ];
+
     private CategoriesMapper $mapper;
     private SQLConnector $connector;
 
@@ -23,7 +29,7 @@ class CategoryRepository
     {
         $sql = 'SELECT `id`, `name`, `active` FROM categories WHERE `id` = :id AND `active` = 1 LIMIT 1';
         if ($id) {
-            $category = $this->connector->get($sql, $id)[0];
+            $category = $this->connector->get($sql, $id)[0] ?? [];
         }
 
         return $this->validateCategory($category ?? []);
@@ -32,7 +38,7 @@ class CategoryRepository
     public function addCategory(CategoryDataTransferObject $data): CategoryDataTransferObject
     {
         $sql = 'INSERT INTO categories (`name`) VALUES(:name)';
-        $attributes = ['name' => new PDOAttribute(':name', gettype($data->name))];
+        $attributes = ['name' => ['key' => ':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]]];
 
         $this->connector->set($sql, (array)$data, $attributes);
         return $this->validateCategory($this->getLastInsert());
@@ -41,7 +47,7 @@ class CategoryRepository
     public function deleteCategoryById(int $id): void
     {
         $sql = 'UPDATE categories SET `active` = 0 WHERE `id` = :id LIMIT 1';
-        $this->connector->set($sql, ['id' => $id], ['id' => new PDOAttribute(':id', 'integer')]);
+        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
     }
 
     public function getAll(): array

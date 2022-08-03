@@ -9,6 +9,12 @@ use Shop\Service\SQLConnector;
 
 class ProductRepository
 {
+    private const PDO_ATTRIBUTE_TYPES = [
+        'integer' => \PDO::PARAM_INT,
+        'string' => \PDO::PARAM_STR,
+        'double' => \PDO::PARAM_STR,
+    ];
+
     private ProductsMapper $mapper;
     private SQLConnector $connector;
 
@@ -50,12 +56,12 @@ class ProductRepository
                 VALUES(:name, :size, :color, :category, :price, :amount);';
 
         $attributes = [
-            'name' => new PDOAttribute(':name', gettype($data->name)),
-            'size' => new PDOAttribute(':size', gettype($data->size)),
-            'color' => new PDOAttribute(':color', gettype($data->color)),
-            'category' => new PDOAttribute(':category', gettype($data->category)),
-            'price' => new PDOAttribute(':price', gettype($data->price)),
-            'amount' => new PDOAttribute(':amount', gettype($data->amount))
+            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
+            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
+            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
+            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
+            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
+            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
         ];
 
         $this->connector->set($sql, (array)$data, $attributes);
@@ -75,13 +81,13 @@ class ProductRepository
                 WHERE `id` = :id LIMIT 1;';
 
         $attributes = [
-            'id' => new PDOAttribute(':id', gettype($data->id)),
-            'name' => new PDOAttribute(':name', gettype($data->name)),
-            'size' => new PDOAttribute(':size', gettype($data->size)),
-            'color' => new PDOAttribute(':color', gettype($data->color)),
-            'category' => new PDOAttribute(':category', gettype($data->category)),
-            'price' => new PDOAttribute(':price', gettype($data->price)),
-            'amount' => new PDOAttribute(':amount', gettype($data->amount)),
+            'id' => ['key' =>':id', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->id)]],
+            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
+            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
+            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
+            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
+            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
+            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
         ];
 
         $this->connector->set($sql, (array)$data, $attributes);
@@ -91,7 +97,7 @@ class ProductRepository
     public function deleteProductById(int $id): void
     {
         $sql = 'UPDATE products SET `active` = 0 WHERE `id` = :id LIMIT 1;';
-        $this->connector->set($sql, ['id' => $id], ['id'=> new PDOAttribute(':id', 'integer')]);
+        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
     }
 
     public function getAll(): array

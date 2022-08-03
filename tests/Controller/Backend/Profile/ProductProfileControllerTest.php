@@ -14,7 +14,7 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         $_REQUEST['action'] = '';
         $_POST['product'] = '';
-        $_REQUEST['id'] = 1;
+        $_REQUEST['id'] = 8;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -32,12 +32,13 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame(1, $results['product']->id);
-        self::assertSame('shirt no.1', $results['product']->name);
+        self::assertSame(8, $results['product']->id);
+        self::assertSame('Strickjacke', $results['product']->name);
         self::assertSame('M,L,XL', $results['product']->size);
-        self::assertSame('T-Shirt', $results['product']->category);
-        self::assertSame(21.0, $results['product']->price);
-        self::assertSame(220, $results['product']->amount);
+        self::assertSame('schwarz,braun,grau', $results['product']->color);
+        self::assertSame('Jacken', $results['product']->category);
+        self::assertSame(35.65, $results['product']->price);
+        self::assertSame(50, $results['product']->amount);
         self::assertTrue($results['product']->active);
     }
 
@@ -85,6 +86,7 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $_POST['product'] = [
             'name' => $name,
             'size' => 'W:30;L:34',
+            'color' => 'schwarz,braun',
             'category' => '3',
             'price' => 34.55,
             'amount' => 130,
@@ -108,8 +110,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $results = $view->getParams();
 
         self::assertSame('Product', $results['title']);
-        self::assertSame('Testhose', $results['product']->name);
+        self::assertSame($name, $results['product']->name);
         self::assertSame('W:30;L:34', $results['product']->size);
+        self::assertSame('schwarz,braun', $results['product']->color);
         self::assertSame('Hosen', $results['product']->category);
         self::assertSame(34.55, $results['product']->price);
         self::assertSame(130, $results['product']->amount);
@@ -127,6 +130,7 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
             'id' => 12,
             'name' => $name,
             'size' => 'W:30;L:34',
+            'color' => 'schwarz,grau,braun',
             'category' => '3',
             'price' => 34.55,
             'amount' => 130,
@@ -149,9 +153,10 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $results = $view->getParams();
 
         self::assertSame('Product', $results['title']);
-        self::assertSame(9, $results['product']->id);
+        self::assertSame(12, $results['product']->id);
         self::assertSame($name, $results['product']->name);
         self::assertSame('W:30;L:34', $results['product']->size);
+        self::assertSame('schwarz,grau,braun', $results['product']->color);
         self::assertSame('Hosen', $results['product']->category);
         self::assertSame(34.55, $results['product']->price);
         self::assertSame(130, $results['product']->amount);

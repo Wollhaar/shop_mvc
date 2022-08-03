@@ -17,6 +17,8 @@ class CategoryControllerTest extends TestCase
 {
     public function testView()
     {
+        $_REQUEST['id'] = '';
+
         $view = new View();
         $connector = new SQLConnector();
         $catMapper = new CategoriesMapper();

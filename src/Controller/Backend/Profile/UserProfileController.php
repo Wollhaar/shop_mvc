@@ -58,7 +58,7 @@ class UserProfileController implements BasicController
                 $password = $user['password'] ?? '';
 
                 $user['id'] = (int)($user['id'] ?? 0);
-                $user['updated'] = date('Y-m-d') ?? '';
+                $user['updated'] = date('Y-m-d h:i:s') ?? '';
                 $user['active'] = (bool)($user['active'] ?? 0);
 
                 $user = $this->usrMapper->mapToDto($user);

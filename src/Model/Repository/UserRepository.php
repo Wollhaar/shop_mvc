@@ -10,6 +10,12 @@ use Shop\Service\SQLConnector;
 
 class UserRepository
 {
+    private const PDO_ATTRIBUTE_TYPES = [
+        'integer' => \PDO::PARAM_INT,
+        'string' => \PDO::PARAM_STR,
+        'double' => \PDO::PARAM_STR,
+    ];
+
     private SQLConnector $connector;
     private UsersMapper $mapper;
 
@@ -55,11 +61,11 @@ class UserRepository
         $data->password = $password;
 
         $attributes = [
-            'username' => new PDOAttribute(':username', gettype($data->username)),
-            'password' => new PDOAttribute(':password', gettype($data->password)),
-            'firstname' => new PDOAttribute(':firstname', gettype($data->firstname)),
-            'lastname' => new PDOAttribute(':lastname', gettype($data->lastname)),
-            'birthday' => new PDOAttribute(':birthday', gettype($data->birthday)),
+            'username' => ['key' => ':username', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->username)]],
+            'password' => ['key' => ':password', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->password)]],
+            'firstname' => ['key' => ':firstname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->firstname)]],
+            'lastname' => ['key' => ':lastname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->lastname)]],
+            'birthday' => ['key' => ':birthday', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->birthday)]],
         ];
 
         $this->connector->set($sql, (array)$data, $attributes);
@@ -76,30 +82,29 @@ class UserRepository
                      `birthday` = :birthday';
 
         $attributes = [
-            'id' => new PDOAttribute(':id', gettype($data->id)),
-            'username' => new PDOAttribute(':username', gettype($data->username)),
-            'firstname' => new PDOAttribute(':firstname', gettype($data->firstname)),
-            'lastname' => new PDOAttribute(':lastname', gettype($data->lastname)),
-            'updated' => new PDOAttribute(':updated', gettype($data->lastname)),
-            'birthday' => new PDOAttribute(':birthday', gettype($data->birthday)),
+            'id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->id)]],
+            'username' => ['key' => ':username', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->username)]],
+            'firstname' => ['key' => ':firstname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->firstname)]],
+            'lastname' => ['key' => ':lastname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->lastname)]],
+            'updated' => ['key' => ':updated', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->updated)]],
+            'birthday' => ['key' => ':birthday', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->birthday)]],
         ];
 
         if ($password !== '') {
             $sql .= ', `password` = :password';
-            $attributes['password'] = new PDOAttribute(':password', 'string'); //TODO: resolve dependencies (object necessary?)
+            $attributes['password'] = ['key' => ':password', 'type' => self::PDO_ATTRIBUTE_TYPES['string']];
             $data->password = $password;
         }
         $sql .= ' WHERE `id` = :id LIMIT 1;';
-        $this->connector->set($sql, (array)$data, $attributes);
 
-        $sql = 'SELECT * FROM users WHERE `id` = :id  LIMIT 1;';
-        return $this->validateUser($this->connector->get($sql, $data->id)[0] ?? []);
+        $this->connector->set($sql, (array)$data, $attributes);
+        return $this->findUserById($data->id);
     }
 
     public function deleteUserById(int $id): void
     {
         $sql = 'UPDATE users SET `active` = 0 WHERE `id` = :id LIMIT 1';
-        $this->connector->set($sql, ['id' => $id], ['id' => new PDOAttribute(':id', 'integer')]);
+        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
     }
 
     public function getPasswordByUser(UserDataTransferObject $user): string
