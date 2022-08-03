@@ -28,7 +28,7 @@ class Authenticator
         $password = $this->userRepository->getPasswordByUser($user);
         $password2 = $request['password'] ?? false;
 
-        $this->auth = $password === $password2;
+        $this->auth = trim($password) === trim($password2);
         $authenticated = ['username' => (bool) $user->id, 'password' => $this->auth];
 
         $this->session->set(['auth' => $this->auth, 'data' => $user], 'user');

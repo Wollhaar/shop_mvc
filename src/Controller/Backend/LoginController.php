@@ -6,6 +6,7 @@ namespace Shop\Controller\Backend;
 use Shop\Controller\BasicController;
 use Shop\Core\{Authenticator, View};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 
 class LoginController implements BasicController
 {
@@ -14,7 +15,7 @@ class LoginController implements BasicController
     private UserRepository $usrRepository;
     private View $renderer;
 
-    public function __construct(View $view, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, Authenticator $authenticator)
+    public function __construct(View $view, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper, ProductsMapper $prodMapper, UsersMapper $usrMapper, Authenticator $authenticator)
     {
         $this->renderer = $view;
         $this->authentication = $authenticator;

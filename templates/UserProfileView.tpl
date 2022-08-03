@@ -14,7 +14,6 @@
 {/if}
 <div>
 {if $create}
-    {$id = 0}
     {$username = ''}
     {$firstname = ''}
     {$lastname = ''}
@@ -28,8 +27,8 @@
     {$birthday = $user->birthday|date_format:"%Y-%m-%d"}
     {$active = $user->active}
 {/if}
-    <form action="/backend/profile/{if $create}create{else}save{/if}?page=user" method="post">
-        <input type="hidden" name="user[id]" value="{$id}" />
+    <form action="/backend/profile?action={if $create}create{else}save{/if}&page=user" method="post">
+        {if isset($id)}id set<input type="hidden" name="user[id]" value="{$id}" />{/if}
         <div class="profile-user--username">
             <label for="username">username</label>
             <input type="text" id="username" name="user[username]" value="{$username}" />

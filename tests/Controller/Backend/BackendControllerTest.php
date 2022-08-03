@@ -13,22 +13,32 @@ use Shop\Model\Repository\CategoryRepository;
 use Shop\Model\Repository\ProductRepository;
 use Shop\Model\Repository\UserRepository;
 use Shop\Service\Session;
+use Shop\Service\SQLConnector;
 
 class BackendControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
-        $usrRepository = new UserRepository(new UsersMapper());
+        $connector = new SQLConnector();
+        $usrMapper = new UsersMapper();
+        $usrRepository = new UserRepository($usrMapper, $connector);
+
         $session = new Session(true);
         $session->set(['auth' => true, $usrRepository->findUserById(2)], 'user');
+
+        $catMapper = new CategoriesMapper();
+        $prodMapper = new ProductsMapper();
 
         $view = new View();
 
         $controller = new BackendController($view,
-            new CategoryRepository(new CategoriesMapper()),
-            new ProductRepository(new ProductsMapper()),
+            new CategoryRepository($catMapper, $connector),
+            new ProductRepository($prodMapper, $connector),
             $usrRepository,
-            new Authenticator($session, $usrRepository)
+            $catMapper,
+            $prodMapper,
+            $usrMapper,
+            new Authenticator(new Session(true), $usrRepository)
         );
         $controller->view();
         $results = $view->getParams();
@@ -38,8 +48,8 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('test', $results['user']->username);
         self::assertSame('Chuck', $results['user']->firstname);
         self::assertSame('Tester', $results['user']->lastname);
-        self::assertSame(1657664319, $results['user']->created);
-        self::assertSame(863301600, $results['user']->birthday);
+        self::assertSame('2022-07-13', $results['user']->created);
+        self::assertSame('1997-11-05', $results['user']->birhtday);
         self::assertTrue($results['user']->active);
     }
 }

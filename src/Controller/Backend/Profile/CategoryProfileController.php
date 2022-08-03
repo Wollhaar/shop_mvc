@@ -6,22 +6,25 @@ namespace Shop\Controller\Backend\Profile;
 use Shop\Core\View;
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
 use Shop\Model\Dto\CategoryDataTransferObject;
+use Shop\Model\Mapper\CategoriesMapper;
 
 class CategoryProfileController implements \Shop\Controller\BasicController
 {
     private const TPL = 'CategoryProfileView.tpl';
     private View $renderer;
     private CategoryRepository $catRepository;
+    private CategoriesMapper $catMapper;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository)
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, UserRepository $usrRepository, CategoriesMapper $catMapper)
     {
         $this->renderer = $renderer;
         $this->catRepository = $catRepository;
+        $this->catMapper = $catMapper;
     }
 
     public function view(): void
     {
-        $category = $this->build();
+        $category = $this->action();
         $name = $category->name;
 
         if ((int)($_REQUEST['create'] ?? 0) === 1) {
@@ -39,9 +42,18 @@ class CategoryProfileController implements \Shop\Controller\BasicController
         $this->renderer->display(self::TPL);
     }
 
-    private function build(): CategoryDataTransferObject
+    private function action(): CategoryDataTransferObject
     {
-        $id = $_REQUEST['id'] ?? '';
-        return $this->catRepository->findCategoryById((int)$id);
+        $do = $_REQUEST['action'] ?? '';
+        switch ($do) {
+            case 'create':
+                $category = $_POST['category'] ?? [];
+                $category = $this->catMapper->mapToDto($category);
+                return $this->catRepository->addCategory($category);
+
+            default:
+                $id = $_REQUEST['id'] ?? '';
+                return $this->catRepository->findCategoryById((int)$id);
+        }
     }
 }

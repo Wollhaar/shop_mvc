@@ -5,120 +5,139 @@ namespace Shop\Model\Repository;
 
 use Shop\Model\Dto\UserDataTransferObject;
 use Shop\Model\Mapper\UsersMapper;
+use Shop\Model\PDOAttribute;
+use Shop\Service\SQLConnector;
 
 class UserRepository
 {
+    private const PDO_ATTRIBUTE_TYPES = [
+        'integer' => \PDO::PARAM_INT,
+        'string' => \PDO::PARAM_STR,
+        'double' => \PDO::PARAM_STR,
+    ];
+
+    private SQLConnector $connector;
     private UsersMapper $mapper;
-    private array $users;
 
-    public function __construct(UsersMapper $mapper)
+    public function __construct(UsersMapper $mapper, SQLConnector $connector)
     {
-        $data = file_get_contents(__DIR__ . '/users.json');
-        $this->users = json_decode($data, true);
-
         $this->mapper = $mapper;
+        $this->connector = $connector;
     }
 
     public function findUserById(int $id): UserDataTransferObject
     {
-        $userData = [];
-        foreach ($this->users as $user) {
-            if ($user['id'] === $id) {
-                $userData = $user;
-            }
+        $sql = 'SELECT * FROM users WHERE `id` = :id AND `active` = 1;';
+        if ($id) {
+            $user = $this->connector->get($sql, $id)[0] ?? [];
         }
-        return $this->mapper->mapToDto($userData);
+        return $this->validateUser($user ?? []);
     }
 
     public function findUserByUsername(string $name): UserDataTransferObject
     {
-        foreach ($this->users as $user) {
-            if ($user['active'] && $user['username'] === $name) {
-                $userData = $user;
-                break;
-            }
+        $sql = 'SELECT * FROM users WHERE `username` = :username AND `active` = 1';
+        $user = $this->connector->getByString($sql, $name, ':username')[0] ?? [];
+
+        return $this->validateUser($user);
+    }
+
+    public function addUser(UserDataTransferObject $data, string $password): UserDataTransferObject
+    {
+        $sql = 'INSERT INTO users (
+                   `username`,
+                   `password`,
+                   `firstname`,
+                   `lastname`,
+                   `birthday`
+                ) VALUES(
+                     :username,
+                     :password,
+                     :firstname,
+                     :lastname,
+                     :birthday
+                );';
+
+        $data->password = $password;
+
+        $attributes = [
+            'username' => ['key' => ':username', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->username)]],
+            'password' => ['key' => ':password', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->password)]],
+            'firstname' => ['key' => ':firstname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->firstname)]],
+            'lastname' => ['key' => ':lastname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->lastname)]],
+            'birthday' => ['key' => ':birthday', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->birthday)]],
+        ];
+
+        $this->connector->set($sql, (array)$data, $attributes);
+        return $this->validateUser($this->getLastInsert());
+    }
+
+    public function saveUser(UserDataTransferObject $data, string $password): UserDataTransferObject
+    {
+        $sql = 'UPDATE users SET 
+                     `username` = :username, 
+                     `firstname` = :firstname, 
+                     `lastname` = :lastname, 
+                     `updated` = :updated, 
+                     `birthday` = :birthday';
+
+        $attributes = [
+            'id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->id)]],
+            'username' => ['key' => ':username', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->username)]],
+            'firstname' => ['key' => ':firstname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->firstname)]],
+            'lastname' => ['key' => ':lastname', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->lastname)]],
+            'updated' => ['key' => ':updated', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->updated)]],
+            'birthday' => ['key' => ':birthday', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->birthday)]],
+        ];
+
+        if ($password !== '') {
+            $sql .= ', `password` = :password';
+            $attributes['password'] = ['key' => ':password', 'type' => self::PDO_ATTRIBUTE_TYPES['string']];
+            $data->password = $password;
         }
-        return $this->mapper->mapToDto($userData ?? []);
-    }
+        $sql .= ' WHERE `id` = :id LIMIT 1;';
 
-    public function addUser(array $data): UserDataTransferObject
-    {
-        $data['id'] = count($this->users);
-
-        $data['created'] = time();
-        $data['updated'] = $data['created'];
-
-        $birthday = strtotime($data['birthday'] ?? '');
-        $birthday = is_int($birthday) ? $birthday : mktime(0);
-        $data['birthday'] = $birthday;
-
-        $data['active'] = true;
-
-        $this->users[$data['id']] = $data;
-        $this->write();
-
-        return $this->mapper->mapToDto($data);
-    }
-
-    public function saveUser(array $data): UserDataTransferObject
-    {
-        $data['id'] = (int)$data['id'];
-        $user = $this->findUserById($data['id']);
-        $data['password'] = $data['password'] !== '' ?
-            $data['password'] : $this->getPasswordByUser($user);
-
-        $created = strtotime($data['created']);
-        $created = is_int($created) ? $created : mktime(0);
-        $data['created'] = $created;
-
-        $data['updated'] = time();
-
-        $birthday = strtotime($data['birthday']);
-        $birthday = is_int($birthday) ? $birthday : mktime(0);
-        $data['birthday'] = $birthday;
-        $data['active'] = (bool)$data['active'];
-
-
-        $this->users[$data['id']] = $data;
-        $this->write();
-
-        return $this->mapper->mapToDto($data);
+        $this->connector->set($sql, (array)$data, $attributes);
+        return $this->findUserById($data->id);
     }
 
     public function deleteUserById(int $id): void
     {
-        $user = $this->users[$id] ?? [];
-        $user['active'] = false;
-        $this->users[$id] = $user;
-        $this->write();
+        $sql = 'UPDATE users SET `active` = 0 WHERE `id` = :id LIMIT 1';
+        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
     }
 
     public function getPasswordByUser(UserDataTransferObject $user): string
     {
-        foreach ($this->users as $userData) {
-            if ($userData['id'] === $user->id) {
-                return $userData['password'] ?? '';
-            }
-        }
-        return '';
+        $sql = 'SELECT `password` FROM users WHERE `id` = :id AND `active` = 1 LIMiT 1;';
+        $password = $this->connector->get($sql, $user->id)[0] ?? [];
+        return $password['password'] ?? '';
     }
 
     public function getAll(): array
     {
-        $users = $this->users ?? [];
+        $sql = 'SELECT * FROM users WHERE `active` = 1;';
+        $users = $this->connector->get($sql);
+        $userList = [];
         foreach ($users as $user) {
-            if (!$user['active']) {
-                unset($users[$user['id']]);
-                continue;
-            }
-            $users[$user['id']] = $this->mapper->mapToDto($user);
+            $user['active'] = (bool)$user['active'];
+            $userList[] = $this->mapper->mapToDto($user);
         }
-        return $users;
+        return $userList;
     }
 
-    private function write(): void
+    private function validateUser(array $user): UserDataTransferObject
     {
-        $data = json_encode($this->users);
-        file_put_contents(__DIR__ . '/users.json', $data);
+        if (!empty($user)) {
+            $user['id'] = (int)$user['id'];
+            $user['active'] = (bool)$user['active'];
+        }
+        return $this->mapper->mapToDto($user);
+    }
+
+    private function getLastInsert(): array
+    {
+        $sql = 'SELECT * FROM users WHERE `id` = LAST_INSERT_ID()';
+        return $this->connector->get($sql)[0] ?? [];
     }
 }

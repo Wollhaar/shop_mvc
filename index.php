@@ -18,7 +18,12 @@ if ($path[1] === 'backend') {
 }
 
 
-$userRepository = new \Shop\Model\Repository\UserRepository(new \Shop\Model\Mapper\UsersMapper());
+$catMapper = new \Shop\Model\Mapper\CategoriesMapper();
+$prodMapper = new \Shop\Model\Mapper\ProductsMapper();
+$usrMapper = new \Shop\Model\Mapper\UsersMapper();
+
+
+$userRepository = new \Shop\Model\Repository\UserRepository($usrMapper, new \Shop\Service\SQLConnector());
 $authenticator = new \Shop\Core\Authenticator($session, $userRepository);
 
 
@@ -26,12 +31,17 @@ $controllerName = class_search($page, $backend ?? '');
 $controller = new $controllerName(
     new \Shop\Core\View(),
     new \Shop\Model\Repository\CategoryRepository(
-        new \Shop\Model\Mapper\CategoriesMapper()
+        $catMapper,
+        new \Shop\Service\SQLConnector()
     ),
     new \Shop\Model\Repository\ProductRepository(
-        new \Shop\Model\Mapper\ProductsMapper()
+        $prodMapper,
+        new \Shop\Service\SQLConnector()
     ),
     $userRepository,
+    $catMapper,
+    $prodMapper,
+    $usrMapper,
     $authenticator
 );
 

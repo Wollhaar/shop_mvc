@@ -14,7 +14,7 @@
 <div>
     <ul>
         {foreach item=category from=$categories}
-            <li><span>{$category->name}</span><a href="/backend/delete?page=category&id={$category->id}">Delete</a></li>
+            <li><span>{$category->name}</span><a href="/backend/list?action=delete&page=category&id={$category->id}">Delete</a></li>
         {/foreach}
         <br/>
         <a class="btn btn-block" href="/backend/profile?page=category&create=1">Neue Kategorie</a>

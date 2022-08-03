@@ -4,102 +4,135 @@ namespace Shop\Model\Repository;
 
 use Shop\Model\Dto\ProductDataTransferObject;
 use Shop\Model\Mapper\ProductsMapper;
+use Shop\Model\PDOAttribute;
+use Shop\Service\SQLConnector;
 
 class ProductRepository
 {
+    private const PDO_ATTRIBUTE_TYPES = [
+        'integer' => \PDO::PARAM_INT,
+        'string' => \PDO::PARAM_STR,
+        'double' => \PDO::PARAM_STR,
+    ];
+
     private ProductsMapper $mapper;
-    private array $products;
-    private array $categories;
+    private SQLConnector $connector;
 
-    public function __construct(ProductsMapper $mapper)
+    public function __construct(ProductsMapper $mapper, SQLConnector $connector)
     {
-        $data = file_get_contents(__DIR__ . '/products.json');
-        $this->products = json_decode($data, true);
-        $data = file_get_contents(__DIR__ . '/categories.json');
-        $this->categories = json_decode($data, true);
-
         $this->mapper = $mapper;
+        $this->connector = $connector;
     }
 
     public function findProductById(int $id): ProductDataTransferObject
     {
-        $product = $this->products[$id] ?? [];
-        $categoryId = $product['category'] ?? 0;
-        $product['category'] = $this->categories[$categoryId]['name'] ?? 'none';
-        return $this->mapper->mapToDto($product);
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
+                LEFT JOIN categories as c 
+                    ON p.`category` = c.`id` 
+                   WHERE p.`id` = :id AND p.`active` = 1 LIMIT 1';
+
+        if ($id) {
+            $product = $this->connector->get($sql, $id)[0];
+        }
+        return $this->validateProduct($product ?? []);
     }
 
     public function findProductsByCategoryId(int $id): array
     {
-        $products = $this->products;
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
+                LEFT JOIN categories as c ON p.`category` = c.`id` 
+                   WHERE c.id = :id AND p.`active` = 1;';
+        $products = $this->connector->get($sql, $id);
+
         foreach ($products as $key => $product) {
-            if ($product['category'] === $id) {
-                $categoryId = $product['category'] ?? 0;
-                $product['category'] = $this->categories[$categoryId]['name'] ?? 'none';
-                $products[$key] = $this->mapper->mapToDto($product);
-            }
-            else {
-                unset($products[$key]);
-            }
+            $products[$key] = $this->validateProduct($product);
         }
         return $products;
     }
 
-    public function addProduct(array $data): ProductDataTransferObject
+    public function addProduct(ProductDataTransferObject $data): ProductDataTransferObject
     {
-        $data['id'] = count($this->products) + 1;
-        $data['category'] = (int)$data['category'];
-        $data['price'] = (float)$data['price'];
-        $data['amount'] = (int)$data['amount'];
-        $data['active'] = true;
+        $sql = 'INSERT INTO products (`name`, `size`, `color`, `category`, `price`, `amount`) 
+                VALUES(:name, :size, :color, :category, :price, :amount);';
 
-        $this->products[$data['id']] = $data;
-        $this->write();
+        $attributes = [
+            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
+            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
+            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
+            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
+            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
+            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
+        ];
 
-        $data['category'] = $this->categories[$data['category']]['name'];
-        return $this->mapper->mapToDto($data);
+        $this->connector->set($sql, (array)$data, $attributes);
+
+        return $this->mapper->mapToDto($this->getLastInsert());
     }
 
-    public function saveProduct(array $data): ProductDataTransferObject
+    public function saveProduct(ProductDataTransferObject $data): ProductDataTransferObject
     {
-        $data['id'] = (int)$data['id'];
-        $data['category'] = (int)$data['category'];
-        $data['price'] = (float)$data['price'];
-        $data['amount'] = (int)$data['amount'];
-        $data['active'] = (bool)$data['active'];
+        $sql = 'UPDATE products SET 
+                    `name` = :name, 
+                    `size`= :size, 
+                    `color`= :color, 
+                    `category`= :category, 
+                    `price`= :price, 
+                    `amount`= :amount 
+                WHERE `id` = :id LIMIT 1;';
 
-        $this->products[$data['id']] = $data;
-        $this->write();
+        $attributes = [
+            'id' => ['key' =>':id', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->id)]],
+            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
+            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
+            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
+            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
+            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
+            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
+        ];
 
-        $data['category'] = $this->categories[$data['category']]['name'];
-        return $this->mapper->mapToDto($data);
+        $this->connector->set($sql, (array)$data, $attributes);
+        return $this->findProductById($data->id);
     }
 
     public function deleteProductById(int $id): void
     {
-        $product = $this->products[$id] ?? [];
-        $product['active'] = false;
-        $this->products[$id] = $product;
-        $this->write();
+        $sql = 'UPDATE products SET `active` = 0 WHERE `id` = :id LIMIT 1;';
+        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
     }
 
     public function getAll(): array
     {
-        $products = $this->products;
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
+                LEFT JOIN categories as c ON p.`category` = c.`id` 
+                WHERE p.`active` = 1;';
+        $products = $this->connector->get($sql);
         foreach ($products as $key => $product) {
-            if (!$product['active']) {
-                unset($products[$key]);
-                continue;
-            }
-            $product['category'] = $this->categories[$product['category']]['name'];
+            $product['category'] = $product['categoryName'];
+            $product['active'] = (bool)$product['active'];
             $products[$key] = $this->mapper->mapToDto($product);
         }
         return $products;
     }
 
-    private function write(): void
+    private function validateProduct(array $product): ProductDataTransferObject
     {
-        $data = json_encode($this->products);
-        file_put_contents(__DIR__ . '/products.json', $data);
+        if (!empty($product)) {
+            $product['category'] = $product['categoryName'];
+            $product['color'] = utf8_encode($product['color']);
+            $product['active'] = (bool)$product['active'];
+        }
+        return $this->mapper->mapToDto($product);
+    }
+
+    private function getLastInsert(): array
+    {
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
+                LEFT JOIN categories as c ON p.`category` = c.`id` 
+                   WHERE p.id = LAST_INSERT_ID() LIMIT 1;';
+        $product = $this->connector->get($sql)[0];
+
+        $product['category'] = $product['categoryName'];
+        $product['active'] = (bool)$product['active'];
+        return $product;
     }
 }

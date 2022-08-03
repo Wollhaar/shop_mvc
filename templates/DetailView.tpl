@@ -17,6 +17,7 @@
 <h1>Produktdetailseite:{if isset($product->name)} {$product->name}{/if}</h1>
 <p>ArtikelId:{if isset($product->id)} {$product->id}{/if}</p>
 <p>Gr&ouml;ße: {if isset($product->size)}{$product->size}{/if}</p>
+<p>Farbe: {if isset($product->color)}{$product->color}{/if}</p>
 <p>Preis: {if isset($product->price)}{$product->price} &euro;{/if}</p>
 <p>Vorrat: {if isset($product->amount)}{$product->amount}{/if}</p>
 </body>

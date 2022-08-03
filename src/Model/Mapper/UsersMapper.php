@@ -14,9 +14,9 @@ class UsersMapper
             $data['username'] ?? '',
             $data['firstname'] ?? 'none',
             $data['lastname'] ?? 'none',
-            $data['created'] ?? 0,
-            $data['updated'] ?? 0,
-            $data['birthday'] ?? 0,
+            $data['created'] ?? '',
+            $data['updated'] ?? '',
+            $data['birthday'] ?? '',
             $data['active'] ?? false,
         );
     }

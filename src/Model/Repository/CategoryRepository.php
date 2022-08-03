@@ -5,60 +5,76 @@ namespace Shop\Model\Repository;
 
 use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Mapper\CategoriesMapper;
+use Shop\Model\PDOAttribute;
+use Shop\Service\SQLConnector;
 
 class CategoryRepository
 {
+    private const PDO_ATTRIBUTE_TYPES = [
+        'integer' => \PDO::PARAM_INT,
+        'string' => \PDO::PARAM_STR,
+        'double' => \PDO::PARAM_STR,
+    ];
+
     private CategoriesMapper $mapper;
-    private array $categories;
+    private SQLConnector $connector;
 
-    public function __construct(CategoriesMapper $mapper)
+    public function __construct(CategoriesMapper $mapper, SQLConnector $connection)
     {
-        $data = file_get_contents(__DIR__ . '/categories.json');
-        $this->categories = json_decode($data, true);
-
         $this->mapper = $mapper;
+        $this->connector = $connection;
     }
 
     public function findCategoryById(int $id): CategoryDataTransferObject|null
     {
-        $category = $this->categories[$id] ?? [];
-        return $this->mapper->mapToDto($category);
+        $sql = 'SELECT `id`, `name`, `active` FROM categories WHERE `id` = :id AND `active` = 1 LIMIT 1';
+        if ($id) {
+            $category = $this->connector->get($sql, $id)[0] ?? [];
+        }
+
+        return $this->validateCategory($category ?? []);
     }
 
-    public function addCategory(array $data): CategoryDataTransferObject
+    public function addCategory(CategoryDataTransferObject $data): CategoryDataTransferObject
     {
-        $data['id'] = count($this->categories) + 1;
-        $data['active'] = true;
-        $this->categories[$data['id']] = $data;
+        $sql = 'INSERT INTO categories (`name`) VALUES(:name)';
+        $attributes = ['name' => ['key' => ':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]]];
 
-        $this->write();
-        return $this->mapper->mapToDto($data);
+        $this->connector->set($sql, (array)$data, $attributes);
+        return $this->validateCategory($this->getLastInsert());
     }
 
     public function deleteCategoryById(int $id): void
     {
-        $category = $this->categories[$id] ?? [];
-        $category['active'] = false;
-        $this->categories[$id] = $category;
-        $this->write();
+        $sql = 'UPDATE categories SET `active` = 0 WHERE `id` = :id LIMIT 1';
+        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
     }
 
     public function getAll(): array
     {
-        $categories = [];
-        foreach ($this->categories as $key => $category) {
-            if (!$category['active']) {
-                unset($categories[$key]);
-                continue;
-            }
-            $categories[$category['id']] = $this->mapper->mapToDto($category);
+        $sql = 'SELECT * FROM categories WHERE `active` = 1;';
+        $categories = $this->connector->get($sql);
+        $categoryList = [];
+        foreach ($categories as $category) {
+            $category['id'] = (int)$category['id'];
+            $category['active'] = (bool)$category['active'];
+            $categoryList[] = $this->mapper->mapToDto($category);
         }
-        return $categories;
+        return $categoryList;
     }
 
-    private function write(): void
+    private function validateCategory(array $category): CategoryDataTransferObject
     {
-        $data = json_encode($this->categories);
-        file_put_contents(__DIR__ . '/categories.json', $data);
+        if (!empty($category)) {
+            $category['id'] = (int)$category['id'];
+            $category['active'] = (bool)$category['active'];
+        }
+        return $this->mapper->mapToDto($category);
+    }
+
+    private function getLastInsert(): array
+    {
+        $sql = 'SELECT * FROM categories WHERE `id` = LAST_INSERT_ID()';
+        return $this->connector->get($sql)[0] ?? [];
     }
 }

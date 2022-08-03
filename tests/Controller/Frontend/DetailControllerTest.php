@@ -10,6 +10,7 @@ use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Repository\CategoryRepository;
 use Shop\Model\Repository\ProductRepository;
+use Shop\Service\SQLConnector;
 
 class DetailControllerTest extends TestCase
 {
@@ -19,9 +20,11 @@ class DetailControllerTest extends TestCase
         $_REQUEST['id'] = 2;
 
         $view = new View();
+        $connector = new SQLConnector();
+
         $controller = new DetailController($view,
-            new CategoryRepository(new CategoriesMapper()),
-            new ProductRepository(new ProductsMapper())
+            new CategoryRepository(new CategoriesMapper(), $connector),
+            new ProductRepository(new ProductsMapper(), $connector),
         );
         $controller->view();
         $results = $view->getParams();
@@ -40,9 +43,11 @@ class DetailControllerTest extends TestCase
         $_REQUEST['id'] = 0;
 
         $view = new View();
+        $connector = new SQLConnector();
+
         $controller = new DetailController($view,
-            new CategoryRepository(new CategoriesMapper()),
-            new ProductRepository(new ProductsMapper())
+            new CategoryRepository(new CategoriesMapper(), $connector),
+            new ProductRepository(new ProductsMapper(), $connector)
         );
         $controller->view();
         $results = $view->getParams();

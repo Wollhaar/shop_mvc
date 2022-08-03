@@ -19,9 +19,9 @@
 {/if}
 <div class="profile-data">
 {if $create}
-    {$id = 0}
     {$name = ''}
     {$size = ''}
+    {$color = ''}
     {$selected = ''}
     {$price = 0}
     {$amount = 0}
@@ -30,13 +30,14 @@
     {$id = $product->id}
     {$name = $product->name}
     {$size = $product->size}
+    {$color = $product->color}
     {$selected = $product->category}
     {$price = $product->price}
     {$amount = $product->amount}
     {$active = $product->active}
 {/if}
-    <form action="/backend/profile/{if $create}create{else}save{/if}?page=product" method="post">
-        <input type="hidden" name="product[id]" value="{$id}" />
+    <form action="/backend/profile?action={if $create}create{else}save{/if}&page=product" method="post">
+        {if isset($id)}<input type="hidden" name="product[id]" value="{$id}" />{/if}
         <div class="profile-product--name">
             <label for="name">name</label>
             <input type="text" id="name" name="product[name]" value="{$name}" />
@@ -44,6 +45,10 @@
         <div class="profile-product--size">
             <label for="size">size</label>
             <input type="text" id="size" name="product[size]" value="{$size}" />
+        </div>
+        <div class="profile-product--color">
+            <label for="size">color</label>
+            <input type="text" id="size" name="product[color]" value="{$color}" />
         </div>
         <div class="profile-product--category">
             <label for="category">category</label>

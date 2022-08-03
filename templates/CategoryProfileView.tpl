@@ -19,7 +19,6 @@
 {/if}
 <div class="category-data">
     {if $create}
-        {$id = 0}
         {$name = ''}
         {$active = false}
     {else}
@@ -28,7 +27,7 @@
         {$active = $category->active}
     {/if}
     <form action="/backend/profile/create?page=category" method="post">
-        <input type="hidden" name="category[id]" value="{$id}" />
+        {if isset($id)}<input type="hidden" name="category[id]" value="{$id}" />{/if}
         <div class="profile-category--name">
             <label for="name">name</label>
             <input type="text" id="name" name="category[name]" value="{$name}" />

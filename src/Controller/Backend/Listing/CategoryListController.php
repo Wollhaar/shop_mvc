@@ -20,6 +20,7 @@ class CategoryListController implements \Shop\Controller\BasicController
 
     public function view(): void
     {
+        $this->action();
         $categories = $this->catRepository->getAll();
 
         $this->renderer->addTemplateParameter('Categories', 'title');
@@ -29,5 +30,14 @@ class CategoryListController implements \Shop\Controller\BasicController
     public function display(): void
     {
         $this->renderer->display(self::TPL);
+    }
+
+    private function action(): void
+    {
+        $do = $_REQUEST['action'] ?? '';
+        if ($do === 'delete') {
+            $id = (int)($_REQUEST['id'] ?? 0);
+            $this->catRepository->deleteCategoryById($id);
+        }
     }
 }
