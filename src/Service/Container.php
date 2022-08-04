@@ -11,7 +11,7 @@ class Container
         $this->storage[$classname] = $object;
     }
 
-    public function get(string $classname): object
+    public function get(string $classname)
     {
         return $this->storage[$classname];
     }

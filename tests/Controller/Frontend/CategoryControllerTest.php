@@ -7,10 +7,8 @@ use Shop\Controller\Frontend\CategoryController;
 use Shop\Core\View;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Mapper\ProductsMapper;
-use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\CategoryRepository;
 use Shop\Model\Repository\ProductRepository;
-use Shop\Model\Repository\UserRepository;
 use Shop\Service\SQLConnector;
 
 class CategoryControllerTest extends TestCase
@@ -25,9 +23,7 @@ class CategoryControllerTest extends TestCase
 
         $controller = new CategoryController($view,
             new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector),
-            new UserRepository(new UsersMapper(), $connector),
-            $catMapper
+            new ProductRepository(new ProductsMapper(), $connector)
         );
         $controller->view();
         $results = $view->getParams();
@@ -56,8 +52,6 @@ class CategoryControllerTest extends TestCase
         $controller = new CategoryController($view,
             new CategoryRepository($catMapper, $connector),
             new ProductRepository(new ProductsMapper(), $connector),
-            new UserRepository(new UsersMapper(), $connector),
-            $catMapper
         );
         $controller->view();
         $results = $view->getParams();
@@ -78,8 +72,6 @@ class CategoryControllerTest extends TestCase
         $controller = new CategoryController($view,
             new CategoryRepository($catMapper, $connector),
             new ProductRepository(new ProductsMapper(), $connector),
-            new UserRepository(new UsersMapper(), $connector),
-            $catMapper
         );
         $controller->view();
         $results = $view->getParams();

@@ -6,9 +6,7 @@ namespace ShopTest\Controller\Frontend;
 use PHPUnit\Framework\TestCase;
 use Shop\Controller\Frontend\DetailController;
 use Shop\Core\View;
-use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Mapper\ProductsMapper;
-use Shop\Model\Repository\CategoryRepository;
 use Shop\Model\Repository\ProductRepository;
 use Shop\Service\SQLConnector;
 
@@ -23,7 +21,6 @@ class DetailControllerTest extends TestCase
         $connector = new SQLConnector();
 
         $controller = new DetailController($view,
-            new CategoryRepository(new CategoriesMapper(), $connector),
             new ProductRepository(new ProductsMapper(), $connector),
         );
         $controller->view();
@@ -46,7 +43,6 @@ class DetailControllerTest extends TestCase
         $connector = new SQLConnector();
 
         $controller = new DetailController($view,
-            new CategoryRepository(new CategoriesMapper(), $connector),
             new ProductRepository(new ProductsMapper(), $connector)
         );
         $controller->view();

@@ -6,11 +6,7 @@ namespace ShopTest\Controller\Backend;
 use Shop\Controller\Backend\BackendController;
 use Shop\Core\Authenticator;
 use Shop\Core\View;
-use Shop\Model\Mapper\CategoriesMapper;
-use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Mapper\UsersMapper;
-use Shop\Model\Repository\CategoryRepository;
-use Shop\Model\Repository\ProductRepository;
 use Shop\Model\Repository\UserRepository;
 use Shop\Service\Session;
 use Shop\Service\SQLConnector;
@@ -26,18 +22,9 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $session = new Session(true);
         $session->set(['auth' => true, $usrRepository->findUserById(2)], 'user');
 
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
-
         $view = new View();
 
         $controller = new BackendController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
-            $usrRepository,
-            $catMapper,
-            $prodMapper,
-            $usrMapper,
             new Authenticator(new Session(true), $usrRepository)
         );
         $controller->view();

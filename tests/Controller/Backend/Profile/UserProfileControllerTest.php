@@ -5,8 +5,8 @@ namespace ShopTest\Controller\Backend\Profile;
 
 use Shop\Controller\Backend\Profile\UserProfileController;
 use Shop\Core\View;
-use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\UsersMapper;
+use Shop\Model\Repository\UserRepository;
 use Shop\Service\SQLConnector;
 
 class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
@@ -15,20 +15,13 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         $_REQUEST['action'] = '';
         $_REQUEST['create'] = 1;
-//        $_REQUEST['id'] = '';
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
         $connector = new SQLConnector();
 
         $controller = new UserProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
             new UserRepository($usrMapper, $connector),
-            $catMapper,
-            $prodMapper,
             $usrMapper,
         );
 
@@ -64,16 +57,10 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         ];
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
             new UserRepository($usrMapper, $connector),
-            $catMapper,
-            $prodMapper,
             $usrMapper,
         );
 
@@ -100,20 +87,13 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $_REQUEST['create'] = '';
         $_REQUEST['action'] = '';
         $user = $_POST['user'];
-        $_REQUEST['id'] = $user['id'];
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
         $connector = new SQLConnector();
 
         $controller = new UserProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
             new UserRepository($usrMapper, $connector),
-            $catMapper,
-            $prodMapper,
             $usrMapper,
         );
 
@@ -149,16 +129,10 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         ];
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
             new UserRepository($usrMapper, $connector),
-            $catMapper,
-            $prodMapper,
             $usrMapper,
         );
 
@@ -194,16 +168,10 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         ];
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
             new UserRepository($usrMapper, $connector),
-            $catMapper,
-            $prodMapper,
             $usrMapper,
         );
 

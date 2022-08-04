@@ -3,26 +3,16 @@ declare(strict_types=1);
 
 namespace Shop\Service;
 
-use Shop\Controller\Backend\BackendController;
-use Shop\Controller\Backend\Listing\CategoryListController;
-use Shop\Controller\Backend\Listing\ProductListController;
-use Shop\Controller\Backend\Listing\UserListController;
-use Shop\Controller\Backend\LoginController;
-use Shop\Controller\Backend\Profile\CategoryProfileController;
-use Shop\Controller\Backend\Profile\ProductProfileController;
-use Shop\Controller\Backend\Profile\UserProfileController;
 use Shop\Controller\ErrorController;
-use Shop\Controller\Frontend\CategoryController;
-use Shop\Controller\Frontend\DetailController;
-use Shop\Controller\Frontend\HomeController;
+use Shop\Controller\Backend\BackendController;
+use Shop\Controller\Backend\LoginController;
+use Shop\Controller\Backend\Listing\{CategoryListController, ProductListController, UserListController};
+use Shop\Controller\Backend\Profile\{CategoryProfileController, ProductProfileController, UserProfileController};
+use Shop\Controller\Frontend\{CategoryController, DetailController, HomeController};
 use Shop\Core\Authenticator;
 use Shop\Core\View;
-use Shop\Model\Mapper\CategoriesMapper;
-use Shop\Model\Mapper\ProductsMapper;
-use Shop\Model\Mapper\UsersMapper;
-use Shop\Model\Repository\CategoryRepository;
-use Shop\Model\Repository\ProductRepository;
-use Shop\Model\Repository\UserRepository;
+use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
+use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
 
 class DependencyProvider
 {

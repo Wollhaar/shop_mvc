@@ -5,8 +5,8 @@ namespace ShopTest\Controller\Backend\Listing;
 
 use Shop\Controller\Backend\Listing\UserListController;
 use Shop\Core\View;
-use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\UsersMapper;
+use Shop\Model\Repository\UserRepository;
 use Shop\Service\SQLConnector;
 
 class UserListControllerTest extends \PHPUnit\Framework\TestCase
@@ -14,16 +14,9 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
     public function testView()
     {
         $view = new View();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
         $connector = new SQLConnector();
-
-        $controller = new UserListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
-            new UserRepository($usrMapper, $connector)
-        );
+        $controller = new UserListController($view, new UserRepository($usrMapper, $connector));
 
         $controller->view();
         $results = $view->getParams();
@@ -43,16 +36,10 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
         $_REQUEST['id'] = 4;
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
         $connector = new SQLConnector();
 
-        $controller = new UserListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
-            new UserRepository($usrMapper, $connector)
-        );
+        $controller = new UserListController($view, new UserRepository($usrMapper, $connector));
 
         $controller->view();
         $results = $view->getParams();

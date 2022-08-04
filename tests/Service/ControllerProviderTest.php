@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace ShopTest;
+namespace ShopTest\Service;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\Frontend\{CategoryController, DetailController, HomeController};
 use Shop\Controller\Backend\{BackendController, LoginController};
 use Shop\Controller\Backend\Listing\{CategoryListController, ProductListController, UserListController};
 use Shop\Controller\Backend\Profile\{CategoryProfileController, ProductProfileController, UserProfileController};
+use Shop\Controller\Frontend\{CategoryController, DetailController, HomeController};
 use Shop\Service\ControllerProvider;
 
 class ControllerProviderTest extends TestCase

@@ -35,11 +35,9 @@ class CategoryController implements BasicController
         $activeCategory = false;
         $name = 'All';
 
-        if (!isNull($this->activeCategory)) {
-            if($this->activeCategory->id !== 0) {
-                $activeCategory = true;
-                $name = $this->activeCategory->name;
-            }
+        if ($this->activeCategory->id !== 0) {
+            $activeCategory = true;
+            $name = $this->activeCategory->name;
         }
 
         $this->renderer->addTemplateParameter($name, 'title');
@@ -54,8 +52,7 @@ class CategoryController implements BasicController
 
     private function build(): array
     {
-        $request = $_REQUEST;
-        $activeId = (int) ($request['id'] ?? 0);
+        $activeId = (int)($_REQUEST['id'] ?? 0);
 
         $this->activeCategory = $this->catRepository->findCategoryById(0);
         if ($activeId) {

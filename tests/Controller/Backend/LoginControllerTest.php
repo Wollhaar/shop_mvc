@@ -7,8 +7,8 @@ use PHPUnit\Framework\TestCase;
 use Shop\Controller\Backend\LoginController;
 use Shop\Core\Authenticator;
 use Shop\Core\View;
-use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\UsersMapper;
+use Shop\Model\Repository\UserRepository;
 use Shop\Service\Session;
 use Shop\Service\SQLConnector;
 
@@ -18,8 +18,6 @@ class LoginControllerTest extends TestCase
     {
         $_POST = ['username' => 'test', 'password' => 'test123'];
         $connector = new SQLConnector();
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
         $usrRepository = new UserRepository($usrMapper, $connector);
 
@@ -27,13 +25,8 @@ class LoginControllerTest extends TestCase
         $session = new Session(true);
 
         $controller = new LoginController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
             $usrRepository,
-            $catMapper,
-            $prodMapper,
-            $usrMapper,
-            new Authenticator($session, $usrRepository)
+            new Authenticator($session, $usrRepository),
         );
 
         $controller->view();
@@ -53,8 +46,6 @@ class LoginControllerTest extends TestCase
     public function testFailedLogin()
     {
         $_REQUEST = ['username' => 'test', 'password' => 'test1234'];
-        $catMapper = new CategoriesMapper();
-        $prodMapper = new ProductsMapper();
         $usrMapper = new UsersMapper();
 
         $connector = new SQLConnector();
@@ -62,12 +53,7 @@ class LoginControllerTest extends TestCase
         $view = new View();
 
         $controller = new LoginController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
             $usrRepository,
-            $catMapper,
-            $prodMapper,
-            $usrMapper,
             new Authenticator(new Session(true), $usrRepository)
         );
 

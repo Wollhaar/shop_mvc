@@ -4,8 +4,8 @@ namespace ShopTest\Controller\Backend\Profile;
 
 use Shop\Controller\Backend\Profile\ProductProfileController;
 use Shop\Core\View;
-use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper};
+use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 use Shop\Service\SQLConnector;
 
 class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
@@ -24,8 +24,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new ProductProfileController($view,
             new CategoryRepository($catMapper, $connector),
             new ProductRepository($prodMapper, $connector),
-            new UserRepository(new UsersMapper(), $connector),
-            $catMapper,
             $prodMapper
         );
 
@@ -56,8 +54,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new ProductProfileController($view,
             new CategoryRepository($catMapper, $connector),
             new ProductRepository($prodMapper, $connector),
-            new UserRepository(new UsersMapper(), $connector),
-            $catMapper,
             $prodMapper
         );
 
@@ -101,8 +97,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new ProductProfileController($view,
             new CategoryRepository($catMapper, $connector),
             new ProductRepository($prodMapper, $connector),
-            new UserRepository(new UsersMapper(), $connector),
-            $catMapper,
             $prodMapper
         );
 
@@ -144,8 +138,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new ProductProfileController($view,
             new CategoryRepository($catMapper, $connector),
             new ProductRepository($prodMapper, $connector),
-            new UserRepository(new UsersMapper(), $connector),
-            $catMapper,
             $prodMapper
         );
 

@@ -5,8 +5,8 @@ namespace ShopTest\Controller\Backend\Listing;
 
 use Shop\Controller\Backend\Listing\ProductListController;
 use Shop\Core\View;
-use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\Mapper\ProductsMapper;
+use Shop\Model\Repository\ProductRepository;
 use Shop\Service\SQLConnector;
 
 class ProductListControllerTest extends \PHPUnit\Framework\TestCase
@@ -17,13 +17,10 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
         $_REQUEST['id'] = '';
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
         $connector = new SQLConnector();
 
         $controller = new ProductListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector),
-            new UserRepository(new UsersMapper(), $connector),
+            new ProductRepository(new ProductsMapper(), $connector)
         );
         $controller->view();
         $results = $view->getParams();
@@ -53,13 +50,10 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
         $_REQUEST['id'] = 9;
 
         $view = new View();
-        $catMapper = new CategoriesMapper();
         $connector = new SQLConnector();
 
         $controller = new ProductListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector),
-            new UserRepository(new UsersMapper(), $connector),
+            new ProductRepository(new ProductsMapper(), $connector)
         );
         $controller->view();
         $results = $view->getParams();

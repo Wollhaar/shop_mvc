@@ -4,15 +4,10 @@ declare(strict_types=1);
 namespace ShopTest\Controller\Backend\Listing;
 
 use PHPUnit\Framework\TestCase;
-use Shop\Controller\Backend\ListController;
 use Shop\Controller\Backend\Listing\CategoryListController;
 use Shop\Core\View;
 use Shop\Model\Mapper\CategoriesMapper;
-use Shop\Model\Mapper\ProductsMapper;
-use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\CategoryRepository;
-use Shop\Model\Repository\ProductRepository;
-use Shop\Model\Repository\UserRepository;
 use Shop\Service\SQLConnector;
 
 class CategoryListControllerTest extends TestCase
@@ -25,11 +20,7 @@ class CategoryListControllerTest extends TestCase
         $catMapper = new CategoriesMapper();
         $connector = new SQLConnector();
 
-        $controller = new CategoryListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector),
-            new UserRepository(new UsersMapper(), $connector),
-        );
+        $controller = new CategoryListController($view, new CategoryRepository($catMapper, $connector));
         $controller->view();
         $results = $view->getParams();
 
@@ -56,9 +47,7 @@ class CategoryListControllerTest extends TestCase
         $connector = new SQLConnector();
 
         $controller = new CategoryListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector),
-            new UserRepository(new UsersMapper(), $connector)
+            new CategoryRepository($catMapper, $connector)
         );
 
         $controller->view();
