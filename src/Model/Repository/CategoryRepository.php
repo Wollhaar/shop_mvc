@@ -5,17 +5,10 @@ namespace Shop\Model\Repository;
 
 use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Mapper\CategoriesMapper;
-use Shop\Model\PDOAttribute;
 use Shop\Service\SQLConnector;
 
 class CategoryRepository
 {
-    private const PDO_ATTRIBUTE_TYPES = [
-        'integer' => \PDO::PARAM_INT,
-        'string' => \PDO::PARAM_STR,
-        'double' => \PDO::PARAM_STR,
-    ];
-
     private CategoriesMapper $mapper;
     private SQLConnector $connector;
 
@@ -35,21 +28,6 @@ class CategoryRepository
         return $this->validateCategory($category ?? []);
     }
 
-    public function addCategory(CategoryDataTransferObject $data): CategoryDataTransferObject
-    {
-        $sql = 'INSERT INTO categories (`name`) VALUES(:name)';
-        $attributes = ['name' => ['key' => ':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]]];
-
-        $this->connector->set($sql, (array)$data, $attributes);
-        return $this->validateCategory($this->getLastInsert());
-    }
-
-    public function deleteCategoryById(int $id): void
-    {
-        $sql = 'UPDATE categories SET `active` = 0 WHERE `id` = :id LIMIT 1';
-        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
-    }
-
     public function getAll(): array
     {
         $sql = 'SELECT * FROM categories WHERE `active` = 1;';
@@ -63,6 +41,14 @@ class CategoryRepository
         return $categoryList;
     }
 
+    public function getLastInsert(): CategoryDataTransferObject
+    {
+        $sql = 'SELECT * FROM categories WHERE `id` = LAST_INSERT_ID()';
+        $category = $this->connector->get($sql)[0] ?? [];
+
+        return $this->validateCategory($category);
+    }
+
     private function validateCategory(array $category): CategoryDataTransferObject
     {
         if (!empty($category)) {
@@ -70,11 +56,5 @@ class CategoryRepository
             $category['active'] = (bool)$category['active'];
         }
         return $this->mapper->mapToDto($category);
-    }
-
-    private function getLastInsert(): array
-    {
-        $sql = 'SELECT * FROM categories WHERE `id` = LAST_INSERT_ID()';
-        return $this->connector->get($sql)[0] ?? [];
     }
 }

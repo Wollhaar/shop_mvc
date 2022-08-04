@@ -3,18 +3,21 @@
 namespace Shop\Controller\Backend\Listing;
 
 use Shop\Core\View;
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\EntityManager\ProductEntityManager;
+use Shop\Model\Repository\{ProductRepository};
 
 class ProductListController implements \Shop\Controller\BasicController
 {
     private const TPL = 'ProductListView.tpl';
     private View $renderer;
     private ProductRepository $prodRepository;
+    private ProductEntityManager $prodEntManager;
 
-    public function __construct(View $renderer, ProductRepository $prodRepository)
+    public function __construct(View $renderer, ProductRepository $prodRepository, ProductEntityManager $prodEntManager)
     {
         $this->renderer = $renderer;
         $this->prodRepository = $prodRepository;
+        $this->prodEntManager = $prodEntManager;
     }
 
     public function view(): void
@@ -36,7 +39,7 @@ class ProductListController implements \Shop\Controller\BasicController
         $do = $_REQUEST['action'] ?? '';
         if ($do === 'delete') {
             $id = (int)($_REQUEST['id'] ?? 0);
-            $this->prodRepository->deleteProductById($id);
+            $this->prodEntManager->deleteProductById($id);
         }
     }
 }

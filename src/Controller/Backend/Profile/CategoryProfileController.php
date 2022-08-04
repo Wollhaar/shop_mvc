@@ -6,6 +6,7 @@ namespace Shop\Controller\Backend\Profile;
 use Shop\Core\View;
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
 use Shop\Model\Dto\CategoryDataTransferObject;
+use Shop\Model\EntityManager\CategoryEntityManager;
 use Shop\Model\Mapper\CategoriesMapper;
 
 class CategoryProfileController implements \Shop\Controller\BasicController
@@ -13,12 +14,14 @@ class CategoryProfileController implements \Shop\Controller\BasicController
     private const TPL = 'CategoryProfileView.tpl';
     private View $renderer;
     private CategoryRepository $catRepository;
+    private CategoryEntityManager $catEntManager;
     private CategoriesMapper $catMapper;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, CategoriesMapper $catMapper)
+    public function __construct(View $renderer, CategoryRepository $catRepository, CategoryEntityManager $catEntManager, CategoriesMapper $catMapper)
     {
         $this->renderer = $renderer;
         $this->catRepository = $catRepository;
+        $this->catEntManager = $catEntManager;
         $this->catMapper = $catMapper;
     }
 
@@ -49,7 +52,8 @@ class CategoryProfileController implements \Shop\Controller\BasicController
             case 'create':
                 $category = $_POST['category'] ?? [];
                 $category = $this->catMapper->mapToDto($category);
-                return $this->catRepository->addCategory($category);
+                $this->catEntManager->addCategory($category);
+                return $this->catRepository->getLastInsert();
 
             default:
                 $id = $_REQUEST['id'] ?? '';

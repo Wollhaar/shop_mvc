@@ -4,17 +4,10 @@ namespace Shop\Model\Repository;
 
 use Shop\Model\Dto\ProductDataTransferObject;
 use Shop\Model\Mapper\ProductsMapper;
-use Shop\Model\PDOAttribute;
 use Shop\Service\SQLConnector;
 
 class ProductRepository
 {
-    private const PDO_ATTRIBUTE_TYPES = [
-        'integer' => \PDO::PARAM_INT,
-        'string' => \PDO::PARAM_STR,
-        'double' => \PDO::PARAM_STR,
-    ];
-
     private ProductsMapper $mapper;
     private SQLConnector $connector;
 
@@ -50,56 +43,6 @@ class ProductRepository
         return $products;
     }
 
-    public function addProduct(ProductDataTransferObject $data): ProductDataTransferObject
-    {
-        $sql = 'INSERT INTO products (`name`, `size`, `color`, `category`, `price`, `amount`) 
-                VALUES(:name, :size, :color, :category, :price, :amount);';
-
-        $attributes = [
-            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
-            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
-            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
-            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
-            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
-            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
-        ];
-
-        $this->connector->set($sql, (array)$data, $attributes);
-
-        return $this->mapper->mapToDto($this->getLastInsert());
-    }
-
-    public function saveProduct(ProductDataTransferObject $data): ProductDataTransferObject
-    {
-        $sql = 'UPDATE products SET 
-                    `name` = :name, 
-                    `size`= :size, 
-                    `color`= :color, 
-                    `category`= :category, 
-                    `price`= :price, 
-                    `amount`= :amount 
-                WHERE `id` = :id LIMIT 1;';
-
-        $attributes = [
-            'id' => ['key' =>':id', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->id)]],
-            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
-            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
-            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
-            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
-            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
-            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
-        ];
-
-        $this->connector->set($sql, (array)$data, $attributes);
-        return $this->findProductById($data->id);
-    }
-
-    public function deleteProductById(int $id): void
-    {
-        $sql = 'UPDATE products SET `active` = 0 WHERE `id` = :id LIMIT 1;';
-        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
-    }
-
     public function getAll(): array
     {
         $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
@@ -114,6 +57,16 @@ class ProductRepository
         return $products;
     }
 
+    public function getLastInsert(): ProductDataTransferObject
+    {
+        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
+                LEFT JOIN categories as c ON p.`category` = c.`id` 
+                   WHERE p.id = LAST_INSERT_ID() LIMIT 1;';
+
+        $product = $this->connector->get($sql)[0];
+        return $this->validateProduct($product);
+    }
+
     private function validateProduct(array $product): ProductDataTransferObject
     {
         if (!empty($product)) {
@@ -122,17 +75,5 @@ class ProductRepository
             $product['active'] = (bool)$product['active'];
         }
         return $this->mapper->mapToDto($product);
-    }
-
-    private function getLastInsert(): array
-    {
-        $sql = 'SELECT *, p.`id` as id, p.`name` as name, c.`name` as categoryName FROM products as p 
-                LEFT JOIN categories as c ON p.`category` = c.`id` 
-                   WHERE p.id = LAST_INSERT_ID() LIMIT 1;';
-        $product = $this->connector->get($sql)[0];
-
-        $product['category'] = $product['categoryName'];
-        $product['active'] = (bool)$product['active'];
-        return $product;
     }
 }

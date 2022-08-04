@@ -5,23 +5,25 @@ namespace Shop\Controller\Backend\Profile;
 
 use Shop\Core\View;
 use Shop\Model\Dto\ProductDataTransferObject;
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
-use Shop\Model\Mapper\CategoriesMapper;
+use Shop\Model\EntityManager\ProductEntityManager;
 use Shop\Model\Mapper\ProductsMapper;
+use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 
 class ProductProfileController implements \Shop\Controller\BasicController
 {
     private const TPL = 'ProductProfileView.tpl';
     private View $renderer;
     private ProductRepository $prodRepository;
+    private ProductEntityManager $prodEntManager;
     private ProductsMapper $prodMapper;
     private CategoryRepository $catRepository;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, ProductsMapper $prodMapper)
+    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, ProductEntityManager $prodEntManager, ProductsMapper $prodMapper)
     {
         $this->renderer = $renderer;
         $this->prodRepository = $prodRepository;
         $this->catRepository = $catRepository;
+        $this->prodEntManager = $prodEntManager;
         $this->prodMapper = $prodMapper;
     }
 
@@ -57,7 +59,8 @@ class ProductProfileController implements \Shop\Controller\BasicController
                 $product['amount'] = (int)($product['amount'] ?? 0);
 
                 $product = $this->prodMapper->mapToDto($product);
-                return $this->prodRepository->addProduct($product);
+                $this->prodEntManager->addProduct($product);
+                return $this->prodRepository->getLastInsert();
 
             case 'save':
                 $product = $_POST['product'];
@@ -67,7 +70,8 @@ class ProductProfileController implements \Shop\Controller\BasicController
                 $product['active'] = (bool)($product['active'] ?? 0);
 
                 $product = $this->prodMapper->mapToDto($product);
-                return $this->prodRepository->saveProduct($product);
+                $this->prodEntManager->saveProduct($product);
+                return $this->prodRepository->findProductById($product->id);
 
             default:
                 $id = (int)($_REQUEST['id'] ?? 0);

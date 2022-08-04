@@ -5,17 +5,20 @@ namespace Shop\Controller\Backend\Listing;
 
 use Shop\Core\View;
 use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
+use Shop\Model\EntityManager\CategoryEntityManager;
 
 class CategoryListController implements \Shop\Controller\BasicController
 {
     private const TPL = 'CategoryListView.tpl';
     private View $renderer;
     private CategoryRepository $catRepository;
+    private CategoryEntityManager $catEntManager;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository)
+    public function __construct(View $renderer, CategoryRepository $catRepository, CategoryEntityManager $catEntManager)
     {
         $this->renderer = $renderer;
         $this->catRepository = $catRepository;
+        $this->catEntManager = $catEntManager;
     }
 
     public function view(): void
@@ -37,7 +40,7 @@ class CategoryListController implements \Shop\Controller\BasicController
         $do = $_REQUEST['action'] ?? '';
         if ($do === 'delete') {
             $id = (int)($_REQUEST['id'] ?? 0);
-            $this->catRepository->deleteCategoryById($id);
+            $this->catEntManager->deleteCategoryById($id);
         }
     }
 }
