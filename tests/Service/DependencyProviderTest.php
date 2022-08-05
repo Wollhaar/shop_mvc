@@ -11,6 +11,8 @@ class DependencyProviderTest extends \PHPUnit\Framework\TestCase
 {
     public function testProvide()
     {
+        $_SERVER['PHP_TEST'] = 1;
+
         $container = new Container();
         $provider = new DependencyProvider();
         $provider->provide($container);
