@@ -26,7 +26,7 @@
 </header>
 <h1>Backend Login</h1>
 <p>
-{if isset($authentication)}
+{if $authentication}
     {$authUsername = $authentication.username}
     {if $authUsername}
         {$authPassword = $authentication.password}
