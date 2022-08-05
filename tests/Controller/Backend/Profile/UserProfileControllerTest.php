@@ -5,6 +5,7 @@ namespace ShopTest\Controller\Backend\Profile;
 
 use Shop\Controller\Backend\Profile\UserProfileController;
 use Shop\Core\View;
+use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
 use Shop\Service\SQLConnector;
@@ -22,6 +23,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new UserProfileController($view,
             new UserRepository($usrMapper, $connector),
+            new UserEntityManager($connector),
             $usrMapper,
         );
 
@@ -61,6 +63,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new UserProfileController($view,
             new UserRepository($usrMapper, $connector),
+            new UserEntityManager($connector),
             $usrMapper,
         );
 
@@ -94,6 +97,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new UserProfileController($view,
             new UserRepository($usrMapper, $connector),
+            new UserEntityManager($connector),
             $usrMapper,
         );
 
@@ -133,6 +137,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new UserProfileController($view,
             new UserRepository($usrMapper, $connector),
+            new UserEntityManager($connector),
             $usrMapper,
         );
 
@@ -172,6 +177,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new UserProfileController($view,
             new UserRepository($usrMapper, $connector),
+            new UserEntityManager($connector),
             $usrMapper,
         );
 

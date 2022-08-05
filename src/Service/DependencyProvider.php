@@ -20,7 +20,7 @@ class DependencyProvider
     public function provide(Container $container): void
     {
         $container->set(SQLConnector::class, new SQLConnector());
-        $container->set(Session::class, new Session());
+        $container->set(Session::class, new Session(true));
         $container->set(View::class, new View());
         $container->set(CategoriesMapper::class, new CategoriesMapper());
         $container->set(ProductsMapper::class, new ProductsMapper());

@@ -6,6 +6,7 @@ namespace ShopTest\Controller\Backend\Listing;
 use PHPUnit\Framework\TestCase;
 use Shop\Controller\Backend\Listing\CategoryListController;
 use Shop\Core\View;
+use Shop\Model\EntityManager\CategoryEntityManager;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;
 use Shop\Service\SQLConnector;
@@ -20,7 +21,10 @@ class CategoryListControllerTest extends TestCase
         $catMapper = new CategoriesMapper();
         $connector = new SQLConnector();
 
-        $controller = new CategoryListController($view, new CategoryRepository($catMapper, $connector));
+        $controller = new CategoryListController($view,
+            new CategoryRepository($catMapper, $connector),
+            new CategoryEntityManager($connector),
+        );
         $controller->view();
         $results = $view->getParams();
 
@@ -47,7 +51,8 @@ class CategoryListControllerTest extends TestCase
         $connector = new SQLConnector();
 
         $controller = new CategoryListController($view,
-            new CategoryRepository($catMapper, $connector)
+            new CategoryRepository($catMapper, $connector),
+            new CategoryEntityManager($connector)
         );
 
         $controller->view();

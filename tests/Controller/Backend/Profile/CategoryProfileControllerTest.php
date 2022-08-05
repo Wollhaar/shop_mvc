@@ -5,6 +5,7 @@ namespace ShopTest\Controller\Backend\Profile;
 
 use Shop\Controller\Backend\Profile\CategoryProfileController;
 use Shop\Core\View;
+use Shop\Model\EntityManager\CategoryEntityManager;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;
 use Shop\Service\SQLConnector;
@@ -22,6 +23,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new CategoryProfileController($view,
             new CategoryRepository($catMapper, $connector),
+            new CategoryEntityManager($connector),
             $catMapper
         );
         $controller->view();
@@ -43,6 +45,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new CategoryProfileController($view,
             new CategoryRepository($catMapper, $connector),
+            new CategoryEntityManager($connector),
             $catMapper
         );
         $controller->view();
@@ -71,6 +74,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new CategoryProfileController($view,
             new CategoryRepository($catMapper, $connector),
+            new CategoryEntityManager($connector),
             $catMapper
         );
         $controller->view();

@@ -5,6 +5,7 @@ namespace ShopTest\Controller\Backend\Listing;
 
 use Shop\Controller\Backend\Listing\ProductListController;
 use Shop\Core\View;
+use Shop\Model\EntityManager\ProductEntityManager;
 use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Repository\ProductRepository;
 use Shop\Service\SQLConnector;
@@ -20,7 +21,8 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
         $connector = new SQLConnector();
 
         $controller = new ProductListController($view,
-            new ProductRepository(new ProductsMapper(), $connector)
+            new ProductRepository(new ProductsMapper(), $connector),
+            new ProductEntityManager($connector),
         );
         $controller->view();
         $results = $view->getParams();
@@ -53,7 +55,8 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
         $connector = new SQLConnector();
 
         $controller = new ProductListController($view,
-            new ProductRepository(new ProductsMapper(), $connector)
+            new ProductRepository(new ProductsMapper(), $connector),
+            new ProductEntityManager($connector)
         );
         $controller->view();
         $results = $view->getParams();

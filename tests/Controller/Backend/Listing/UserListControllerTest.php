@@ -5,6 +5,7 @@ namespace ShopTest\Controller\Backend\Listing;
 
 use Shop\Controller\Backend\Listing\UserListController;
 use Shop\Core\View;
+use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
 use Shop\Service\SQLConnector;
@@ -16,7 +17,10 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
         $view = new View();
         $usrMapper = new UsersMapper();
         $connector = new SQLConnector();
-        $controller = new UserListController($view, new UserRepository($usrMapper, $connector));
+        $controller = new UserListController($view,
+            new UserRepository($usrMapper, $connector),
+            new UserEntityManager($connector)
+        );
 
         $controller->view();
         $results = $view->getParams();
@@ -39,7 +43,9 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
         $connector = new SQLConnector();
 
-        $controller = new UserListController($view, new UserRepository($usrMapper, $connector));
+        $controller = new UserListController($view,
+            new UserRepository($usrMapper, $connector),
+            new UserEntityManager($connector));
 
         $controller->view();
         $results = $view->getParams();
