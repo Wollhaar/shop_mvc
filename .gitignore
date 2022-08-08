@@ -7,6 +7,10 @@ composer.lock
 .phpunit.result.cache
 
 #frameworks
+#doctrine
+/bin/doctrine.php
+bootstrap-doctrine.php
+
 #phpunit
 coverage
 
