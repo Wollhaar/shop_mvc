@@ -3,20 +3,28 @@ declare(strict_types=1);
 
 namespace Shop\Model\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="categories")
+ */
 class Category
 {
     /**
-     * @var int
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private int $id;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $name;
 
     /**
-     * @var bool
+     * @ORM\Column(type="integer")
      */
     private bool $active;
 }

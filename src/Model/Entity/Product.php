@@ -3,45 +3,117 @@ declare(strict_types=1);
 
 namespace Shop\Model\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="products")
+ */
 class Product
 {
     /**
-     * @var int
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private int $id;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $name;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $size;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $color;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $category;
 
     /**
-     * @var float
+     * @ORM\Column(type="string")
      */
-    private float $price;
+    private string $price;
 
     /**
-     * @var int
+     * @ORM\Column(type="integer")
      */
     private int $amount;
 
     /**
-     * @var bool
+     * @ORM\Column(type="integer")
      */
-    private bool $active;
+    private int $active;
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $size
+     */
+    public function setSize(string $size): void
+    {
+        $this->size = $size;
+    }
+
+    /**
+     * @param string $color
+     */
+    public function setColor(string $color): void
+    {
+        $this->color = $color;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory(string $category): void
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * @param string $price
+     */
+    public function setPrice(string $price): void
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @param int $amount
+     */
+    public function setAmount(int $amount): void
+    {
+        $this->amount = $amount;
+    }
+
+    /**
+     * @param int $active
+     */
+    public function setActive(int $active): void
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

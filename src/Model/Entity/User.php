@@ -3,50 +3,58 @@ declare(strict_types=1);
 
 namespace Shop\Model\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="users")
+ */
 class User
 {
     /**
-     * @var int
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private int $id;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $username;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $password;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $firstname;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $lastname;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $created;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $updated;
 
     /**
-     * @var string
+     * @ORM\Column(type="string")
      */
     private string $birthday;
 
     /**
-     * @var bool
+     * @ORM\Column(type="integer")
      */
     private bool $active;
 }

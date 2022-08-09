@@ -9,7 +9,10 @@ composer.lock
 #frameworks
 #doctrine
 /bin/doctrine.php
+doctrine.php
 bootstrap-doctrine.php
+create_product.php
+*.sqlite
 
 #phpunit
 coverage
