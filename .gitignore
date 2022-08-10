@@ -8,10 +8,11 @@ composer.lock
 
 #frameworks
 #doctrine
+doctrine_scripts/
 /bin/doctrine.php
 doctrine.php
 bootstrap-doctrine.php
-create_product.php
+create_*.php
 *.sqlite
 
 #phpunit

@@ -36,11 +36,6 @@ class Product
     /**
      * @ORM\Column(type="string")
      */
-    private string $category;
-
-    /**
-     * @ORM\Column(type="string")
-     */
     private string $price;
 
     /**
@@ -49,9 +44,12 @@ class Product
     private int $amount;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
-    private int $active;
+    private bool $active;
+
+    private $category;
+
 
     /**
      * @param string $name
@@ -78,9 +76,9 @@ class Product
     }
 
     /**
-     * @param string $category
+     * @param Category $category
      */
-    public function setCategory(string $category): void
+    public function setCategory(Category $category): void
     {
         $this->category = $category;
     }
@@ -102,9 +100,9 @@ class Product
     }
 
     /**
-     * @param int $active
+     * @param bool $active
      */
-    public function setActive(int $active): void
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
@@ -115,5 +113,13 @@ class Product
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 }
