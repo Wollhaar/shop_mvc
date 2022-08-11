@@ -2,6 +2,7 @@
 
 define("ROOT_PATH", __DIR__);
 require __DIR__ . '/vendor/autoload.php';
+require_once "bootstrap-doctrine.php";
 
 
 function class_search(string $name, string $backend): string

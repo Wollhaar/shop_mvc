@@ -7,6 +7,8 @@ $page = $request['page'] ?? 'home';
 
 
 $container = new \Shop\Service\Container();
+$container->set(\Doctrine\ORM\EntityManager::class, $entityManager);
+
 $dependencyProvider = new \Shop\Service\DependencyProvider();
 $dependencyProvider->provide($container);
 
@@ -26,4 +28,3 @@ $controllerName = class_search($page, $backend ?? '');
 $controller = $container->get($controllerName);
 
 $controller->view();
-//$controller->display();

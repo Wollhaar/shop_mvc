@@ -27,6 +27,21 @@ class CategoryEntityManager
         $attributes = ['name' => ['key' => ':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]]];
 
         $this->connector->set($sql, (array)$data, $attributes);
+
+
+        $category = $entityManager->find(\Shop\Model\Entity\Category::class, (int)$newProductCategory);
+
+        $product = new \Shop\Model\Entity\Product();
+        $product->setName($newProductName);
+        $product->setSize($newProductSize);
+        $product->setColor($newProductColor);
+        $product->assignToCategory($category);
+        $product->setPrice($newProductPrice);
+        $product->setAmount((int)$newProductAmount);
+        $product->setActive((bool)$newProductActive);
+
+        $entityManager->persist($product);
+        $entityManager->flush();
     }
 
     public function deleteCategoryById(int $id): void

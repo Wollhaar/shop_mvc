@@ -25,16 +25,10 @@ class Category
     private string $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
     private bool $active;
 
-    private $products;
-
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -68,8 +62,11 @@ class Category
         $this->active = $active;
     }
 
-    public function assignToProduct(Product $product): void
+    /**
+     * @return bool
+     */
+    public function getActive(): bool
     {
-        $this->products[] = $product;
+        return $this->active;
     }
 }

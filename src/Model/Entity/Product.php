@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Shop\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,6 +35,11 @@ class Product
     private string $color;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Category", )
+     */
+    private $categories;
+
+    /**
      * @ORM\Column(type="string")
      */
     private string $price;
@@ -48,8 +54,10 @@ class Product
      */
     private bool $active;
 
-    private $category;
-
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
 
     /**
      * @param string $name
@@ -78,9 +86,9 @@ class Product
     /**
      * @param Category $category
      */
-    public function setCategory(Category $category): void
+    public function assignToCategory(Category $category): void
     {
-        $this->category = $category;
+        $this->categories[] = $category;
     }
 
     /**
