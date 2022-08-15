@@ -25,6 +25,7 @@ class CategoryListController implements \Shop\Controller\BasicController
     {
         $this->action();
         $categories = $this->catRepository->getAll();
+//        var_dump($categories);
 
         $this->renderer->addTemplateParameter('Categories', 'title');
         $this->renderer->addTemplateParameter($categories, 'categories');

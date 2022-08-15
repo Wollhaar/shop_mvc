@@ -3,84 +3,61 @@ declare(strict_types=1);
 
 namespace Shop\Model\EntityManager;
 
+use Doctrine\ORM\EntityManager;
 use Shop\Model\Dto\ProductDataTransferObject;
-use Shop\Service\SQLConnector;
+use Shop\Model\Entity\{Category, Product};
 
 class ProductEntityManager
 {
-    private const PDO_ATTRIBUTE_TYPES = [
-        'integer' => \PDO::PARAM_INT,
-        'string' => \PDO::PARAM_STR,
-        'double' => \PDO::PARAM_STR,
-    ];
-
-    private SQLConnector $connector;
+    private EntityManager $dataManager;
 
 
-    public function __construct(SQLConnector $connector)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->connector = $connector;
+        $this->dataManager = $entityManager;
     }
 
     public function addProduct(ProductDataTransferObject $data): void
     {
-        $sql = 'INSERT INTO products (`name`, `size`, `color`, `category`, `price`, `amount`) 
-                VALUES(:name, :size, :color, :category, :price, :amount);';
+        $category = $this->dataManager->find(Category::class, (int)$data->category);
 
-        $attributes = [
-            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
-            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
-            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
-            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
-            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
-            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
-        ];
-
-        $this->connector->set($sql, (array)$data, $attributes);
-
-
-        $category = $entityManager->find(\Shop\Model\Entity\Category::class, (int)$newProductCategory);
-
-        $product = new \Shop\Model\Entity\Product();
-        $product->setName($newProductName);
-        $product->setSize($newProductSize);
-        $product->setColor($newProductColor);
+        $product = new Product();
+        $product->setName($data->name);
+        $product->setSize($data->size);
+        $product->setColor($data->color);
         $product->assignToCategory($category);
-        $product->setPrice($newProductPrice);
-        $product->setAmount((int)$newProductAmount);
-        $product->setActive((bool)$newProductActive);
+        $product->setPrice((string)$data->price);
+        $product->setAmount($data->amount);
+        $product->setActive(true);
 
-        $entityManager->persist($product);
-        $entityManager->flush();
+        $this->dataManager->persist($product);
+        $this->dataManager->flush();
     }
 
     public function saveProduct(ProductDataTransferObject $data): void
     {
-        $sql = 'UPDATE products SET 
-                    `name` = :name, 
-                    `size`= :size, 
-                    `color`= :color, 
-                    `category`= :category, 
-                    `price`= :price, 
-                    `amount`= :amount 
-                WHERE `id` = :id LIMIT 1;';
+//        $product = $this->dataManager->find(Product::class, $data->id);
+        $product = new Product();
+        $category = $this->dataManager->find(Category::class, (int)$data->category);
 
-        $attributes = [
-            'id' => ['key' =>':id', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->id)]],
-            'name' => ['key' =>':name', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->name)]],
-            'size' => ['key' =>':size', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->size)]],
-            'color' => ['key' =>':color', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->color)]],
-            'category' => ['key' =>':category', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->category)]],
-            'price' => ['key' =>':price', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->price)]],
-            'amount' => ['key' =>':amount', 'type' => self::PDO_ATTRIBUTE_TYPES[gettype($data->amount)]]
-        ];
+        var_dump($category);
+        $product->setName($data->name);
+        $product->setSize($data->size);
+        $product->setColor($data->color);
+        $product->assignToCategory($category);
+        $product->setPrice((string)$data->price);
+        $product->setAmount($data->amount);
+        $product->setActive(true);
 
-        $this->connector->set($sql, (array)$data, $attributes);
+        $this->dataManager->persist($product);
+        $this->dataManager->flush();
     }
 
     public function deleteProductById(int $id): void
     {
-        $sql = 'UPDATE products SET `active` = 0 WHERE `id` = :id LIMIT 1;';
-        $this->connector->set($sql, ['id' => $id], ['id' => ['key' => ':id', 'type' => self::PDO_ATTRIBUTE_TYPES['integer']]]);
+        $product = $this->dataManager->find(Product::class, $id);
+        $product->setActive(false);
+
+        $this->dataManager->flush();
     }
 }

@@ -30,7 +30,7 @@ class DependencyProvider
         $container->set(ProductRepository::class, new ProductRepository($container->get(ProductsMapper::class), $container->get(SQLConnector::class), $container->get(EntityManager::class)));
         $container->set(UserRepository::class, new UserRepository($container->get(UsersMapper::class), $container->get(SQLConnector::class), $container->get(EntityManager::class)));
         $container->set(CategoryEntityManager::class, new CategoryEntityManager($container->get(SQLConnector::class), $container->get(EntityManager::class)));
-        $container->set(ProductEntityManager::class, new ProductEntityManager($container->get(SQLConnector::class), $container->get(EntityManager::class)));
+        $container->set(ProductEntityManager::class, new ProductEntityManager($container->get(EntityManager::class)));
         $container->set(UserEntityManager::class, new UserEntityManager($container->get(SQLConnector::class), $container->get(EntityManager::class)));
         $container->set(Authenticator::class, new Authenticator($container->get(Session::class), $container->get(UserRepository::class)));
         $container->set(ErrorController::class, new ErrorController($container->get(View::class)));

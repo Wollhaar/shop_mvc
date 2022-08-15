@@ -29,6 +29,13 @@ class Category
      */
     private bool $active;
 
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
 
     /**
      * @return int

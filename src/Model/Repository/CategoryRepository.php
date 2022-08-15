@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Shop\Model\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Entity\Category;
@@ -34,14 +35,17 @@ class CategoryRepository
 
     public function getAll(): array
     {
-//        $sql = 'SELECT * FROM categories WHERE `active` = 1;';
-//        $categories = $this->connector->get($sql);
-        $categoryRepository = $this->dataManager->getRepository(Category::class);
-        $categories = $categoryRepository->findAll();
+        $queryBuild = $this->dataManager->createQueryBuilder();
+        $categories = $queryBuild
+            ->select('cat.id')
+            ->addSelect(['cat.name', 'cat.active'])
+            ->from(Category::class, 'cat')
+            ->andWhere('cat.active = true')
+            ->getQuery()->execute();
+
 
         $categoryList = [];
         foreach ($categories as $category) {
-            $category = ['id' => $category->getId(), 'name' => $category->getName(), 'active' => $category->getActive()];
             $categoryList[] = $this->mapper->mapToDto($category);
         }
         return $categoryList;
