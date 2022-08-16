@@ -40,7 +40,6 @@ class ProductEntityManager
         $product = new Product();
         $category = $this->dataManager->find(Category::class, (int)$data->category);
 
-        var_dump($category);
         $product->setName($data->name);
         $product->setSize($data->size);
         $product->setColor($data->color);

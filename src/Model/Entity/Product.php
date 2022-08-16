@@ -16,6 +16,7 @@ class Product
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @var int
      */
     private int $id;
 
@@ -35,9 +36,9 @@ class Product
     private string $color;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", )
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
      */
-    private $categories;
+    private $category_id;
 
     /**
      * @ORM\Column(type="string")
@@ -54,10 +55,6 @@ class Product
      */
     private bool $active;
 
-    public function __construct()
-    {
-        $this->categories = new ArrayCollection();
-    }
 
     /**
      * @param string $name
@@ -86,9 +83,10 @@ class Product
     /**
      * @param Category $category
      */
-    public function assignToCategory(Category $category): void
+    public function setCategory(Category $category): void
     {
-        $this->categories[] = $category;
+        $category->assignedProducts($this);
+        $this->category_id = $category;
     }
 
     /**

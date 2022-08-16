@@ -16,6 +16,7 @@ class Category
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @var int
      */
     private int $id;
 
@@ -28,6 +29,17 @@ class Category
      * @ORM\Column(type="boolean")
      */
     private bool $active;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="category")
+     * @var Product[] An ArrayCollection of Product objects.
+     */
+    private $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     /**
      * @param int $id
@@ -75,5 +87,10 @@ class Category
     public function getActive(): bool
     {
         return $this->active;
+    }
+
+    public function assignedProducts(Product $product): void
+    {
+        $this->products[] = $product;
     }
 }
