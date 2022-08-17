@@ -7,32 +7,32 @@ use Shop\Core\View;
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 use Shop\Model\EntityManager\ProductEntityManager;
-use Shop\Service\SQLConnector;
 
 class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['action'] = '';
         $_POST['product'] = '';
-        $_REQUEST['id'] = 8;
+        $_REQUEST['id'] = 14;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
         $prodMapper = new ProductsMapper();
-        $connector = new SQLConnector();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
-            new ProductEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new ProductRepository($prodMapper, $entityManager),
+            new ProductEntityManager($entityManager),
             $prodMapper
         );
 
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame(8, $results['product']->id);
+        self::assertSame(14, $results['product']->id);
         self::assertSame('Strickjacke', $results['product']->name);
         self::assertSame('M,L,XL', $results['product']->size);
         self::assertSame('schwarz,braun,grau', $results['product']->color);
@@ -44,6 +44,8 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreationView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['create'] = 1;
         $_REQUEST['id'] = '';
         $_POST['product'] = '';
@@ -51,12 +53,11 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $view = new View();
         $catMapper = new CategoriesMapper();
         $prodMapper = new ProductsMapper();
-        $connector = new SQLConnector();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
-            new ProductEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new ProductRepository($prodMapper, $entityManager),
+            new ProductEntityManager($entityManager),
             $prodMapper
         );
 
@@ -77,16 +78,13 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        $sql = 'SELECT COUNT(*) as counted FROM products WHERE `name` LIKE "Testhose%"';
-        $connector = new SQLConnector();
-        $count = $connector->get($sql)[0]['counted'] + 1;
-        $name = 'Testhose' . $count;
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
         $_POST['product'] = [
-            'name' => $name,
+            'name' => 'TesthoseCREATE',
             'size' => 'W:30;L:34',
             'color' => 'schwarz,braun',
-            'category' => '3',
+            'category' => '6',
             'price' => 34.55,
             'amount' => 130,
             'active' => true,
@@ -98,9 +96,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $prodMapper = new ProductsMapper();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
-            new ProductEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new ProductRepository($prodMapper, $entityManager),
+            new ProductEntityManager($entityManager),
             $prodMapper
         );
 
@@ -108,7 +106,7 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $results = $view->getParams();
 
         self::assertSame('Product', $results['title']);
-        self::assertSame($name, $results['product']->name);
+        self::assertSame('TesthoseCREATE', $results['product']->name);
         self::assertSame('W:30;L:34', $results['product']->size);
         self::assertSame('schwarz,braun', $results['product']->color);
         self::assertSame('Hosen', $results['product']->category);
@@ -119,17 +117,15 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveView()
     {
-        $sql = 'SELECT COUNT(*) as counter FROM products WHERE `name` LIKE "Testhose%"';
-        $connector = new SQLConnector();
-        $name = 'TesthoseSAVE' . $connector->get($sql)[0]['counter'] + 1;
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
         $_REQUEST['action'] = 'save';
         $_POST['product'] = [
-            'id' => 12,
-            'name' => $name,
+            'id' => 15,
+            'name' => 'TesthoseSAVE',
             'size' => 'W:30;L:34',
             'color' => 'schwarz,grau,braun',
-            'category' => '3',
+            'category' => '6',
             'price' => 34.55,
             'amount' => 130,
             'active' => true,
@@ -140,9 +136,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $prodMapper = new ProductsMapper();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository($prodMapper, $connector),
-            new ProductEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new ProductRepository($prodMapper, $entityManager),
+            new ProductEntityManager($entityManager),
             $prodMapper
         );
 
@@ -150,8 +146,8 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $results = $view->getParams();
 
         self::assertSame('Product', $results['title']);
-        self::assertSame(12, $results['product']->id);
-        self::assertSame($name, $results['product']->name);
+        self::assertSame(15, $results['product']->id);
+        self::assertSame('TesthoseSAVE', $results['product']->name);
         self::assertSame('W:30;L:34', $results['product']->size);
         self::assertSame('schwarz,grau,braun', $results['product']->color);
         self::assertSame('Hosen', $results['product']->category);

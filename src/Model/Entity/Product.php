@@ -38,7 +38,7 @@ class Product
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
      */
-    private $category_id;
+    private $category;
 
     /**
      * @ORM\Column(type="string")
@@ -86,7 +86,7 @@ class Product
     public function setCategory(Category $category): void
     {
         $category->assignedProducts($this);
-        $this->category_id = $category;
+        $this->category = $category;
     }
 
     /**
@@ -128,4 +128,53 @@ class Product
     {
         return $this->name;
     }
+
+    /**
+     * @return string
+     */
+    public function getSize(): string
+    {
+        return $this->size;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrice(): string
+    {
+        return $this->price;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
 }

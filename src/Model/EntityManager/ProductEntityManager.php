@@ -17,7 +17,7 @@ class ProductEntityManager
         $this->dataManager = $entityManager;
     }
 
-    public function addProduct(ProductDataTransferObject $data): void
+    public function addProduct(ProductDataTransferObject $data): int
     {
         $category = $this->dataManager->find(Category::class, (int)$data->category);
 
@@ -25,30 +25,29 @@ class ProductEntityManager
         $product->setName($data->name);
         $product->setSize($data->size);
         $product->setColor($data->color);
-        $product->assignToCategory($category);
+        $product->setCategory($category);
         $product->setPrice((string)$data->price);
         $product->setAmount($data->amount);
         $product->setActive(true);
 
         $this->dataManager->persist($product);
         $this->dataManager->flush();
+
+        return $product->getId();
     }
 
     public function saveProduct(ProductDataTransferObject $data): void
     {
-//        $product = $this->dataManager->find(Product::class, $data->id);
-        $product = new Product();
+        $product = $this->dataManager->find(Product::class, $data->id);
         $category = $this->dataManager->find(Category::class, (int)$data->category);
 
         $product->setName($data->name);
         $product->setSize($data->size);
         $product->setColor($data->color);
-        $product->assignToCategory($category);
+        $product->setCategory($category);
         $product->setPrice((string)$data->price);
         $product->setAmount($data->amount);
-        $product->setActive(true);
 
-        $this->dataManager->persist($product);
         $this->dataManager->flush();
     }
 

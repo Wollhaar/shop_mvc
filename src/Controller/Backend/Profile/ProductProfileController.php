@@ -59,8 +59,8 @@ class ProductProfileController implements \Shop\Controller\BasicController
                 $product['amount'] = (int)($product['amount'] ?? 0);
 
                 $product = $this->prodMapper->mapToDto($product);
-                $this->prodEntManager->addProduct($product);
-                return $this->prodRepository->getLastInsert();
+                $productId = $this->prodEntManager->addProduct($product);
+                return $this->prodRepository->findProductById($productId);
 
             case 'save':
                 $product = $_POST['product'];

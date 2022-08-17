@@ -31,7 +31,7 @@ class Category
     private bool $active;
 
     /**
-     * @ORM\OneToMany(targetEntity="Product", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="category_id")
      * @var Product[] An ArrayCollection of Product objects.
      */
     private $products;

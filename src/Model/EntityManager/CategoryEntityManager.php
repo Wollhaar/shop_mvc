@@ -12,7 +12,7 @@ class CategoryEntityManager
 {
     private EntityManager $dataManager;
 
-    public function __construct(SQLConnector $connection, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
         $this->dataManager = $entityManager;
     }

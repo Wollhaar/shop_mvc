@@ -15,15 +15,16 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['id'] = 1;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
-        $connector = new SQLConnector();
 
         $controller = new CategoryProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new CategoryEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new CategoryEntityManager($entityManager),
             $catMapper
         );
         $controller->view();
@@ -36,16 +37,17 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreationView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['create'] = 1;
         $_REQUEST['id'] = '';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
-        $connector = new SQLConnector();
 
         $controller = new CategoryProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new CategoryEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new CategoryEntityManager($entityManager),
             $catMapper
         );
         $controller->view();
@@ -61,20 +63,22 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        $sql = 'SELECT COUNT(*) as counter FROM categories WHERE `name` LIKE "testKategorie%"';
-        $connector = new SQLConnector();
-        $count = $connector->get($sql)[0]['counter'] + 1;
-        $name = 'testKategorie' . $count;
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
+//        $sql = 'SELECT COUNT(*) as counter FROM categories WHERE `name` LIKE "testKategorie%"';
+//        $connector = new SQLConnector();
+//        $count = $connector->get($sql)[0]['counter'] + 1;
+//        $name = 'testKategorie' . $count;
 
         $_REQUEST['action'] = 'create';
-        $_POST['category'] = ['name' => $name];
+        $_POST['category'] = ['name' => 'testKategorieCREATE'];
 
         $view = new View();
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryProfileController($view,
-            new CategoryRepository($catMapper, $connector),
-            new CategoryEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new CategoryEntityManager($entityManager),
             $catMapper
         );
         $controller->view();
@@ -82,7 +86,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
 
         self::assertSame('Category', $results['title']);
-        self::assertSame($name, $results['category']->name);
+        self::assertSame('testKategorieCREATE', $results['category']->name);
         self::assertTrue($results['category']->active);
     }
 }

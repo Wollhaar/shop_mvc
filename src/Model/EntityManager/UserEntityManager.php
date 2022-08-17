@@ -61,7 +61,7 @@ class UserEntityManager
         $user->setFirstname($data->firstname);
         $user->setLastname($data->lastname);
         $user->setBirthday(new \DateTime($data->birthday));
-        $user->setActive($data->active);
+        $user->setActive(true);
 
         $this->dataManager->persist($user);
         $this->dataManager->flush();

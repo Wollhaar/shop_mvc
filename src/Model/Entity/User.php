@@ -24,7 +24,7 @@ class User
     private string $username;
 
     /**
-     * @ORM\Column(type="string", nullable=true, options: ['default' => ''])
+     * @ORM\Column(type="string")
      */
     private $password;
 
