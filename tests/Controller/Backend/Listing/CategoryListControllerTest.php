@@ -15,59 +15,61 @@ class CategoryListControllerTest extends TestCase
 {
     public function testView()
     {
-        $_REQUEST['page'] = 'categories';
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
+        $_REQUEST['action'] = '';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
-        $connector = new SQLConnector();
 
         $controller = new CategoryListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new CategoryEntityManager($connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new CategoryEntityManager($entityManager),
         );
         $controller->view();
         $results = $view->getParams();
 
         self::assertSame('Categories', $results['title']);
-        self::assertSame(1, $results['categories'][0]->id);
+        self::assertSame(4, $results['categories'][0]->id);
         self::assertSame('T-Shirt', $results['categories'][0]->name);
-        self::assertSame(2, $results['categories'][1]->id);
+        self::assertSame(5, $results['categories'][1]->id);
         self::assertSame('Pullover', $results['categories'][1]->name);
-        self::assertSame(3, $results['categories'][2]->id);
+        self::assertSame(6, $results['categories'][2]->id);
         self::assertSame('Hosen', $results['categories'][2]->name);
-        self::assertSame(4, $results['categories'][3]->id);
+        self::assertSame(7, $results['categories'][3]->id);
         self::assertSame('Sportswear', $results['categories'][3]->name);
-        self::assertSame(5, $results['categories'][4]->id);
+        self::assertSame(8, $results['categories'][4]->id);
         self::assertSame('Jacken', $results['categories'][4]->name);
     }
 
     public function testDeleteView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['action'] = 'delete';
-        $_REQUEST['id'] = '';
+        $_REQUEST['id'] = '9';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
-        $connector = new SQLConnector();
 
         $controller = new CategoryListController($view,
-            new CategoryRepository($catMapper, $connector),
-            new CategoryEntityManager($connector)
+            new CategoryRepository($catMapper, $entityManager),
+            new CategoryEntityManager($entityManager)
         );
 
         $controller->view();
         $results = $view->getParams();
 
         self::assertSame('Categories', $results['title']);
-        self::assertSame(1, $results['categories'][0]->id);
+        self::assertSame(4, $results['categories'][0]->id);
         self::assertSame('T-Shirt', $results['categories'][0]->name);
-        self::assertSame(2, $results['categories'][1]->id);
+        self::assertSame(5, $results['categories'][1]->id);
         self::assertSame('Pullover', $results['categories'][1]->name);
-        self::assertSame(3, $results['categories'][2]->id);
+        self::assertSame(6, $results['categories'][2]->id);
         self::assertSame('Hosen', $results['categories'][2]->name);
-        self::assertSame(4, $results['categories'][3]->id);
+        self::assertSame(7, $results['categories'][3]->id);
         self::assertSame('Sportswear', $results['categories'][3]->name);
-        self::assertSame(5, $results['categories'][4]->id);
+        self::assertSame(8, $results['categories'][4]->id);
         self::assertSame('Jacken', $results['categories'][4]->name);
     }
 }

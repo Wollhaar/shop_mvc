@@ -15,15 +15,16 @@ class CategoryControllerTest extends TestCase
 {
     public function testView()
     {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $_REQUEST['id'] = '';
 
         $view = new View();
-        $connector = new SQLConnector();
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector)
+            new CategoryRepository($catMapper, $entityManager),
+            new ProductRepository(new ProductsMapper(), $entityManager)
         );
         $controller->view();
         $results = $view->getParams();
@@ -43,15 +44,16 @@ class CategoryControllerTest extends TestCase
 
     public function testProductCategoryView()
     {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $_REQUEST['id'] = 4;
 
         $view = new View();
-        $connector = new SQLConnector();
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new ProductRepository(new ProductsMapper(), $entityManager),
         );
         $controller->view();
         $results = $view->getParams();
@@ -63,15 +65,16 @@ class CategoryControllerTest extends TestCase
 
     public function testProductCategoryView2nd()
     {
-        $_REQUEST['id'] = 1;
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
+//        $_REQUEST['id'] = 4;
 
         $view = new View();
-        $connector = new SQLConnector();
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryController($view,
-            new CategoryRepository($catMapper, $connector),
-            new ProductRepository(new ProductsMapper(), $connector),
+            new CategoryRepository($catMapper, $entityManager),
+            new ProductRepository(new ProductsMapper(), $entityManager),
         );
         $controller->view();
         $results = $view->getParams();

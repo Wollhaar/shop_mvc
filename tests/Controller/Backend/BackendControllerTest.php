@@ -15,9 +15,10 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
-        $connector = new SQLConnector();
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $usrMapper = new UsersMapper();
-        $usrRepository = new UserRepository($usrMapper, $connector);
+        $usrRepository = new UserRepository($usrMapper, $entityManager);
 
         $session = new Session(true);
         $session->set(['auth' => true, $usrRepository->findUserById(2)], 'user');

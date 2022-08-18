@@ -3,71 +3,68 @@ declare(strict_types=1);
 
 namespace Shop\Model\Repository;
 
+use Doctrine\ORM\EntityManager;
 use Shop\Model\Dto\UserDataTransferObject;
+use Shop\Model\Entity\User;
 use Shop\Model\Mapper\UsersMapper;
-use Shop\Service\SQLConnector;
 
 class UserRepository
 {
-    private SQLConnector $connector;
+    private EntityManager $dataManager;
     private UsersMapper $mapper;
 
-    public function __construct(UsersMapper $mapper, SQLConnector $connector)
+    public function __construct(UsersMapper $mapper, EntityManager $entityManager)
     {
         $this->mapper = $mapper;
-        $this->connector = $connector;
+        $this->dataManager = $entityManager;
     }
 
     public function findUserById(int $id): UserDataTransferObject
     {
-        $sql = 'SELECT * FROM users WHERE `id` = :id AND `active` = 1;';
-        if ($id) {
-            $user = $this->connector->get($sql, $id)[0] ?? [];
-        }
-        return $this->validateUser($user ?? []);
+        $user = $this->dataManager->find(User::class, $id);
+        return $this->validateUser($user);
     }
 
     public function findUserByUsername(string $name): UserDataTransferObject
     {
-        $sql = 'SELECT * FROM users WHERE `username` = :username AND `active` = 1';
-        $user = $this->connector->getByString($sql, $name, ':username')[0] ?? [];
+        $usrRepo = $this->dataManager->getRepository(User::class);
+        $user = $usrRepo->findOneBy(['username' => $name]);
 
         return $this->validateUser($user);
     }
 
     public function getPasswordByUser(UserDataTransferObject $user): string
     {
-        $sql = 'SELECT `password` FROM users WHERE `id` = :id AND `active` = 1 LIMiT 1;';
-        $password = $this->connector->get($sql, $user->id)[0] ?? [];
-        return $password['password'] ?? '';
+        $userObj = $this->dataManager->find(User::class, $user->id);
+        return isset($userObj) ? $userObj->getPassword() : '';
     }
 
     public function getAll(): array
     {
-        $sql = 'SELECT * FROM users WHERE `active` = 1;';
-        $users = $this->connector->get($sql);
+        $usrRepo = $this->dataManager->getRepository(User::class);
+        $users = $usrRepo->findBy(['active' => true]);
+
         $userList = [];
         foreach ($users as $user) {
-            $user['active'] = (bool)$user['active'];
-            $userList[] = $this->mapper->mapToDto($user);
+            $userList[] = $this->validateUser($user);
         }
         return $userList;
     }
 
-    public function getLastInsert(): UserDataTransferObject
+    private function validateUser(?User $user): UserDataTransferObject
     {
-        $sql = 'SELECT * FROM users WHERE `id` = LAST_INSERT_ID()';
-        $user = $this->connector->get($sql)[0] ?? [];
-
-        return $this->validateUser($user);
-    }
-
-    private function validateUser(array $user): UserDataTransferObject
-    {
-        if (!empty($user)) {
-            $user['id'] = (int)$user['id'];
-            $user['active'] = (bool)$user['active'];
+        if (isset($user)) {
+            $newUser = [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'firstname' => $user->getFirstname(),
+                'lastname' => $user->getLastname(),
+                'created' => $user->getCreated()->format('Y-m-d h:i:s'),
+                'updated' => $user->getUpdated()->format('Y-m-d h:i:s'),
+                'birthday' => $user->getBirthday()->format('Y-m-d h:i:s'),
+                'active' => $user->getActive(),
+            ];
         }
-        return $this->mapper->mapToDto($user);
+        return $this->mapper->mapToDto($newUser ?? []);
     }
 }

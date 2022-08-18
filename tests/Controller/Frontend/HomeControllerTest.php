@@ -14,9 +14,11 @@ class HomeControllerTest extends TestCase
 {
     public function testView()
     {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $view = new View();
         $controller = new HomeController($view,
-            new CategoryRepository(new CategoriesMapper(), new SQLConnector())
+            new CategoryRepository(new CategoriesMapper(), $entityManager)
         );
         $controller->view();
         $results = $view->getParams();

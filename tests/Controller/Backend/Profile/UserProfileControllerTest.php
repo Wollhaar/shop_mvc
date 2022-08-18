@@ -14,16 +14,17 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreationView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['action'] = '';
         $_REQUEST['create'] = 1;
 
         $view = new View();
         $usrMapper = new UsersMapper();
-        $connector = new SQLConnector();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $connector),
-            new UserEntityManager($connector),
+            new UserRepository($usrMapper, $entityManager),
+            new UserEntityManager($entityManager),
             $usrMapper,
         );
 
@@ -44,15 +45,12 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        $sql = 'SELECT COUNT(*) as counted FROM users WHERE `username` LIKE "test%"';
-        $connector = new SQLConnector();
-        $count = $connector->get($sql)[0]['counted'] + 1;
-        $uniqueName = 'test' . $count;
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
         $_REQUEST['create'] = '';
         $_REQUEST['action'] = 'create';
         $_POST['user'] = [
-            'username' => $uniqueName,
+            'username' => 'testCREATE',
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
             'birthday' => '2000-01-01',
@@ -62,8 +60,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $connector),
-            new UserEntityManager($connector),
+            new UserRepository($usrMapper, $entityManager),
+            new UserEntityManager($entityManager),
             $usrMapper,
         );
 
@@ -72,8 +70,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('User', $results['title']);
         self::assertFalse($results['create']);
-        self::assertSame($uniqueName, $results['subtitle']);
-        self::assertSame($uniqueName, $results['user']->username);
+        self::assertSame('testCREATE', $results['subtitle']);
+        self::assertSame('testCREATE', $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->created);
@@ -87,17 +85,18 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['create'] = '';
         $_REQUEST['action'] = '';
         $user = $_POST['user'];
 
         $view = new View();
         $usrMapper = new UsersMapper();
-        $connector = new SQLConnector();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $connector),
-            new UserEntityManager($connector),
+            new UserRepository($usrMapper, $entityManager),
+            new UserEntityManager($entityManager),
             $usrMapper,
         );
 
@@ -119,14 +118,12 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveView()
     {
-        $sql = 'SELECT count(*) as counter From users WHERE `username` LIKE "test%"';
-        $connector = new SQLConnector();
-        $uniqueName = 'testSave' . $connector->get($sql)[0]['counter'] + 1;
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
         $_REQUEST['action'] = 'save';
         $_POST['user'] = [
-            'id' => 19,
-            'username' => $uniqueName,
+            'id' => 4,
+            'username' => 'testSAVE',
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
             'birthday' => '2001-02-01',
@@ -136,8 +133,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $connector),
-            new UserEntityManager($connector),
+            new UserRepository($usrMapper, $entityManager),
+            new UserEntityManager($entityManager),
             $usrMapper,
         );
 
@@ -146,8 +143,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('User', $results['title']);
         self::assertFalse($results['create']);
-        self::assertSame($uniqueName, $results['subtitle']);
-        self::assertSame($uniqueName, $results['user']->username);
+        self::assertSame('testSAVE', $results['subtitle']);
+        self::assertSame('testSAVE', $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
         self::assertSame('2022-08-02 14:38:18', $results['user']->created);
@@ -158,14 +155,12 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testSavePasswordView()
     {
-        $sql = 'SELECT count(*) as counter From users WHERE `username` LIKE "test%"';
-        $connector = new SQLConnector();
-        $uniqueName = 'testSave' . $connector->get($sql)[0]['counter'] + 1;
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
         $_REQUEST['action'] = 'save';
         $_POST['user'] = [
-            'id' => 19,
-            'username' => $uniqueName,
+            'id' => 4,
+            'username' => 'testSAVE',
             'password' => 'tesPasst123',
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
@@ -176,8 +171,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $connector),
-            new UserEntityManager($connector),
+            new UserRepository($usrMapper, $entityManager),
+            new UserEntityManager($entityManager),
             $usrMapper,
         );
 
@@ -186,8 +181,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('User', $results['title']);
         self::assertFalse($results['create']);
-        self::assertSame($uniqueName, $results['subtitle']);
-        self::assertSame($uniqueName, $results['user']->username);
+        self::assertSame('testSAVE', $results['subtitle']);
+        self::assertSame('testSAVE', $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
         self::assertSame('2022-08-02 14:38:18', $results['user']->created);

@@ -14,14 +14,14 @@ class DetailControllerTest extends TestCase
 {
     public function testPositive()
     {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $_REQUEST['page'] = 'detail';
         $_REQUEST['id'] = 2;
 
         $view = new View();
-        $connector = new SQLConnector();
-
         $controller = new DetailController($view,
-            new ProductRepository(new ProductsMapper(), $connector),
+            new ProductRepository(new ProductsMapper(), $entityManager),
         );
         $controller->view();
         $results = $view->getParams();
@@ -37,13 +37,13 @@ class DetailControllerTest extends TestCase
 
     public function testNegative()
     {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $_REQUEST['id'] = 0;
 
         $view = new View();
-        $connector = new SQLConnector();
-
         $controller = new DetailController($view,
-            new ProductRepository(new ProductsMapper(), $connector)
+            new ProductRepository(new ProductsMapper(), $entityManager)
         );
         $controller->view();
         $results = $view->getParams();

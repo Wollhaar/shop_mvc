@@ -6,7 +6,6 @@ namespace Shop\Model\EntityManager;
 use Doctrine\ORM\EntityManager;
 use Shop\Model\Dto\CategoryDataTransferObject;
 use Shop\Model\Entity\Category;
-use Shop\Service\SQLConnector;
 
 class CategoryEntityManager
 {
@@ -17,7 +16,7 @@ class CategoryEntityManager
         $this->dataManager = $entityManager;
     }
 
-    public function addCategory(CategoryDataTransferObject $data): void
+    public function addCategory(CategoryDataTransferObject $data): int
     {
         $category = new \Shop\Model\Entity\Category();
         $category->setName($data->name);
@@ -25,13 +24,16 @@ class CategoryEntityManager
 
         $this->dataManager->persist($category);
         $this->dataManager->flush();
+
+        return $category->getId();
     }
 
     public function deleteCategoryById(int $id): void
     {
         $category = $this->dataManager->find(Category::class, $id);
-//        $this->dataManager->remove($category);
-        $category->setActive(false);
+        if (!empty($category)) {
+            $category->setActive(false);
+        }
 
         $this->dataManager->flush();
     }

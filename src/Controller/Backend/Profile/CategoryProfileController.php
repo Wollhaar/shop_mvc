@@ -52,8 +52,8 @@ class CategoryProfileController implements \Shop\Controller\BasicController
             case 'create':
                 $category = $_POST['category'] ?? [];
                 $category = $this->catMapper->mapToDto($category);
-                $this->catEntManager->addCategory($category);
-                return $this->catRepository->getLastInsert();
+                $categoryId = $this->catEntManager->addCategory($category);
+                return $this->catRepository->findCategoryById($categoryId);
 
             default:
                 $id = $_REQUEST['id'] ?? '';

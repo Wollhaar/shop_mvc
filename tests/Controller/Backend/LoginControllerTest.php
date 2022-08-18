@@ -16,10 +16,11 @@ class LoginControllerTest extends TestCase
 {
     public function testView()
     {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $_POST = ['username' => 'test', 'password' => 'test123'];
-        $connector = new SQLConnector();
         $usrMapper = new UsersMapper();
-        $usrRepository = new UserRepository($usrMapper, $connector);
+        $usrRepository = new UserRepository($usrMapper, $entityManager);
 
         $view = new View();
         $session = new Session(true);
@@ -45,11 +46,12 @@ class LoginControllerTest extends TestCase
 
     public function testFailedLogin()
     {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
         $_REQUEST = ['username' => 'test', 'password' => 'test1234'];
         $usrMapper = new UsersMapper();
 
-        $connector = new SQLConnector();
-        $usrRepository = new UserRepository($usrMapper, $connector);
+        $usrRepository = new UserRepository($usrMapper, $entityManager);
         $view = new View();
 
         $controller = new LoginController($view,

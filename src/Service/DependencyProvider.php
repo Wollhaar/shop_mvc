@@ -20,7 +20,6 @@ class DependencyProvider
 {
     public function provide(Container $container): void
     {
-        $container->set(SQLConnector::class, new SQLConnector());
         $container->set(Session::class, new Session((bool)($_SERVER['PHP_TEST'] ?? 0)));
         $container->set(View::class, new View());
         $container->set(CategoriesMapper::class, new CategoriesMapper());
@@ -28,10 +27,10 @@ class DependencyProvider
         $container->set(UsersMapper::class, new UsersMapper());
         $container->set(CategoryRepository::class, new CategoryRepository($container->get(CategoriesMapper::class), $container->get(EntityManager::class)));
         $container->set(ProductRepository::class, new ProductRepository($container->get(ProductsMapper::class), $container->get(EntityManager::class)));
-        $container->set(UserRepository::class, new UserRepository($container->get(UsersMapper::class), $container->get(SQLConnector::class), $container->get(EntityManager::class)));
+        $container->set(UserRepository::class, new UserRepository($container->get(UsersMapper::class), $container->get(EntityManager::class)));
         $container->set(CategoryEntityManager::class, new CategoryEntityManager($container->get(EntityManager::class)));
         $container->set(ProductEntityManager::class, new ProductEntityManager($container->get(EntityManager::class)));
-        $container->set(UserEntityManager::class, new UserEntityManager($container->get(SQLConnector::class), $container->get(EntityManager::class)));
+        $container->set(UserEntityManager::class, new UserEntityManager($container->get(EntityManager::class)));
         $container->set(Authenticator::class, new Authenticator($container->get(Session::class), $container->get(UserRepository::class)));
         $container->set(ErrorController::class, new ErrorController($container->get(View::class)));
         $container->set(HomeController::class, new HomeController($container->get(View::class), $container->get(CategoryRepository::class)));

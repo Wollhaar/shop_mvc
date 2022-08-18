@@ -14,12 +14,14 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+        $_REQUEST['action'] = '';
+
         $view = new View();
         $usrMapper = new UsersMapper();
-        $connector = new SQLConnector();
         $controller = new UserListController($view,
-            new UserRepository($usrMapper, $connector),
-            new UserEntityManager($connector)
+            new UserRepository($usrMapper, $entityManager),
+            new UserEntityManager($entityManager)
         );
 
         $controller->view();
@@ -36,16 +38,17 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testDeleteView()
     {
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
+
         $_REQUEST['action'] = 'delete';
         $_REQUEST['id'] = 4;
 
         $view = new View();
         $usrMapper = new UsersMapper();
-        $connector = new SQLConnector();
 
         $controller = new UserListController($view,
-            new UserRepository($usrMapper, $connector),
-            new UserEntityManager($connector));
+            new UserRepository($usrMapper, $entityManager),
+            new UserEntityManager($entityManager));
 
         $controller->view();
         $results = $view->getParams();

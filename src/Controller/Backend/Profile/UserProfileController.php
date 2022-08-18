@@ -54,8 +54,8 @@ class UserProfileController implements BasicController
                 $user = $_POST['user'] ?? [];
                 $password = $user['password'] ?? '';
 
-                $this->usrEntManager->addUser($this->usrMapper->mapToDto($user), $password);
-                return $this->usrRepository->getLastInsert();
+                $userId = $this->usrEntManager->addUser($this->usrMapper->mapToDto($user), $password);
+                return $this->usrRepository->findUserById($userId);
 
             case 'save':
                 $user = $_POST['user'];

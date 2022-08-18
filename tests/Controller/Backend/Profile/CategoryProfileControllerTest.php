@@ -65,11 +65,6 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-//        $sql = 'SELECT COUNT(*) as counter FROM categories WHERE `name` LIKE "testKategorie%"';
-//        $connector = new SQLConnector();
-//        $count = $connector->get($sql)[0]['counter'] + 1;
-//        $name = 'testKategorie' . $count;
-
         $_REQUEST['action'] = 'create';
         $_POST['category'] = ['name' => 'testKategorieCREATE'];
 
