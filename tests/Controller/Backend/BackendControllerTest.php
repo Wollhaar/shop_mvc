@@ -20,6 +20,34 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
         $session = new Session(true);
+        $session->set(['auth' => true, $usrRepository->findUserById(3)], 'user');
+
+        $view = new View();
+
+        $controller = new BackendController($view,
+            new Authenticator(new Session(true), $usrRepository)
+        );
+        $controller->view();
+        $results = $view->getParams();
+
+        self::assertSame('Dashboard', $results['title']);
+        self::assertSame(3, $results['user']->id);
+        self::assertSame('maxi', $results['user']->username);
+        self::assertTrue($results['user']->active);
+        self::assertFalse($results['categories']);
+        self::assertFalse($results['products']);
+        self::assertFalse($results['users']);
+        self::assertSame('standard', $results['user']->role);
+    }
+
+    public function testAdminView()
+    {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
+        $usrMapper = new UsersMapper();
+        $usrRepository = new UserRepository($usrMapper, $entityManager);
+
+        $session = new Session(true);
         $session->set(['auth' => true, $usrRepository->findUserById(2)], 'user');
 
         $view = new View();
@@ -32,11 +60,40 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('Dashboard', $results['title']);
         self::assertSame(2, $results['user']->id);
-        self::assertSame('test', $results['user']->username);
-        self::assertSame('Chuck', $results['user']->firstname);
-        self::assertSame('Tester', $results['user']->lastname);
-        self::assertSame('2022-07-13', $results['user']->created);
-        self::assertSame('1997-11-05', $results['user']->birhtday);
+        self::assertSame('admin', $results['user']->username);
         self::assertTrue($results['user']->active);
+        self::assertTrue($results['categories']);
+        self::assertTrue($results['products']);
+        self::assertFalse($results['users']);
+        self::assertSame('admin', $results['user']->role);
+    }
+
+    public function testRootView()
+    {
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+
+        $usrMapper = new UsersMapper();
+        $usrRepository = new UserRepository($usrMapper, $entityManager);
+
+        $session = new Session(true);
+        $session->set(['auth' => true, $usrRepository->findUserById(28)], 'user');
+
+        $view = new View();
+
+        $controller = new BackendController($view,
+            new Authenticator(new Session(true), $usrRepository)
+        );
+        $controller->view();
+        $results = $view->getParams();
+
+        self::assertSame('Dashboard', $results['title']);
+        self::assertSame('Welcome root', $results['subtitle']);
+        self::assertSame(28, $results['user']->id);
+        self::assertSame('root', $results['user']->username);
+        self::assertTrue($results['user']->active);
+        self::assertTrue($results['categories']);
+        self::assertTrue($results['products']);
+        self::assertTrue($results['users']);
+        self::assertSame('root', $results['user']->role);
     }
 }
