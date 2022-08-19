@@ -29,12 +29,12 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private string $firstname;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private string $lastname;
 
@@ -47,9 +47,12 @@ class User
     private $updated;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $birthday;
+
+    #[ORM\Column(name: "updated", type: "string", options: ["default" => "standard"])]
+    private $role;
 
     /**
      * @ORM\Column(type="boolean")
@@ -169,11 +172,27 @@ class User
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getBirthday()
     {
         return $this->birthday;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param string $role
+     */
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
     }
 
     /**

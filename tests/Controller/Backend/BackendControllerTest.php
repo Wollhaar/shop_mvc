@@ -76,7 +76,7 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
         $session = new Session(true);
-        $session->set(['auth' => true, $usrRepository->findUserById(28)], 'user');
+        $session->set(['auth' => true, $usrRepository->findUserById(31)], 'user');
 
         $view = new View();
 
