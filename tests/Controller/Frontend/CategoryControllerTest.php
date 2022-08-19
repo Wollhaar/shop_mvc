@@ -45,7 +45,7 @@ class CategoryControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-        $_REQUEST['id'] = 8;
+        $_REQUEST['id'] = 7;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -59,7 +59,7 @@ class CategoryControllerTest extends TestCase
 
         self::assertSame('Sportswear', $results['title']);
         self::assertTrue($results['activeCategory']);
-        self::assertSame('HSV - Home-Jersey', $results['build'][0]->name);
+        self::assertSame('HSV - Home-Jersey', $results['build'][1]->name);
     }
 
     public function testProductCategoryView2nd()
@@ -81,7 +81,7 @@ class CategoryControllerTest extends TestCase
         self::assertTrue($results['activeCategory']);
         self::assertSame('T-Shirt', $results['title']);
         self::assertSame('Shirt No.1', $results['build'][1]->name);
-        self::assertSame('Bandshirt - Outkast', $results['build'][1]->name);
+        self::assertSame('Bandshirt - Outkast', $results['build'][2]->name);
         self::assertSame('plain white', $results['build'][3]->name);
     }
 }

@@ -67,7 +67,7 @@ class LoginControllerTest extends TestCase
         self::assertSame('Chuck', $object->firstname);
         self::assertSame('Tester', $object->lastname);
         self::assertSame('2022-07-13 12:00:00', $object->created);
-        self::assertSame('1997-11-05 00:00:00', $object->birthday);
+        self::assertSame('1997-11-05 12:00:00', $object->birthday);
         self::assertTrue($object->active);
     }
 }
