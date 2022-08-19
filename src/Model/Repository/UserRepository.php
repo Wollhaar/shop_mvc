@@ -54,13 +54,18 @@ class UserRepository
     private function validateUser(?User $user): UserDataTransferObject
     {
         if (isset($user)) {
+            $updated = $user->getUpdated();
+            if (!empty($updated)) {
+                $updated = $updated->format('Y-m-d h:i:s');
+            }
+
             $newUser = [
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
                 'firstname' => $user->getFirstname(),
                 'lastname' => $user->getLastname(),
                 'created' => $user->getCreated()->format('Y-m-d h:i:s'),
-                'updated' => $user->getUpdated()->format('Y-m-d h:i:s'),
+                'updated' => $updated,
                 'birthday' => $user->getBirthday()->format('Y-m-d h:i:s'),
                 'active' => $user->getActive(),
             ];

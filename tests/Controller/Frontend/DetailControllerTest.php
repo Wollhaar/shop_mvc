@@ -8,7 +8,6 @@ use Shop\Controller\Frontend\DetailController;
 use Shop\Core\View;
 use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Repository\ProductRepository;
-use Shop\Service\SQLConnector;
 
 class DetailControllerTest extends TestCase
 {
@@ -17,7 +16,7 @@ class DetailControllerTest extends TestCase
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
         $_REQUEST['page'] = 'detail';
-        $_REQUEST['id'] = 2;
+        $_REQUEST['id'] = 8;
 
         $view = new View();
         $controller = new DetailController($view,
@@ -26,7 +25,7 @@ class DetailControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame(2, $results['product']->id);
+        self::assertSame(8, $results['product']->id);
         self::assertSame('HSV - Home-Jersey', $results['product']->name);
         self::assertSame('M,L', $results['product']->size);
         self::assertSame('Sportswear', $results['product']->category);

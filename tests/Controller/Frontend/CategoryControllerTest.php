@@ -9,7 +9,6 @@ use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Repository\CategoryRepository;
 use Shop\Model\Repository\ProductRepository;
-use Shop\Service\SQLConnector;
 
 class CategoryControllerTest extends TestCase
 {
@@ -30,15 +29,15 @@ class CategoryControllerTest extends TestCase
         $results = $view->getParams();
 
         self::assertSame('All', $results['title']);
-        self::assertSame(1, $results['build'][0]->id);
+        self::assertSame(4, $results['build'][0]->id);
         self::assertSame('T-Shirt', $results['build'][0]->name);
-        self::assertSame(2, $results['build'][1]->id);
+        self::assertSame(5, $results['build'][1]->id);
         self::assertSame('Pullover', $results['build'][1]->name);
-        self::assertSame(3, $results['build'][2]->id);
+        self::assertSame(6, $results['build'][2]->id);
         self::assertSame('Hosen', $results['build'][2]->name);
-        self::assertSame(4, $results['build'][3]->id);
+        self::assertSame(7, $results['build'][3]->id);
         self::assertSame('Sportswear', $results['build'][3]->name);
-        self::assertSame(5, $results['build'][4]->id);
+        self::assertSame(8, $results['build'][4]->id);
         self::assertSame('Jacken', $results['build'][4]->name);
    }
 
@@ -46,7 +45,7 @@ class CategoryControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-        $_REQUEST['id'] = 4;
+        $_REQUEST['id'] = 8;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -67,7 +66,7 @@ class CategoryControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-//        $_REQUEST['id'] = 4;
+        $_REQUEST['id'] = 4;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -81,8 +80,8 @@ class CategoryControllerTest extends TestCase
 
         self::assertTrue($results['activeCategory']);
         self::assertSame('T-Shirt', $results['title']);
-        self::assertSame('shirt no.1', $results['build'][0]->name);
+        self::assertSame('Shirt No.1', $results['build'][1]->name);
         self::assertSame('Bandshirt - Outkast', $results['build'][1]->name);
-        self::assertSame('plain white', $results['build'][2]->name);
+        self::assertSame('plain white', $results['build'][3]->name);
     }
 }

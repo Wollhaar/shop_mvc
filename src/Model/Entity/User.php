@@ -43,9 +43,7 @@ class User
      */
     private $created;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(name: "updated", type: "datetime", nullable: true)]
     private $updated;
 
     /**

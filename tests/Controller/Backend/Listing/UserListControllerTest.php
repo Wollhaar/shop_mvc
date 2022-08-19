@@ -8,7 +8,6 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
-use Shop\Service\SQLConnector;
 
 class UserListControllerTest extends \PHPUnit\Framework\TestCase
 {
@@ -48,7 +47,8 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
 
         $controller = new UserListController($view,
             new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager));
+            new UserEntityManager($entityManager)
+        );
 
         $controller->view();
         $results = $view->getParams();

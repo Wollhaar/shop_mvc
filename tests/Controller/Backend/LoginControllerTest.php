@@ -10,7 +10,6 @@ use Shop\Core\View;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
 use Shop\Service\Session;
-use Shop\Service\SQLConnector;
 
 class LoginControllerTest extends TestCase
 {
@@ -67,7 +66,7 @@ class LoginControllerTest extends TestCase
         self::assertSame('test', $object->username);
         self::assertSame('Chuck', $object->firstname);
         self::assertSame('Tester', $object->lastname);
-        self::assertSame('2022-07-13 00:00:00', $object->created);
+        self::assertSame('2022-07-13 12:00:00', $object->created);
         self::assertSame('1997-11-05 00:00:00', $object->birthday);
         self::assertTrue($object->active);
     }

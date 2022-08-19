@@ -9,7 +9,6 @@ use Shop\Core\View;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
 use Shop\Service\Session;
-use Shop\Service\SQLConnector;
 
 class BackendControllerTest extends \PHPUnit\Framework\TestCase
 {

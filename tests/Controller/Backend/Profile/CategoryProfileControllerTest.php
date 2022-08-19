@@ -8,7 +8,6 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\CategoryEntityManager;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;
-use Shop\Service\SQLConnector;
 
 class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
@@ -17,7 +16,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['id'] = 1;
+        $_REQUEST['id'] = 4;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -30,7 +29,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame(1, $results['category']->id);
+        self::assertSame(4, $results['category']->id);
         self::assertSame('T-Shirt', $results['category']->name);
         self::assertTrue($results['category']->active);
     }

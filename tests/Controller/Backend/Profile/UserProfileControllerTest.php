@@ -8,7 +8,6 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
-use Shop\Service\SQLConnector;
 
 class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
@@ -75,7 +74,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->created);
-        self::assertSame('2000-01-01 00:00:00', $results['user']->birthday);
+        self::assertSame('2000-01-01 12:00:00', $results['user']->birthday);
         self::assertTrue($results['user']->active);
 
         $_REQUEST['id'] = $results['user']->id;
@@ -110,9 +109,9 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame($user['username'], $results['user']->username);
         self::assertSame($user['firstname'], $results['user']->firstname);
         self::assertSame($user['lastname'], $results['user']->lastname);
-        self::assertSame($user['created'], $results['user']->created);
+        self::assertSame('2022-08-18 12:29:27', $results['user']->created);
         self::assertSame('', $results['user']->updated);
-        self::assertSame($user['birthday'] . ' 00:00:00', $results['user']->birthday);
+        self::assertSame($user['birthday'] . ' 12:00:00', $results['user']->birthday);
         self::assertTrue($results['user']->active);
     }
 
@@ -147,7 +146,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('testSAVE', $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
-        self::assertSame('2022-08-02 14:38:18', $results['user']->created);
+        self::assertSame('2022-08-17 09:38:59', $results['user']->created);
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->updated);
         self::assertSame('2001-02-01 00:00:00', $results['user']->birthday);
         self::assertTrue($results['user']->active);
@@ -159,7 +158,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
         $_REQUEST['action'] = 'save';
         $_POST['user'] = [
-            'id' => 4,
+            'id' => 6,
             'username' => 'testSAVE',
             'password' => 'tesPasst123',
             'firstname' => 'testvorname1',
@@ -185,7 +184,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('testSAVE', $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
-        self::assertSame('2022-08-02 14:38:18', $results['user']->created);
+        self::assertSame('2022-08-17 09:38:59', $results['user']->created);
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->updated);
         self::assertSame('2001-02-01 00:00:00', $results['user']->birthday);
         self::assertTrue($results['user']->active);

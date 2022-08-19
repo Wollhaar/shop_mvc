@@ -9,7 +9,6 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\CategoryEntityManager;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;
-use Shop\Service\SQLConnector;
 
 class CategoryListControllerTest extends TestCase
 {

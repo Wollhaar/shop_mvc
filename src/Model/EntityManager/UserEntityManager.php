@@ -24,7 +24,7 @@ class UserEntityManager
         $user->setFirstname($data->firstname);
         $user->setLastname($data->lastname);
         $user->setCreated(new \DateTime('now'));
-        $user->setUpdated(new \DateTime('now'));
+//        $user->setUpdated(new \DateTime('now'));
         $user->setBirthday(new \DateTime($data->birthday));
         $user->setActive(true);
 
