@@ -10,15 +10,9 @@ use Shop\Model\EntityManager\UserEntityManager;
 class UserListController implements \Shop\Controller\BasicController
 {
     private const TPL = 'UserListView.tpl';
-    private View $renderer;
-    private UserRepository $usrRepository;
-    private UserEntityManager $usrEntManager;
 
-    public function __construct(View $renderer, UserRepository $usrRepository, UserEntityManager $usrEntManager)
+    public function __construct(private View $renderer, private UserRepository $usrRepository, private UserEntityManager $usrEntManager)
     {
-        $this->renderer = $renderer;
-        $this->usrRepository = $usrRepository;
-        $this->usrEntManager = $usrEntManager;
     }
 
     public function view(): void

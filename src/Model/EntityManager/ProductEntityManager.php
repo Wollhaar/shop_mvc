@@ -9,12 +9,8 @@ use Shop\Model\Entity\{Category, Product};
 
 class ProductEntityManager
 {
-    private EntityManager $dataManager;
-
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $dataManager)
     {
-        $this->dataManager = $entityManager;
     }
 
     public function addProduct(ProductDataTransferObject $data): int

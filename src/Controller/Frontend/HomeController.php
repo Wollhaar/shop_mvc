@@ -10,15 +10,8 @@ class HomeController implements BasicController
 {
     private const TPL = 'HomeView.tpl';
 
-    private View $renderer;
-
-    private CategoryRepository $catRepository;
-
-
-    public function __construct(View $renderer, CategoryRepository $catRepository)
+    public function __construct(private View $renderer, private CategoryRepository $catRepository)
     {
-        $this->renderer = $renderer;
-        $this->catRepository = $catRepository;
     }
 
     public function view():void

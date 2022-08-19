@@ -14,15 +14,11 @@ use Shop\Service\Session;
 class BackendController implements BasicController
 {
     private const TPL = 'BackendView.tpl';
-    private View $renderer;
-    private Authenticator $authenticator;
     private Session $session;
 
-    public function __construct(View $view, Authenticator $authenticator)
+    public function __construct(private View $renderer, private Authenticator $authenticator)
     {
-        $this->renderer = $view;
-        $this->authenticator = $authenticator;
-        $this->session = $authenticator->getSession();
+        $this->session = $this->authenticator->getSession();
     }
 
     public function view(): void

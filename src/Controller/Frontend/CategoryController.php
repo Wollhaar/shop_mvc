@@ -12,21 +12,10 @@ use function PHPUnit\Framework\isNull;
 class CategoryController implements BasicController
 {
     private const TPL = 'CategoryView.tpl';
-
     private CategoryDataTransferObject $activeCategory;
 
-    private CategoryRepository $catRepository;
-
-    private ProductRepository $prodRepository;
-
-    private View $renderer;
-
-
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository)
+    public function __construct(private View $renderer, private CategoryRepository $catRepository, private ProductRepository $prodRepository)
     {
-        $this->renderer = $renderer;
-        $this->catRepository = $catRepository;
-        $this->prodRepository = $prodRepository;
     }
 
     public function view(): void

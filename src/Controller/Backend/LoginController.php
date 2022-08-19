@@ -11,15 +11,9 @@ use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 class LoginController implements BasicController
 {
     private const TPL = 'BackendLoginView.tpl';
-    private Authenticator $authentication;
-    private UserRepository $usrRepository;
-    private View $renderer;
 
-    public function __construct(View $view, UserRepository $usrRepository, Authenticator $authenticator)
+    public function __construct(private View $renderer, private UserRepository $usrRepository, private Authenticator $authentication)
     {
-        $this->renderer = $view;
-        $this->authentication = $authenticator;
-        $this->usrRepository = $usrRepository;
     }
 
     public function view(): void

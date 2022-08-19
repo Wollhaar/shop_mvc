@@ -13,17 +13,9 @@ use Shop\Model\EntityManager\UserEntityManager;
 class UserProfileController implements BasicController
 {
     private const TPL = 'UserProfileView.tpl';
-    private View $renderer;
-    private UserRepository $usrRepository;
-    private UserEntityManager $usrEntManager;
-    private UsersMapper $usrMapper;
 
-    public function __construct(View $renderer, UserRepository $usrRepository, UserEntityManager $usrEntManager, UsersMapper $usrMapper)
+    public function __construct(private View $renderer, private UserRepository $usrRepository, private UserEntityManager $usrEntManager, private UsersMapper $usrMapper)
     {
-        $this->renderer = $renderer;
-        $this->usrRepository = $usrRepository;
-        $this->usrEntManager = $usrEntManager;
-        $this->usrMapper = $usrMapper;
     }
 
     public function view(): void

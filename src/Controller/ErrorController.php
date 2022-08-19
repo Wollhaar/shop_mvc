@@ -9,15 +9,10 @@ use Shop\Model\Error;
 class ErrorController implements BasicController
 {
     private const TPL = 'NotFoundView.tpl';
-
     public static Error $error;
 
-    private View $renderer;
-
-
-    public function __construct(View $renderer)
+    public function __construct(private View $renderer)
     {
-        $this->renderer = $renderer;
     }
 
     public function view(): void

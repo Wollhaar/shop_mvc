@@ -9,11 +9,8 @@ use Shop\Model\Entity\Category;
 
 class CategoryEntityManager
 {
-    private EntityManager $dataManager;
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $dataManager)
     {
-        $this->dataManager = $entityManager;
     }
 
     public function addCategory(CategoryDataTransferObject $data): int

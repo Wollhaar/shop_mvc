@@ -12,17 +12,13 @@ use Shop\Model\Mapper\CategoriesMapper;
 class CategoryProfileController implements \Shop\Controller\BasicController
 {
     private const TPL = 'CategoryProfileView.tpl';
-    private View $renderer;
-    private CategoryRepository $catRepository;
-    private CategoryEntityManager $catEntManager;
-    private CategoriesMapper $catMapper;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, CategoryEntityManager $catEntManager, CategoriesMapper $catMapper)
+    public function __construct(
+        private View $renderer,
+        private CategoryRepository $catRepository,
+        private CategoryEntityManager $catEntManager,
+        private CategoriesMapper $catMapper)
     {
-        $this->renderer = $renderer;
-        $this->catRepository = $catRepository;
-        $this->catEntManager = $catEntManager;
-        $this->catMapper = $catMapper;
     }
 
     public function view(): void

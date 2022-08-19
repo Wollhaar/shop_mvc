@@ -8,18 +8,10 @@ use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 
 class DetailController implements BasicController
 {
-
     private const TPL = 'DetailView.tpl';
 
-    private ProductRepository $prodRepository;
-
-    private View $renderer;
-
-
-    public function __construct(View $renderer, ProductRepository $prodRepository)
+    public function __construct(private View $renderer, private ProductRepository $prodRepository)
     {
-        $this->renderer = $renderer;
-        $this->prodRepository = $prodRepository;
     }
 
     public function view(): void

@@ -10,13 +10,8 @@ use Shop\Model\Mapper\UsersMapper;
 
 class UserRepository
 {
-    private EntityManager $dataManager;
-    private UsersMapper $mapper;
-
-    public function __construct(UsersMapper $mapper, EntityManager $entityManager)
+    public function __construct(private UsersMapper $mapper, private EntityManager $dataManager)
     {
-        $this->mapper = $mapper;
-        $this->dataManager = $entityManager;
     }
 
     public function findUserById(int $id): UserDataTransferObject

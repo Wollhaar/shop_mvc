@@ -8,15 +8,10 @@ use Shop\Service\Session;
 
 class Authenticator
 {
-    private Session $session;
-    private UserRepository $userRepository;
     private bool $auth;
 
-    public function __construct(Session $session, UserRepository $userRepository)
+    public function __construct(private Session $session, private UserRepository $userRepository)
     {
-        $this->session = $session;
-        $this->userRepository = $userRepository;
-
         $this->auth = $this->session->get('user')['auth'] ?? false;
     }
 

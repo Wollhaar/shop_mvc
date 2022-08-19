@@ -10,13 +10,8 @@ use Shop\Model\Mapper\CategoriesMapper;
 
 class CategoryRepository
 {
-    private CategoriesMapper $mapper;
-    private EntityManager $dataManager;
-
-    public function __construct(CategoriesMapper $mapper, EntityManager $entityManager)
+    public function __construct(private CategoriesMapper $mapper, private EntityManager $dataManager)
     {
-        $this->mapper = $mapper;
-        $this->dataManager = $entityManager;
     }
 
     public function findCategoryById(int $id): CategoryDataTransferObject|null

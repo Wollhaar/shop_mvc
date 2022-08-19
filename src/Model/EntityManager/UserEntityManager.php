@@ -9,11 +9,8 @@ use Shop\Model\Entity\User;
 
 class UserEntityManager
 {
-    private EntityManager $dataManager;
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $dataManager)
     {
-        $this->dataManager = $entityManager;
     }
 
     public function addUser(UserDataTransferObject $data, string $password): int
@@ -24,7 +21,6 @@ class UserEntityManager
         $user->setFirstname($data->firstname);
         $user->setLastname($data->lastname);
         $user->setCreated(new \DateTime('now'));
-//        $user->setUpdated(new \DateTime('now'));
         $user->setBirthday(new \DateTime($data->birthday));
         $user->setActive(true);
 

@@ -12,19 +12,14 @@ use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 class ProductProfileController implements \Shop\Controller\BasicController
 {
     private const TPL = 'ProductProfileView.tpl';
-    private View $renderer;
-    private ProductRepository $prodRepository;
-    private ProductEntityManager $prodEntManager;
-    private ProductsMapper $prodMapper;
-    private CategoryRepository $catRepository;
 
-    public function __construct(View $renderer, CategoryRepository $catRepository, ProductRepository $prodRepository, ProductEntityManager $prodEntManager, ProductsMapper $prodMapper)
+    public function __construct(
+        private View $renderer,
+        private CategoryRepository $catRepository,
+        private ProductRepository $prodRepository,
+        private ProductEntityManager $prodEntManager,
+        private ProductsMapper $prodMapper)
     {
-        $this->renderer = $renderer;
-        $this->prodRepository = $prodRepository;
-        $this->catRepository = $catRepository;
-        $this->prodEntManager = $prodEntManager;
-        $this->prodMapper = $prodMapper;
     }
 
     public function view(): void

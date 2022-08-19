@@ -9,15 +9,9 @@ use Shop\Model\Repository\{ProductRepository};
 class ProductListController implements \Shop\Controller\BasicController
 {
     private const TPL = 'ProductListView.tpl';
-    private View $renderer;
-    private ProductRepository $prodRepository;
-    private ProductEntityManager $prodEntManager;
 
-    public function __construct(View $renderer, ProductRepository $prodRepository, ProductEntityManager $prodEntManager)
+    public function __construct(private View $renderer, private ProductRepository $prodRepository, private ProductEntityManager $prodEntManager)
     {
-        $this->renderer = $renderer;
-        $this->prodRepository = $prodRepository;
-        $this->prodEntManager = $prodEntManager;
     }
 
     public function view(): void

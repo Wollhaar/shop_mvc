@@ -10,13 +10,8 @@ use Shop\Model\Mapper\ProductsMapper;
 
 class ProductRepository
 {
-    private ProductsMapper $mapper;
-    private EntityManager $dataManager;
-
-    public function __construct(ProductsMapper $mapper, EntityManager $entityManager)
+    public function __construct(private ProductsMapper $mapper, private EntityManager $dataManager)
     {
-        $this->mapper = $mapper;
-        $this->dataManager = $entityManager;
     }
 
     public function findProductById(int $id): ProductDataTransferObject|null
