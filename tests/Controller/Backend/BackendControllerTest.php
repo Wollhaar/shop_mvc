@@ -34,9 +34,6 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(3, $results['user']->id);
         self::assertSame('maxi', $results['user']->username);
         self::assertTrue($results['user']->active);
-        self::assertFalse($results['categories']);
-        self::assertFalse($results['products']);
-        self::assertFalse($results['users']);
         self::assertSame('standard', $results['user']->role);
     }
 
@@ -62,9 +59,6 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(2, $results['user']->id);
         self::assertSame('admin', $results['user']->username);
         self::assertTrue($results['user']->active);
-        self::assertTrue($results['categories']);
-        self::assertTrue($results['products']);
-        self::assertFalse($results['users']);
         self::assertSame('admin', $results['user']->role);
     }
 
@@ -88,12 +82,9 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('Dashboard', $results['title']);
         self::assertSame('Welcome root', $results['subtitle']);
-        self::assertSame(28, $results['user']->id);
+        self::assertSame(31, $results['user']->id);
         self::assertSame('root', $results['user']->username);
         self::assertTrue($results['user']->active);
-        self::assertTrue($results['categories']);
-        self::assertTrue($results['products']);
-        self::assertTrue($results['users']);
         self::assertSame('root', $results['user']->role);
     }
 }

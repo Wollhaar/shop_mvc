@@ -18,6 +18,7 @@
     {$firstname = ''}
     {$lastname = ''}
     {$birthday = 0}
+    {$role = ''}
     {$active = false}
 {else}
     {$id = $user->id}
@@ -25,6 +26,7 @@
     {$firstname = $user->firstname}
     {$lastname = $user->lastname}
     {$birthday = $user->birthday|date_format:"%Y-%m-%d"}
+    {$role = $user->role}
     {$active = $user->active}
 {/if}
     <form action="/backend/profile?action={if $create}create{else}save{/if}&page=user" method="post">
@@ -59,6 +61,13 @@
         <div class="profile-user--birthday">
             <label for="birthday">birthday</label>
             <input type="date" id="birthday" name="user[birthday]" value="{$birthday}" />
+        </div>
+        <div class="profile-user--role">
+            <label for="role">role</label>
+            <select type="text" id="role" name="user[role]">
+                <option value="standard" {if $role === 'standard'}selected{/if}>standard</option>
+                <option value="admin" {if $role === 'admin'}selected{/if}>admin</option>
+            </select>
         </div>
         {if $active}
             <div class="profile-user--active">

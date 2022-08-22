@@ -13,6 +13,7 @@ class UserDataTransferObject
         public readonly string $created,
         public readonly string $updated,
         public readonly string $birthday,
+        public readonly string $role,
         public readonly bool $active
     )
     {

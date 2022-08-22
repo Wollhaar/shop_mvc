@@ -62,6 +62,7 @@ class UserRepository
                 'created' => $user->getCreated()->format('Y-m-d h:i:s'),
                 'updated' => $updated,
                 'birthday' => $user->getBirthday()->format('Y-m-d h:i:s'),
+                'role' => $user->getRole(),
                 'active' => $user->getActive(),
             ];
         }

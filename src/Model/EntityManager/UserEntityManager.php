@@ -22,6 +22,7 @@ class UserEntityManager
         $user->setLastname($data->lastname);
         $user->setCreated(new \DateTime('now'));
         $user->setBirthday(new \DateTime($data->birthday));
+        $user->setRole($data->role);
         $user->setActive(true);
 
         $this->dataManager->persist($user);
