@@ -37,7 +37,7 @@ class Session
         return is_array($return) ? $return : [];
     }
 
-    public function set(array $data, string $param): void
+    public function set($data, string $param): void
     {
         $this->session[$param] = $data;
         if ($this->active === PHP_SESSION_ACTIVE) {

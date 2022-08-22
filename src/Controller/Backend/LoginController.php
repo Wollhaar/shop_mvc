@@ -5,30 +5,31 @@ namespace Shop\Controller\Backend;
 
 use Shop\Controller\BasicController;
 use Shop\Core\{Authenticator, View};
-use Shop\Model\Repository\{CategoryRepository, ProductRepository, UserRepository};
-use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
 
 class LoginController implements BasicController
 {
     private const TPL = 'BackendLoginView.tpl';
 
-    public function __construct(private View $renderer, private UserRepository $usrRepository, private Authenticator $authentication)
+    public function __construct(private View $renderer, private Authenticator $authentication)
     {
     }
 
     public function view(): void
     {
-        $username = $_REQUEST['username'] ?? '';
-        $authFailed = false;
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
+
         if ($username !== '') {
-            $authFailed = $this->authentication->authentication($username);
+            $this->authentication->authentication($username, $password);
+            $loginAttempted = true;
         }
         if ($this->authentication->getAuth()) {
             $this->redirectToBackend();
         }
 
-        $this->renderer->addTemplateParameter($this->usrRepository->findUserByUsername($username), 'user');
-        $this->renderer->addTemplateParameter($authFailed, 'authentication');
+        $this->renderer->addTemplateParameter($loginAttempted ?? false, 'authentication');
+        $this->renderer->addTemplateParameter($this->authentication->getFailed('username'), 'wrong.username');
+        $this->renderer->addTemplateParameter($this->authentication->getFailed('password'), 'wrong.password');
     }
 
     public function display(): void

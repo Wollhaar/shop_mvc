@@ -37,7 +37,7 @@ class DependencyProvider
         $container->set(CategoryController::class, new CategoryController($container->get(View::class), $container->get(CategoryRepository::class), $container->get(ProductRepository::class)));
         $container->set(DetailController::class, new DetailController($container->get(View::class), $container->get(ProductRepository::class)));
         $container->set(BackendController::class, new BackendController($container->get(View::class), $container->get(Authenticator::class)));
-        $container->set(LoginController::class, new LoginController($container->get(View::class), $container->get(UserRepository::class), $container->get(Authenticator::class)));
+        $container->set(LoginController::class, new LoginController($container->get(View::class), $container->get(Authenticator::class)));
         $container->set(CategoryListController::class, new CategoryListController($container->get(View::class), $container->get(CategoryRepository::class), $container->get(CategoryEntityManager::class)));
         $container->set(ProductListController::class, new ProductListController($container->get(View::class), $container->get(ProductRepository::class), $container->get(ProductEntityManager::class)));
         $container->set(UserListController::class, new UserListController($container->get(View::class), $container->get(UserRepository::class), $container->get(UserEntityManager::class)));

@@ -8,6 +8,7 @@ class UserDataTransferObject
     public function __construct(
         public readonly int $id,
         public readonly string $username,
+        public readonly string $passwordHash,
         public readonly string $firstname,
         public readonly string $lastname,
         public readonly string $created,

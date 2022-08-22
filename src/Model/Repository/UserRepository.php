@@ -14,24 +14,18 @@ class UserRepository
     {
     }
 
-    public function findUserById(int $id): UserDataTransferObject
+    public function findUserById(int $id): UserDataTransferObject|null
     {
         $user = $this->dataManager->find(User::class, $id);
-        return $this->validateUser($user);
+        return $this->mapper->mapEntityToDto($user);
     }
 
-    public function findUserByUsername(string $name): UserDataTransferObject
+    public function findUserByUsername(string $name): UserDataTransferObject|null
     {
         $usrRepo = $this->dataManager->getRepository(User::class);
         $user = $usrRepo->findOneBy(['username' => $name]);
 
-        return $this->validateUser($user);
-    }
-
-    public function getPasswordByUser(UserDataTransferObject $user): string
-    {
-        $userObj = $this->dataManager->find(User::class, $user->id);
-        return isset($userObj) ? $userObj->getPassword() : '';
+        return $this->mapper->mapEntityToDto($user);
     }
 
     public function getAll(): array
@@ -41,31 +35,10 @@ class UserRepository
 
         $userList = [];
         foreach ($users as $user) {
-            $userList[] = $this->validateUser($user);
+//            if ($user)
+            var_dump($user);
+            $userList[] = $this->mapper->mapEntityToDto($user);
         }
         return $userList;
-    }
-
-    private function validateUser(?User $user): UserDataTransferObject
-    {
-        if (isset($user)) {
-            $updated = $user->getUpdated();
-            if (!empty($updated)) {
-                $updated = $updated->format('Y-m-d h:i:s');
-            }
-
-            $newUser = [
-                'id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
-                'created' => $user->getCreated()->format('Y-m-d h:i:s'),
-                'updated' => $updated,
-                'birthday' => $user->getBirthday()->format('Y-m-d h:i:s'),
-                'role' => $user->getRole(),
-                'active' => $user->getActive(),
-            ];
-        }
-        return $this->mapper->mapToDto($newUser ?? []);
     }
 }

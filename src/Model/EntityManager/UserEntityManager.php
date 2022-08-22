@@ -13,11 +13,11 @@ class UserEntityManager
     {
     }
 
-    public function addUser(UserDataTransferObject $data, string $password): int
+    public function addUser(UserDataTransferObject $data): int
     {
         $user = new User();
         $user->setUsername($data->username);
-        $user->setPassword($password);
+        $user->setPasswordHash($data->passwordHash);
         $user->setFirstname($data->firstname);
         $user->setLastname($data->lastname);
         $user->setCreated(new \DateTime('now'));
@@ -31,12 +31,12 @@ class UserEntityManager
         return $user->getId();
     }
 
-    public function saveUser(UserDataTransferObject $data, string $password): void
+    public function saveUser(UserDataTransferObject $data): void
     {
         $user = $this->dataManager->find(User::class, $data->id);
 
-        if ($password !== '') {
-            $user->setPassword($password);
+        if ($data->passwordHash !== '') {
+            $user->setPasswordHash($data->passwordHash);
         }
 
         $user->setUsername($data->username);

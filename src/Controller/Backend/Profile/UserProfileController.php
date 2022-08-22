@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Shop\Controller\Backend\Profile;
 
 use Shop\Controller\BasicController;
+use Shop\Core\Helper;
 use Shop\Core\View;
 use Shop\Model\Dto\UserDataTransferObject;
 use Shop\Model\Repository\UserRepository;
@@ -14,7 +15,7 @@ class UserProfileController implements BasicController
 {
     private const TPL = 'UserProfileView.tpl';
 
-    public function __construct(private View $renderer, private UserRepository $usrRepository, private UserEntityManager $usrEntManager, private UsersMapper $usrMapper)
+    public function __construct(private View $renderer, private UserRepository $usrRepository, private UserEntityManager $usrEntManager, private UsersMapper $usrMapper, private Helper $helper)
     {
     }
 
@@ -44,21 +45,29 @@ class UserProfileController implements BasicController
         switch ($do) {
             case 'create':
                 $user = $_POST['user'] ?? [];
-                $password = $user['password'] ?? '';
+                 $user['passwordHash'] = $user['password'] ?? '';
 
-                $userId = $this->usrEntManager->addUser($this->usrMapper->mapToDto($user), $password);
+                if (!empty($user['passwordHash'])) {
+                    $user['passwordHash'] = password_hash($user['passwordHash'], PASSWORD_ARGON2I);
+                }
+
+                $userId = $this->usrEntManager->addUser($this->usrMapper->mapToDto($user));
                 return $this->usrRepository->findUserById($userId);
 
             case 'save':
                 $user = $_POST['user'];
-                $password = $user['password'] ?? '';
+                $user['passwordHash'] = $user['password'] ?? '';
+
+                if (!empty($user['passwordHash'])) {
+                    $user['passwordHash'] = password_hash($user['passwordHash'], PASSWORD_ARGON2I);
+                }
 
                 $user['id'] = (int)($user['id'] ?? 0);
                 $user['updated'] = date('Y-m-d h:i:s') ?? '';
                 $user['active'] = (bool)($user['active'] ?? 0);
 
                 $user = $this->usrMapper->mapToDto($user);
-                $this->usrEntManager->saveUser($user, $password);
+                $this->usrEntManager->saveUser($user);
                 return $this->usrRepository->findUserById($user->id);
 
             default:

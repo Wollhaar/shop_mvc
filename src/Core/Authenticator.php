@@ -9,25 +9,24 @@ use Shop\Service\Session;
 class Authenticator
 {
     private bool $auth;
+    private array $failed = [];
 
     public function __construct(private Session $session, private UserRepository $userRepository)
     {
-        $this->auth = $this->session->get('user')['auth'] ?? false;
     }
 
-    public function authentication(string $username): array
+    public function authentication(string $username, string $password): void
     {
-        $request = $_REQUEST;
         $user = $this->userRepository->findUserByUsername($username);
 
-        $password = $this->userRepository->getPasswordByUser($user);
-        $password2 = $request['password'] ?? false;
-
-        $this->auth = trim($password) === trim($password2);
-        $authenticated = ['username' => (bool) $user->id, 'password' => $this->auth];
-
-        $this->session->set(['auth' => $this->auth, 'data' => $user], 'user');
-        return $authenticated;
+        $this->failed['username'] = true;
+        if ($user !== null) {
+            $this->auth = password_verify(trim($password), PASSWORD_ARGON2I);
+            $this->failed['username'] = !$user->id;
+            $this->failed['password'] = !$this->auth;
+        }
+        $this->session->set($this->auth, 'auth');
+        $this->session->set($user, 'user');
     }
 
     /**
@@ -35,7 +34,19 @@ class Authenticator
      */
     public function getAuth(): bool
     {
+        if ($this->auth !== true) {
+            $this->auth = $this->session->get('user')['auth'] ?? false;
+        }
         return $this->auth;
+    }
+
+    /**
+     * @param string $property
+     * @return bool
+     */
+    public function getFailed(string $property): bool
+    {
+        return $this->failed[$property];
     }
 
     /**

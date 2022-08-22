@@ -16,48 +16,48 @@ class User
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    private int $id;
+    public int $id;
 
     /**
      * @ORM\Column(type="string")
      */
-    private string $username;
+    public string $username;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $password;
+    public $passwordHash;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private string $firstname;
+    public string $firstname;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private string $lastname;
+    public string $lastname;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created;
+    public $created;
 
     #[ORM\Column(name: "updated", type: "datetime", nullable: true)]
-    private $updated;
+    public $updated;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $birthday;
+    public $birthday;
 
     #[ORM\Column(name: "updated", type: "string", options: ["default" => "standard"])]
-    private $role;
+    public $role;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $active;
+    public bool $active;
 
     /**
      * @return int
@@ -84,19 +84,19 @@ class User
     }
 
     /**
-     * @param string $password
+     * @param string $passwordHash
      */
-    public function setPassword(string $password): void
+    public function setPasswordHash(string $passwordHash): void
     {
-        $this->password = $password;
+        $this->passwordHash = $passwordHash;
     }
 
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getPasswordHash(): string
     {
-        return $this->password;
+        return $this->passwordHash;
     }
 
     /**

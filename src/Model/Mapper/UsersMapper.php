@@ -10,15 +10,32 @@ class UsersMapper
     public function mapToDto(array $data): UserDataTransferObject
     {
         return new UserDataTransferObject(
-            $data['id'] ?? 0,
-            $data['username'] ?? '',
-            $data['firstname'] ?? 'none',
-            $data['lastname'] ?? 'none',
-            $data['created'] ?? '',
-            $data['updated'] ?? '',
-            $data['birthday'] ?? '',
-            $data['role'] ?? '',
-            $data['active'] ?? false,
+            $data['id'],
+            $data['username'],
+            $data['passwordHash'],
+            $data['firstname'],
+            $data['lastname'],
+            $data['created'],
+            $data['updated'],
+            $data['birthday'],
+            $data['role'],
+            $data['active'],
+        );
+    }
+
+    public function mapEntityToDto(array $data): UserDataTransferObject
+    {
+        return new UserDataTransferObject(
+            $data['id'],
+            $data['username'],
+            $data['passwordHash'],
+            $data['firstname'],
+            $data['lastname'],
+            $data['created'],
+            $data['updated'],
+            $data['birthday'],
+            $data['role'],
+            $data['active'],
         );
     }
 }

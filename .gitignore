@@ -5,14 +5,11 @@ vendor/
 #files
 composer.lock
 .phpunit.result.cache
+hashhash.php
 
 #frameworks
 #doctrine
-doctrine_scripts/
 /bin/doctrine.php
-doctrine.php
-bootstrap-doctrine.php
-create_*.php
 *.sqlite
 
 #phpunit
