@@ -17,7 +17,10 @@ class UserRepository
     public function findUserById(int $id): UserDataTransferObject|null
     {
         $user = $this->dataManager->find(User::class, $id);
-        return $this->mapper->mapEntityToDto($user);
+        if (is_object($user)) {
+            $user = $this->mapper->mapEntityToDto($user);
+        }
+        return $user;
     }
 
     public function findUserByUsername(string $name): UserDataTransferObject|null
@@ -25,7 +28,10 @@ class UserRepository
         $usrRepo = $this->dataManager->getRepository(User::class);
         $user = $usrRepo->findOneBy(['username' => $name]);
 
-        return $this->mapper->mapEntityToDto($user);
+        if (is_object($user)) {
+            $user = $this->mapper->mapEntityToDto($user);
+        }
+        return $user;
     }
 
     public function getAll(): array
@@ -36,7 +42,7 @@ class UserRepository
         $userList = [];
         foreach ($users as $user) {
 //            if ($user)
-            var_dump($user);
+//            var_dump($user);
             $userList[] = $this->mapper->mapEntityToDto($user);
         }
         return $userList;

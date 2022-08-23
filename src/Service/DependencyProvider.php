@@ -11,6 +11,7 @@ use Shop\Controller\Backend\Profile\{CategoryProfileController, ProductProfileCo
 use Shop\Controller\ErrorController;
 use Shop\Controller\Frontend\{CategoryController, DetailController, HomeController};
 use Shop\Core\Authenticator;
+use Shop\Core\Helper;
 use Shop\Core\View;
 use Shop\Model\EntityManager\{CategoryEntityManager, ProductEntityManager, UserEntityManager};
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper, UsersMapper};
@@ -25,6 +26,7 @@ class DependencyProvider
         $container->set(CategoriesMapper::class, new CategoriesMapper());
         $container->set(ProductsMapper::class, new ProductsMapper());
         $container->set(UsersMapper::class, new UsersMapper());
+        $container->set(Helper::class, new Helper());
         $container->set(CategoryRepository::class, new CategoryRepository($container->get(CategoriesMapper::class), $container->get(EntityManager::class)));
         $container->set(ProductRepository::class, new ProductRepository($container->get(ProductsMapper::class), $container->get(EntityManager::class)));
         $container->set(UserRepository::class, new UserRepository($container->get(UsersMapper::class), $container->get(EntityManager::class)));
@@ -43,6 +45,6 @@ class DependencyProvider
         $container->set(UserListController::class, new UserListController($container->get(View::class), $container->get(UserRepository::class), $container->get(UserEntityManager::class)));
         $container->set(CategoryProfileController::class, new CategoryProfileController($container->get(View::class), $container->get(CategoryRepository::class), $container->get(CategoryEntityManager::class), $container->get(CategoriesMapper::class)));
         $container->set(ProductProfileController::class, new ProductProfileController($container->get(View::class), $container->get(CategoryRepository::class), $container->get(ProductRepository::class), $container->get(ProductEntityManager::class), $container->get(ProductsMapper::class)));
-        $container->set(UserProfileController::class, new UserProfileController($container->get(View::class), $container->get(UserRepository::class), $container->get(UserEntityManager::class), $container->get(UsersMapper::class)));
+        $container->set(UserProfileController::class, new UserProfileController($container->get(View::class), $container->get(UserRepository::class), $container->get(UserEntityManager::class), $container->get(UsersMapper::class), $container->get(Helper::class)));
     }
 }

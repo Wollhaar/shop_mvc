@@ -76,7 +76,7 @@
                 <span>Aktiv</span>
             </div>
         {/if}
-        <button type="submit">{if $create}Hinzuf&uuml;{else}Speichern{/if}</button>
+        <button type="submit">{if $create}Hinzuf&uuml;gen{else}Speichern{/if}</button>
     </form>
 </div>
 </body>

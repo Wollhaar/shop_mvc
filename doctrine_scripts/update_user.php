@@ -2,7 +2,7 @@
 
 // create_product.php <name>
 require_once __DIR__ . "/../bootstrap-doctrine.php";
-
+$helper = new \Shop\Core\Helper();
 
 $id = $argv[1];
 $attr = $argv[2];
@@ -13,23 +13,25 @@ $user = $entityManager->find(\Shop\Model\Entity\User::class, $id);
 
 switch ($attr) {
     case 'username':
-        $user->setName($val);
+        $user->username = $val;
         break;
     case 'password':
-        $user->setPassword($val);
+        $user->passwordHash = $helper->hash($val);
         break;
     case 'firstname':
-        $user->setFirstname($val);
+        $user->firstname = $val;
         break;
     case 'lastname':
-        $user->setLastname($val);
+        $user->lastname = $val;
         break;
     case 'role':
-        $user->setRole($val);
-        echo $val . "\n";
+        $user->role = $val;
+        break;
+    case 'update':
+        $user->updated = new DateTime();
         break;
     case 'active':
-        $user->setActive((bool)$val);
+        $user->Active = (bool)$val;
         break;
 }
 var_dump($user);

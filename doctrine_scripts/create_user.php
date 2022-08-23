@@ -11,15 +11,15 @@ $pass = $argv[2];
 $role = $argv[3] ?? null;
 
 $user = new \Shop\Model\Entity\User();
-$user->setUsername($username);
-$user->setPasswordHash($pass);
+$user->username = $username;
+$user->passwordHash = $pass;
 if (isset($role)) {
-    $user->setRole($role);
+    $user->role = $role;
 }
-$user->setCreated(new DateTime('now'));
-$user->setActive(true);
+$user->created = new DateTime('now');
+$user->active = true;
 
 $entityManager->persist($user);
 $entityManager->flush();
 
-echo "Created User with ID " . $user->getId() . " and name: " . $user->getUsername() . "\n";
+echo "Created User with ID " . $user->id . " and name: " . $user->username . "\n";

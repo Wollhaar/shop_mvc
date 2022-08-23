@@ -16,19 +16,19 @@ class UserEntityManager
     public function addUser(UserDataTransferObject $data): int
     {
         $user = new User();
-        $user->setUsername($data->username);
-        $user->setPasswordHash($data->passwordHash);
-        $user->setFirstname($data->firstname);
-        $user->setLastname($data->lastname);
-        $user->setCreated(new \DateTime('now'));
-        $user->setBirthday(new \DateTime($data->birthday));
-        $user->setRole($data->role);
-        $user->setActive(true);
+        $user->username = $data->username;
+        $user->passwordHash = $data->passwordHash;
+        $user->firstname = $data->firstname;
+        $user->lastname = $data->lastname;
+        $user->created = new \DateTime($data->created);
+        $user->birthday = new \DateTime($data->birthday);
+        $user->role = $data->role;
+        $user->active = $data->active;
 
         $this->dataManager->persist($user);
         $this->dataManager->flush();
 
-        return $user->getId();
+        return $user->id;
     }
 
     public function saveUser(UserDataTransferObject $data): void
@@ -39,11 +39,11 @@ class UserEntityManager
             $user->setPasswordHash($data->passwordHash);
         }
 
-        $user->setUsername($data->username);
-        $user->setFirstname($data->firstname);
-        $user->setLastname($data->lastname);
-        $user->setUpdated(new \DateTime('now'));
-        $user->setBirthday(new \DateTime($data->birthday));
+        $user->username = $data->username;
+        $user->firstname = $data->firstname;
+        $user->lastname = $data->lastname;
+        $user->updated = new \DateTime('now');
+        $user->birthday = new \DateTime($data->birthday);
 
         $this->dataManager->flush();
     }
@@ -52,7 +52,7 @@ class UserEntityManager
     {
         $user = $this->dataManager->find(User::class, $id);
         if (!empty($user)) {
-            $user->setActive(false);
+            $user->active = false;
         }
         $this->dataManager->flush();
     }

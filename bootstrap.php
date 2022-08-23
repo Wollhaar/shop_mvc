@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
-$request = $_REQUEST;
+$get = $_GET;
 $path = explode('/', $_SERVER['PATH_INFO'] ?? '');
 
-$page = $request['page'] ?? 'home';
-
+$page = $get['page'] ?? 'home';
 
 $container = new \Shop\Service\Container();
 $container->set(\Doctrine\ORM\EntityManager::class, $entityManager);
