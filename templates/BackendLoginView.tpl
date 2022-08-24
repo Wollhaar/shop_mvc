@@ -27,21 +27,21 @@
 <h1>Backend Login</h1>
 <p>
 {if $authentication}
-    {$authUsername = $authentication.username}
+    {$authUsername = $wrongUsername}
     {if $authUsername}
-        {$authPassword = $authentication.password}
+        {$authPassword = $wrongPassword}
     {/if}
 {/if}
     <form action="/backend/login" method="post">
         <div class="username-field">
-            {if isset($authUsername) && $authUsername == false}
+            {if isset($authUsername) && $authUsername == true}
                 <span style="color:red;font-size: 0.7rem;display: block">Username does not exist</span>
             {/if}
             <label for="username">Username</label>
             <input type="text" id="username" name="username"/>
         </div>
         <div class="password-field">
-            {if isset($authPassword) && $authPassword == false}
+            {if isset($authPassword) && $authPassword == true}
                 <span style="color:red;font-size: 0.7rem;display: block">Password is false</span>
             {/if}
             <label for="password">Password</label>

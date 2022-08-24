@@ -24,7 +24,7 @@ class ProductRepository
     {
         $category = $this->dataManager->find(Category::class, $id);
         $prodRepo = $this->dataManager->getRepository(Product::class);
-        $products = $prodRepo->findBy(['category' => $category->getId(), 'active' => true]);
+        $products = $prodRepo->findBy(['category' => $category->getName(), 'active' => true]);
 
         foreach ($products as $key => $product) {
             $products[$key] = $this->validateProduct($product);
@@ -34,8 +34,9 @@ class ProductRepository
 
     public function getAll(): array
     {
-        $prodDataRepository = $this->dataManager->getRepository(Product::class);
-        $products = $prodDataRepository->findAll();
+        $products = $this->dataManager
+            ->getRepository(Product::class)
+            ->findAll();
 
         foreach ($products as $key => $product) {
             unset($products[$key]);

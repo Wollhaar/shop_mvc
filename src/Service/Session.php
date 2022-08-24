@@ -5,7 +5,6 @@ namespace Shop\Service;
 
 class Session
 {
-    private const TTL = 600;
     private array $session = [];
     private int $active;
 
@@ -13,7 +12,7 @@ class Session
     {
         $this->active = session_status();
         if ($test) {
-            $this->session['user'] = ['auth' => true];
+            $this->session['auth'] = true;
             return;
         }
         session_start();
@@ -31,10 +30,9 @@ class Session
         session_start();
     }
 
-    public function get(string $data): array
+    public function get(string $data)
     {
-        $return = $this->session[$data] ?? [];
-        return is_array($return) ? $return : [];
+        return $this->session[$data] ?? null;
     }
 
     public function set($data, string $param): void

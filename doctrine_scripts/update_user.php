@@ -31,8 +31,7 @@ switch ($attr) {
         $user->updated = new DateTime();
         break;
     case 'active':
-        $user->Active = (bool)$val;
+        $user->active = (bool)$val;
         break;
 }
-var_dump($user);
 $entityManager->flush();

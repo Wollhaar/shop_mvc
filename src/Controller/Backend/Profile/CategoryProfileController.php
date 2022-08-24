@@ -17,21 +17,24 @@ class CategoryProfileController implements \Shop\Controller\BasicController
         private View $renderer,
         private CategoryRepository $catRepository,
         private CategoryEntityManager $catEntManager,
-        private CategoriesMapper $catMapper)
-    {
-    }
+        private CategoriesMapper $catMapper
+    )
+    {}
 
     public function view(): void
     {
-        $category = $this->action();
-        $name = $category->name;
+        $action = $_GET['action'] ?? 'index';
+        $category = $this->$action();
 
+        if (is_object($category)) {
+            $name = $category->name;
+        }
         if ((int)($_REQUEST['create'] ?? 0) === 1) {
             $create = true;
             $name = 'Creation';
         }
         $this->renderer->addTemplateParameter('Category', 'title');
-        $this->renderer->addTemplateParameter($name, 'subtitle');
+        $this->renderer->addTemplateParameter($name ?? null, 'subtitle');
         $this->renderer->addTemplateParameter($create ?? false, 'create');
         $this->renderer->addTemplateParameter($category, 'category');
     }
@@ -41,19 +44,17 @@ class CategoryProfileController implements \Shop\Controller\BasicController
         $this->renderer->display(self::TPL);
     }
 
-    private function action(): CategoryDataTransferObject
+    private function create(): CategoryDataTransferObject
     {
-        $do = $_REQUEST['action'] ?? '';
-        switch ($do) {
-            case 'create':
-                $category = $_POST['category'] ?? [];
-                $category = $this->catMapper->mapToDto($category);
-                $categoryId = $this->catEntManager->addCategory($category);
-                return $this->catRepository->findCategoryById($categoryId);
+        $category = $_POST['category'] ?? [];
+        $category = $this->catMapper->mapToDto($category);
+        $categoryId = $this->catEntManager->addCategory($category);
+        return $this->catRepository->findCategoryById($categoryId);
+    }
 
-            default:
-                $id = $_REQUEST['id'] ?? '';
-                return $this->catRepository->findCategoryById((int)$id);
-        }
+    private function index(): CategoryDataTransferObject|null
+    {
+        $id = $_REQUEST['id'] ?? '';
+        return $this->catRepository->findCategoryById((int)$id);
     }
 }

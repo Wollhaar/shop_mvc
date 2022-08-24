@@ -14,7 +14,6 @@ use Shop\Model\EntityManager\UserEntityManager;
 class UserProfileController implements BasicController
 {
     private const TPL = 'UserProfileView.tpl';
-    private UserDataTransferObject|null $user;
 
     public function __construct(
         private View $renderer,
@@ -28,10 +27,10 @@ class UserProfileController implements BasicController
     public function view(): void
     {
         $action = $_GET['action'] ?? 'index';
-        $this->$action();
+        $user = $this->$action();
 
-        if (is_object($this->user)) {
-            $name = $this->user->username;
+        if (is_object($user)) {
+            $name = $user->username;
         }
         if ((int)($_GET['create'] ?? 0) === 1) {
             $create = true;
@@ -40,7 +39,7 @@ class UserProfileController implements BasicController
         $this->renderer->addTemplateParameter('User', 'title');
         $this->renderer->addTemplateParameter($name ?? null, 'subtitle');
         $this->renderer->addTemplateParameter($create ?? false, 'create');
-        $this->renderer->addTemplateParameter($this->user ?? null, 'user');
+        $this->renderer->addTemplateParameter($user ?? null, 'user');
     }
 
     public function display(): void
@@ -48,17 +47,13 @@ class UserProfileController implements BasicController
         $this->renderer->display(self::TPL);
     }
 
-    public function index(): void
+    public function index(): UserDataTransferObject|null
     {
         $id = (int)($_GET['id'] ?? 0);
-
-        if ($id > 0) {
-            return;
-        }
-        $this->user = $this->usrRepository->findUserById($id);
+        return $this->usrRepository->findUserById($id);
     }
 
-    public function create(): void
+    public function create(): UserDataTransferObject
     {
         $user = $_POST['user'] ?? [];
         $user['id'] = 0;
@@ -69,16 +64,13 @@ class UserProfileController implements BasicController
         $user['active'] = true;
 
         $userId = $this->usrEntManager->addUser($this->usrMapper->mapToDto($user));
-        $this->user = $this->usrRepository->findUserById($userId);
+        return $this->usrRepository->findUserById($userId);
     }
 
-    public function save(): void
+    public function save(): UserDataTransferObject
     {
         $user = $_POST['user'];
         $user['id'] = (int)($user['id'] ?? 0);
-        if ($user['id'] > 0) {
-            return;
-        }
 
         $user['passwordHash'] = $user['password'] ?? '';
         if ($user['password'] !== '') {
@@ -91,6 +83,6 @@ class UserProfileController implements BasicController
 
         $user = $this->usrMapper->mapToDto($user);
         $this->usrEntManager->saveUser($user);
-        $this->user = $this->usrRepository->findUserById($user->id);
+        return $this->usrRepository->findUserById($user->id);
     }
 }

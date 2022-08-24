@@ -9,7 +9,10 @@ use Shop\Service\Session;
 class Authenticator
 {
     private bool $auth;
-    private array $failed = [];
+    private array $failed = [
+        'username' => false,
+        'password' => false
+    ];
 
     public function __construct(private Session $session, private UserRepository $userRepository)
     {
@@ -21,11 +24,12 @@ class Authenticator
 
         $this->failed['username'] = true;
         if ($user !== null) {
-            $this->auth = password_verify(trim($password), PASSWORD_ARGON2I);
+            $this->auth = password_verify(trim($password), $user->passwordHash);
             $this->failed['username'] = !$user->id;
             $this->failed['password'] = !$this->auth;
         }
-        $this->session->set($this->auth, 'auth');
+        var_dump($this->failed);
+        $this->session->set($this->auth ?? null, 'auth');
         $this->session->set($user, 'user');
     }
 
@@ -34,8 +38,8 @@ class Authenticator
      */
     public function getAuth(): bool
     {
-        if ($this->auth !== true) {
-            $this->auth = $this->session->get('user')['auth'] ?? false;
+        if (empty($this->auth) || $this->auth !== true) {
+            $this->auth = $this->session->get('auth') ?? false;
         }
         return $this->auth;
     }

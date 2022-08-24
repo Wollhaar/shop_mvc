@@ -54,7 +54,7 @@
             <label for="category">category</label>
             <select type="text" id="category" name="product[category]">
                 {foreach item=category from=$categories}
-                    <option value="{$category->id}"{if $selected == $category->name} selected{/if}>{$category->name}</option>
+                    <option value="{$category->name}"{if $selected == $category->name} selected{/if}>{$category->name}</option>
                 {/foreach}
             </select>
         </div>

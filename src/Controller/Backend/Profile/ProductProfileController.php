@@ -24,16 +24,20 @@ class ProductProfileController implements \Shop\Controller\BasicController
 
     public function view(): void
     {
-        $product = $this->action();
-        $categories = $this->catRepository->getAll();
-        $name = $product->name;
+        $action = $_GET['action'] ?? 'index';
+        $product = $this->$action();
 
+        $categories = $this->catRepository->getAll();
+
+        if (is_object($product)) {
+            $name = $product->name;
+        }
         if ((int)($_REQUEST['create'] ?? 0) === 1) {
             $create = true;
             $name = 'Creation';
         }
         $this->renderer->addTemplateParameter('Product', 'title');
-        $this->renderer->addTemplateParameter($name, 'subtitle');
+        $this->renderer->addTemplateParameter($name ?? null, 'subtitle');
         $this->renderer->addTemplateParameter($create ?? false, 'create');
         $this->renderer->addTemplateParameter($product, 'product');
         $this->renderer->addTemplateParameter($categories, 'categories');
@@ -44,33 +48,33 @@ class ProductProfileController implements \Shop\Controller\BasicController
         $this->renderer->display(self::TPL);
     }
 
-    private function action(): ProductDataTransferObject
+    private function index(): ProductDataTransferObject|null
     {
-        $do = $_REQUEST['action'] ?? '';
-        switch ($do) {
-            case 'create':
-                $product = $_POST['product'] ?? [];
-                $product['price'] = (float)($product['price'] ?? 0);
-                $product['amount'] = (int)($product['amount'] ?? 0);
+        $id = (int)($_REQUEST['id'] ?? 0);
+        return $this->prodRepository->findProductById($id);
+    }
 
-                $product = $this->prodMapper->mapToDto($product);
-                $productId = $this->prodEntManager->addProduct($product);
-                return $this->prodRepository->findProductById($productId);
+    private function create(): ProductDataTransferObject
+    {
+        $product = $_POST['product'] ?? [];
+        $product['price'] = (float)($product['price'] ?? 0);
+        $product['amount'] = (int)($product['amount'] ?? 0);
 
-            case 'save':
-                $product = $_POST['product'];
-                $product['id'] = (int)($product['id'] ?? 0);
-                $product['price'] = (float)($product['price'] ?? 0);
-                $product['amount'] = (int)($product['amount'] ?? 0);
-                $product['active'] = (bool)($product['active'] ?? 0);
+        $product = $this->prodMapper->mapToDto($product);
+        $productId = $this->prodEntManager->addProduct($product);
+        return $this->prodRepository->findProductById($productId);
+    }
 
-                $product = $this->prodMapper->mapToDto($product);
-                $this->prodEntManager->saveProduct($product);
-                return $this->prodRepository->findProductById($product->id);
+    private function save(): ProductDataTransferObject
+    {
+        $product = $_POST['product'];
+        $product['id'] = (int)($product['id'] ?? 0);
+        $product['price'] = (float)($product['price'] ?? 0);
+        $product['amount'] = (int)($product['amount'] ?? 0);
+        $product['active'] = (bool)($product['active'] ?? 0);
 
-            default:
-                $id = (int)($_REQUEST['id'] ?? 0);
-                return $this->prodRepository->findProductById($id);
-        }
+        $product = $this->prodMapper->mapToDto($product);
+        $this->prodEntManager->saveProduct($product);
+        return $this->prodRepository->findProductById($product->id);
     }
 }

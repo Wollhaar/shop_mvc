@@ -15,7 +15,9 @@ class ProductEntityManager
 
     public function addProduct(ProductDataTransferObject $data): int
     {
-        $category = $this->dataManager->find(Category::class, (int)$data->category);
+        $category = $this->dataManager
+            ->getRepository(Category::class)
+            ->findOneBy(['name' => $data->category]);
 
         $product = new Product();
         $product->setName($data->name);
@@ -35,7 +37,8 @@ class ProductEntityManager
     public function saveProduct(ProductDataTransferObject $data): void
     {
         $product = $this->dataManager->find(Product::class, $data->id);
-        $category = $this->dataManager->find(Category::class, (int)$data->category);
+        $category = $this->dataManager->getRepository(Category::class)
+            ->findOneBy(['name' => $data->category]);
 
         $product->setName($data->name);
         $product->setSize($data->size);

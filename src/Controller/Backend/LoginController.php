@@ -23,13 +23,14 @@ class LoginController implements BasicController
             $this->authentication->authentication($username, $password);
             $loginAttempted = true;
         }
+        var_dump($this->authentication->getAuth());
         if ($this->authentication->getAuth()) {
             $this->redirectToBackend();
         }
 
         $this->renderer->addTemplateParameter($loginAttempted ?? false, 'authentication');
-        $this->renderer->addTemplateParameter($this->authentication->getFailed('username'), 'wrong.username');
-        $this->renderer->addTemplateParameter($this->authentication->getFailed('password'), 'wrong.password');
+        $this->renderer->addTemplateParameter($this->authentication->getFailed('username'), 'wrongUsername');
+        $this->renderer->addTemplateParameter($this->authentication->getFailed('password'), 'wrongPassword');
     }
 
     public function display(): void

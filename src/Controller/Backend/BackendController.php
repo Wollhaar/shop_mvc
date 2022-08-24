@@ -26,6 +26,7 @@ class BackendController implements BasicController
         $user = $this->buildUser();
 
         $this->renderer->addTemplateParameter('Dashboard', 'title');
+        $this->renderer->addTemplateParameter('Welcome ' . $user->username, 'subtitle');
         $this->renderer->addTemplateParameter($user, 'user');
     }
 
@@ -36,7 +37,7 @@ class BackendController implements BasicController
 
     private function buildUser(): UserDataTransferObject
     {
-        $user = $this->session->get('user')['data'] ?? null;
+        $user = $this->session->get('user');
         if (is_null($user) || !$this->authenticator->getAuth()) {
             header('Location: /backend/login');
         }

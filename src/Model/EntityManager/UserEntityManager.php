@@ -36,7 +36,7 @@ class UserEntityManager
         $user = $this->dataManager->find(User::class, $data->id);
 
         if ($data->passwordHash !== '') {
-            $user->setPasswordHash($data->passwordHash);
+            $user->passwordHash = $data->passwordHash;
         }
 
         $user->username = $data->username;
@@ -51,7 +51,7 @@ class UserEntityManager
     public function deleteUserById(int $id): void
     {
         $user = $this->dataManager->find(User::class, $id);
-        if (!empty($user)) {
+        if (!empty($user) && $user->role !== 'root') {
             $user->active = false;
         }
         $this->dataManager->flush();

@@ -31,6 +31,7 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $results = $view->getParams();
 
         self::assertSame('Dashboard', $results['title']);
+        self::assertSame('Welcome maxi', $results['title']);
         self::assertSame(3, $results['user']->id);
         self::assertSame('maxi', $results['user']->username);
         self::assertTrue($results['user']->active);
@@ -56,6 +57,7 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $results = $view->getParams();
 
         self::assertSame('Dashboard', $results['title']);
+        self::assertSame('Welcome admin', $results['subtitle']);
         self::assertSame(2, $results['user']->id);
         self::assertSame('admin', $results['user']->username);
         self::assertTrue($results['user']->active);
