@@ -24,7 +24,7 @@ class CategoryController implements BasicController
         $activeCategory = false;
         $name = 'All';
 
-        if ($this->activeCategory->id !== 0) {
+        if (isset($this->activeCategory)) {
             $activeCategory = true;
             $name = $this->activeCategory->name;
         }
@@ -41,9 +41,8 @@ class CategoryController implements BasicController
 
     private function build(): array
     {
-        $activeId = (int)($_REQUEST['id'] ?? 0);
+        $activeId = (int)($_GET['id'] ?? 0);
 
-        $this->activeCategory = $this->catRepository->findCategoryById(0);
         if ($activeId) {
             $this->activeCategory = $this->catRepository->findCategoryById($activeId);
             return $this->prodRepository->findProductsByCategoryId($this->activeCategory->id);

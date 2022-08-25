@@ -16,8 +16,7 @@ class DetailController implements BasicController
 
     public function view(): void
     {
-        $request = $_REQUEST;
-        $activeId = (int) ($request['id'] ?? 0);
+        $activeId = (int) ($_GET['id'] ?? 0);
         $activeProduct = $this->prodRepository->findProductById($activeId);
 
         $this->renderer->addTemplateParameter($activeProduct, 'product');

@@ -20,18 +20,18 @@ class ProductEntityManager
             ->findOneBy(['name' => $data->category]);
 
         $product = new Product();
-        $product->setName($data->name);
-        $product->setSize($data->size);
-        $product->setColor($data->color);
+        $product->name = $data->name;
+        $product->size = $data->size;
+        $product->color = $data->color;
         $product->setCategory($category);
-        $product->setPrice((string)$data->price);
-        $product->setAmount($data->amount);
-        $product->setActive(true);
+        $product->price = $data->price;
+        $product->amount = $data->amount;
+        $product->active = $data->active;
 
         $this->dataManager->persist($product);
         $this->dataManager->flush();
 
-        return $product->getId();
+        return $product->id;
     }
 
     public function saveProduct(ProductDataTransferObject $data): void
@@ -40,12 +40,12 @@ class ProductEntityManager
         $category = $this->dataManager->getRepository(Category::class)
             ->findOneBy(['name' => $data->category]);
 
-        $product->setName($data->name);
-        $product->setSize($data->size);
-        $product->setColor($data->color);
+        $product->name = $data->name;
+        $product->size = $data->size;
+        $product->color = $data->color;
         $product->setCategory($category);
-        $product->setPrice((string)$data->price);
-        $product->setAmount($data->amount);
+        $product->price = $data->price;
+        $product->amount = $data->amount;
 
         $this->dataManager->flush();
     }
@@ -53,7 +53,7 @@ class ProductEntityManager
     public function deleteProductById(int $id): void
     {
         $product = $this->dataManager->find(Product::class, $id);
-        $product->setActive(false);
+        $product->active = false;
 
         $this->dataManager->flush();
     }

@@ -16,20 +16,20 @@ class CategoryEntityManager
     public function addCategory(CategoryDataTransferObject $data): int
     {
         $category = new \Shop\Model\Entity\Category();
-        $category->setName($data->name);
-        $category->setActive(true);
+        $category->name = $data->name;
+        $category->active = $data->active;
 
         $this->dataManager->persist($category);
         $this->dataManager->flush();
 
-        return $category->getId();
+        return $category->id;
     }
 
     public function deleteCategoryById(int $id): void
     {
         $category = $this->dataManager->find(Category::class, $id);
         if (!empty($category)) {
-            $category->setActive(false);
+            $category->active = false;
         }
 
         $this->dataManager->flush();

@@ -3,20 +3,35 @@
 namespace Shop\Model\Mapper;
 
 use Shop\Model\Dto\ProductDataTransferObject;
+use Shop\Model\Entity\Product;
 
 class ProductsMapper
 {
     public function mapToDto(array $product): ProductDataTransferObject
     {
         return new ProductDataTransferObject(
-            $product['id'] ?? 0,
-            $product['name'] ?? 'none',
-            $product['size'] ?? 'none',
-            $product['color'] ?? 'none',
-            $product['category'] ?? 'none',
-            $product['price'] ?? 0.0,
-            $product['amount'] ?? 0,
-            $product['active'] ?? false
+            $product['id'],
+            $product['name'],
+            $product['size'],
+            $product['color'],
+            $product['category'],
+            $product['price'],
+            $product['amount'],
+            $product['active']
+        );
+    }
+
+    public function mapEntityToDto(Product $product): ProductDataTransferObject
+    {
+        return new ProductDataTransferObject(
+            $product->id,
+            $product->name,
+            $product->size,
+            $product->color,
+            $product->category->name,
+            $product->price,
+            $product->amount,
+            $product->active
         );
     }
 }

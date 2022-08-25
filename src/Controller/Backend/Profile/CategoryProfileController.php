@@ -47,6 +47,8 @@ class CategoryProfileController implements \Shop\Controller\BasicController
     private function create(): CategoryDataTransferObject
     {
         $category = $_POST['category'] ?? [];
+        $category['id'] = 0;
+        $category['active'] = true;
         $category = $this->catMapper->mapToDto($category);
         $categoryId = $this->catEntManager->addCategory($category);
         return $this->catRepository->findCategoryById($categoryId);
@@ -54,7 +56,7 @@ class CategoryProfileController implements \Shop\Controller\BasicController
 
     private function index(): CategoryDataTransferObject|null
     {
-        $id = $_REQUEST['id'] ?? '';
+        $id = $_GET['id'] ?? '';
         return $this->catRepository->findCategoryById((int)$id);
     }
 }

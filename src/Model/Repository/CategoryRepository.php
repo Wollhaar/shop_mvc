@@ -17,7 +17,10 @@ class CategoryRepository
     public function findCategoryById(int $id): CategoryDataTransferObject|null
     {
         $category = $this->dataManager->find(Category::class, $id);
-        return $this->validateCategory($category);
+        if (is_object($category)) {
+            $category = $this->mapper->mapEntityToDto($category);
+        }
+        return $category;
     }
 
     public function getAll(): array
@@ -27,21 +30,8 @@ class CategoryRepository
 
         $categoryList = [];
         foreach ($categories as $category) {
-            $categoryList[] = $this->validateCategory($category);
+            $categoryList[] = $this->mapper->mapEntityToDto($category);
         }
         return $categoryList;
-    }
-
-    private function validateCategory(?Category $category): CategoryDataTransferObject
-    {
-        if (isset($category)) {
-            $newCategory = [
-                'id' => $category->getId(),
-                'name' => $category->getName(),
-                'active' => $category->getActive(),
-            ];
-        }
-
-        return $this->mapper->mapToDto($newCategory ?? []);
     }
 }

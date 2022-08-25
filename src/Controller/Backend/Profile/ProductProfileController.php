@@ -50,15 +50,17 @@ class ProductProfileController implements \Shop\Controller\BasicController
 
     private function index(): ProductDataTransferObject|null
     {
-        $id = (int)($_REQUEST['id'] ?? 0);
+        $id = (int)($_GET['id'] ?? 0);
         return $this->prodRepository->findProductById($id);
     }
 
     private function create(): ProductDataTransferObject
     {
         $product = $_POST['product'] ?? [];
+        $product['id'] = 0;
         $product['price'] = (float)($product['price'] ?? 0);
         $product['amount'] = (int)($product['amount'] ?? 0);
+        $product['active'] = true;
 
         $product = $this->prodMapper->mapToDto($product);
         $productId = $this->prodEntManager->addProduct($product);

@@ -17,17 +17,20 @@ class ProductRepository
     public function findProductById(int $id): ProductDataTransferObject|null
     {
         $product = $this->dataManager->find(Product::class, $id);
-        return $this->validateProduct($product);
+        if (is_object($product)) {
+            $product = $this->mapper->mapEntityToDto($product);
+        }
+        return $product;
     }
 
     public function findProductsByCategoryId(int $id): array
     {
         $category = $this->dataManager->find(Category::class, $id);
-        $prodRepo = $this->dataManager->getRepository(Product::class);
-        $products = $prodRepo->findBy(['category' => $category->getName(), 'active' => true]);
+        $products = $this->dataManager->getRepository(Product::class)
+            ->findBy(['category' => $category, 'active' => true]);
 
         foreach ($products as $key => $product) {
-            $products[$key] = $this->validateProduct($product);
+            $products[$key] = $this->mapper->mapEntityToDto($product);
         }
         return $products;
     }
@@ -40,28 +43,10 @@ class ProductRepository
 
         foreach ($products as $key => $product) {
             unset($products[$key]);
-            if ($product->isActive()) {
-                $products[$key] = $this->validateProduct($product);
+            if ($product->active) {
+                $products[$key] = $this->mapper->mapEntityToDto($product);
             }
         }
         return $products;
-    }
-
-    private function validateProduct(?Product $product): ProductDataTransferObject
-    {
-        if (isset($product)) {
-            $newProduct = [
-                'id' => $product->getId(),
-                'name' => utf8_encode($product->getName()),
-                'size' => $product->getSize(),
-                'color' => utf8_encode($product->getColor()),
-                'category' => $product->getCategory()->getName(),
-                'price' => (float)$product->getPrice(),
-                'amount' => $product->getAmount(),
-                'active' => $product->isActive(),
-            ];
-        }
-
-        return $this->mapper->mapToDto($newProduct ?? []);
     }
 }
