@@ -32,7 +32,7 @@ class ProductProfileController implements \Shop\Controller\BasicController
         if (is_object($product)) {
             $name = $product->name;
         }
-        if ((int)($_REQUEST['create'] ?? 0) === 1) {
+        if ((int)($_GET['create'] ?? 0) === 1) {
             $create = true;
             $name = 'Creation';
         }

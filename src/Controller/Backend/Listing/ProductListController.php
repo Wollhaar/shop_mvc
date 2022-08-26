@@ -33,7 +33,7 @@ class ProductListController implements \Shop\Controller\BasicController
 
     private function delete(): void
     {
-        $id = (int)($_REQUEST['id'] ?? 0);
+        $id = (int)($_GET['id'] ?? 0);
         $this->prodEntManager->deleteProductById($id);
     }
 }

@@ -25,7 +25,6 @@ class LoginControllerTest extends TestCase
         $session = new Session(true);
 
         $controller = new LoginController($view,
-            $usrRepository,
             new Authenticator($session, $usrRepository),
         );
 
@@ -47,27 +46,21 @@ class LoginControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-        $_REQUEST = ['username' => 'test', 'password' => 'test1234'];
+        $_POST = ['username' => 'test', 'password' => 'test1234'];
         $usrMapper = new UsersMapper();
 
         $usrRepository = new UserRepository($usrMapper, $entityManager);
         $view = new View();
 
         $controller = new LoginController($view,
-            $usrRepository,
             new Authenticator(new Session(true), $usrRepository)
         );
 
         $controller->view();
         $results = $view->getParams();
-        $object = $results['user'];
 
-        self::assertSame(2, $object->id);
-        self::assertSame('test', $object->username);
-        self::assertSame('Chuck', $object->firstname);
-        self::assertSame('Tester', $object->lastname);
-        self::assertSame('2022-07-13 12:00:00', $object->created);
-        self::assertSame('1997-11-05 12:00:00', $object->birthday);
-        self::assertTrue($object->active);
+        self::assertTrue($results['authentication']);
+        self::assertFalse($results['wrongUsername']);
+        self::assertTrue($results['wrongPassword']);
     }
 }

@@ -23,7 +23,6 @@ class LoginController implements BasicController
             $this->authentication->authentication($username, $password);
             $loginAttempted = true;
         }
-        var_dump($this->authentication->getAuth());
         if ($this->authentication->getAuth()) {
             $this->redirectToBackend();
         }

@@ -58,7 +58,10 @@ class UserProfileController implements BasicController
         $user = $_POST['user'] ?? [];
         $user['id'] = 0;
 
-        $user['passwordHash'] = $this->helper->hash($user['password']);
+        $user['passwordHash'] = '';
+        if (isset($user['password']) && $user['password'] !== '') {
+            $user['passwordHash'] = $this->helper->hash($user['password']);
+        }
         $user['created'] = date('Y-m-d h:i:s') ?? '';
         $user['updated'] = '';
         $user['active'] = true;
@@ -73,7 +76,7 @@ class UserProfileController implements BasicController
         $user['id'] = (int)($user['id'] ?? 0);
 
         $user['passwordHash'] = $user['password'] ?? '';
-        if ($user['password'] !== '') {
+        if (isset($user['password']) && $user['password'] !== '') {
             $user['passwordHash'] = $this->helper->hash($user['passwordHash']);
         }
 

@@ -16,7 +16,8 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['id'] = 4;
+        unset($_GET['action']);
+        $_GET['id'] = 4;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -38,8 +39,9 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['create'] = 1;
-        $_REQUEST['id'] = '';
+        unset($_GET['action']);
+        $_GET['create'] = 1;
+        $_GET['id'] = '';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -55,16 +57,14 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('Category', $results['title']);
         self::assertSame('Creation', $results['subtitle']);
         self::assertTrue($results['create']);
-        self::assertSame(0, $results['category']->id);
-        self::assertSame('All', $results['category']->name);
-        self::assertFalse($results['category']->active);
+        self::assertNull($results['category']);
     }
 
     public function testCreateView()
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = 'create';
+        $_GET['action'] = 'create';
         $_POST['category'] = ['name' => 'testKategorieCREATE'];
 
         $view = new View();
@@ -77,7 +77,6 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         );
         $controller->view();
         $results = $view->getParams();
-
 
         self::assertSame('Category', $results['title']);
         self::assertSame('testKategorieCREATE', $results['category']->name);

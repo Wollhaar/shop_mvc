@@ -20,18 +20,18 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
         $session = new Session(true);
-        $session->set(['auth' => true, $usrRepository->findUserById(3)], 'user');
+        $session->set(true, 'auth');
+        $session->set($usrRepository->findUserById(3), 'user');
 
         $view = new View();
-
         $controller = new BackendController($view,
-            new Authenticator(new Session(true), $usrRepository)
+            new Authenticator($session, $usrRepository)
         );
         $controller->view();
         $results = $view->getParams();
 
         self::assertSame('Dashboard', $results['title']);
-        self::assertSame('Welcome maxi', $results['title']);
+        self::assertSame('Welcome maxi', $results['subtitle']);
         self::assertSame(3, $results['user']->id);
         self::assertSame('maxi', $results['user']->username);
         self::assertTrue($results['user']->active);
@@ -46,20 +46,20 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
         $session = new Session(true);
-        $session->set(['auth' => true, $usrRepository->findUserById(2)], 'user');
+        $session->set(true, 'auth');
+        $session->set($usrRepository->findUserById(2), 'user');
 
         $view = new View();
-
         $controller = new BackendController($view,
-            new Authenticator(new Session(true), $usrRepository)
+            new Authenticator($session, $usrRepository)
         );
         $controller->view();
         $results = $view->getParams();
 
         self::assertSame('Dashboard', $results['title']);
-        self::assertSame('Welcome admin', $results['subtitle']);
+        self::assertSame('Welcome test', $results['subtitle']);
         self::assertSame(2, $results['user']->id);
-        self::assertSame('admin', $results['user']->username);
+        self::assertSame('test', $results['user']->username);
         self::assertTrue($results['user']->active);
         self::assertSame('admin', $results['user']->role);
     }
@@ -72,19 +72,19 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
         $session = new Session(true);
-        $session->set(['auth' => true, $usrRepository->findUserById(31)], 'user');
+        $session->set(true, 'auth');
+        $session->set($usrRepository->findUserById(4), 'user');
 
         $view = new View();
-
         $controller = new BackendController($view,
-            new Authenticator(new Session(true), $usrRepository)
+            new Authenticator($session, $usrRepository)
         );
         $controller->view();
         $results = $view->getParams();
 
         self::assertSame('Dashboard', $results['title']);
         self::assertSame('Welcome root', $results['subtitle']);
-        self::assertSame(31, $results['user']->id);
+        self::assertSame(4, $results['user']->id);
         self::assertSame('root', $results['user']->username);
         self::assertTrue($results['user']->active);
         self::assertSame('root', $results['user']->role);

@@ -15,8 +15,8 @@ class DetailControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-        $_REQUEST['page'] = 'detail';
-        $_REQUEST['id'] = 8;
+        $_GET['page'] = 'detail';
+        $_GET['id'] = 8;
 
         $view = new View();
         $controller = new DetailController($view,
@@ -38,7 +38,7 @@ class DetailControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-        $_REQUEST['id'] = 0;
+        $_GET['id'] = 0;
 
         $view = new View();
         $controller = new DetailController($view,
@@ -47,12 +47,6 @@ class DetailControllerTest extends TestCase
         $controller->view();
         $results = $view->getParams();
 
-        self::assertSame(0, $results['product']->id);
-        self::assertSame('none', $results['product']->name);
-        self::assertSame('none', $results['product']->size);
-        self::assertSame('none', $results['product']->category);
-        self::assertSame(0.0, $results['product']->price);
-        self::assertSame(0, $results['product']->amount);
-        self::assertFalse($results['product']->active);
+        self::assertNull($results['product']);
     }
 }

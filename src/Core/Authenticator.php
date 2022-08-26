@@ -28,7 +28,7 @@ class Authenticator
             $this->failed['username'] = !$user->id;
             $this->failed['password'] = !$this->auth;
         }
-        var_dump($this->failed);
+
         $this->session->set($this->auth ?? null, 'auth');
         $this->session->set($user, 'user');
     }

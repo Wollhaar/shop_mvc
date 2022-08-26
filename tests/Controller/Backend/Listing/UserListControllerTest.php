@@ -14,7 +14,7 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
     public function testView()
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
-        $_REQUEST['action'] = '';
+        unset($_GET['action']);
 
         $view = new View();
         $usrMapper = new UsersMapper();
@@ -39,8 +39,8 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = 'delete';
-        $_REQUEST['id'] = 4;
+        $_GET['action'] = 'delete';
+        $_GET['id'] = 5;
 
         $view = new View();
         $usrMapper = new UsersMapper();

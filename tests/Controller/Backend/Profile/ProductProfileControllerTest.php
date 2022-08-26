@@ -14,9 +14,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = '';
+        unset($_GET['action']);
         $_POST['product'] = '';
-        $_REQUEST['id'] = 14;
+        $_GET['id'] = 14;
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -46,8 +46,8 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['create'] = 1;
-        $_REQUEST['id'] = '';
+        $_GET['create'] = 1;
+        $_GET['id'] = '';
         $_POST['product'] = '';
 
         $view = new View();
@@ -67,13 +67,7 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('Product', $results['title']);
         self::assertSame('Creation', $results['subtitle']);
         self::assertTrue($results['create']);
-        self::assertSame(0, $results['product']->id);
-        self::assertSame('none', $results['product']->name);
-        self::assertSame('none', $results['product']->size);
-        self::assertSame('none', $results['product']->category);
-        self::assertSame(0.0, $results['product']->price);
-        self::assertSame(0, $results['product']->amount);
-        self::assertFalse($results['product']->active);
+        self::assertNull($results['product']);
     }
 
     public function testCreateView()
@@ -84,12 +78,12 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
             'name' => 'TesthoseCREATE',
             'size' => 'W:30;L:34',
             'color' => 'schwarz,braun',
-            'category' => '6',
+            'category' => 'Hosen',
             'price' => 34.55,
             'amount' => 130,
             'active' => true,
         ];
-        $_REQUEST['action'] = 'create';
+        $_GET['action'] = 'create';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -119,13 +113,13 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = 'save';
+        $_GET['action'] = 'save';
         $_POST['product'] = [
             'id' => 15,
             'name' => 'TesthoseSAVE',
             'size' => 'W:30;L:34',
             'color' => 'schwarz,grau,braun',
-            'category' => '6',
+            'category' => 'Hosen',
             'price' => 34.55,
             'amount' => 130,
             'active' => true,

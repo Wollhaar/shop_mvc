@@ -53,7 +53,9 @@ class ProductEntityManager
     public function deleteProductById(int $id): void
     {
         $product = $this->dataManager->find(Product::class, $id);
-        $product->active = false;
+        if (is_object($product)) {
+            $product->active = false;
+        }
 
         $this->dataManager->flush();
     }

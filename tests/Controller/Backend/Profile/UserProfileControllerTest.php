@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ShopTest\Controller\Backend\Profile;
 
 use Shop\Controller\Backend\Profile\UserProfileController;
+use Shop\Core\Helper;
 use Shop\Core\View;
 use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\UsersMapper;
@@ -15,8 +16,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = '';
-        $_REQUEST['create'] = 1;
+        unset($_GET['action']);
+        $_GET['create'] = 1;
 
         $view = new View();
         $usrMapper = new UsersMapper();
@@ -25,6 +26,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
+            new Helper()
         );
 
         $controller->view();
@@ -33,26 +35,22 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('User', $results['title']);
         self::assertSame('Creation', $results['subtitle']);
         self::assertTrue($results['create']);
-        self::assertSame(0, $results['user']->id);
-        self::assertSame('', $results['user']->username);
-        self::assertSame('none', $results['user']->firstname);
-        self::assertSame('none', $results['user']->lastname);
-        self::assertSame('', $results['user']->created);
-        self::assertSame('', $results['user']->birthday);
-        self::assertFalse($results['user']->active);
+        self::assertNull($results['user']);
     }
 
     public function testCreateView()
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['create'] = '';
-        $_REQUEST['action'] = 'create';
+        $_GET['create'] = '';
+        $_GET['action'] = 'create';
         $_POST['user'] = [
             'username' => 'testCREATE',
+            'password' => 'testCreatePass',
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
             'birthday' => '2000-01-01',
+            'role' => 'standard',
         ];
 
         $view = new View();
@@ -62,6 +60,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
+            new Helper()
         );
 
         $controller->view();
@@ -76,8 +75,9 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->created);
         self::assertSame('2000-01-01 12:00:00', $results['user']->birthday);
         self::assertTrue($results['user']->active);
+        self::assertSame('standard', $results['user']->role);
 
-        $_REQUEST['id'] = $results['user']->id;
+        $_GET['id'] = $results['user']->id;
         $_POST['user']['id'] = $results['user']->id;
         $_POST['user']['created'] = $results['user']->created;
     }
@@ -86,8 +86,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['create'] = '';
-        $_REQUEST['action'] = '';
+        unset($_GET['action']);
+        $_GET['create'] = '';
         $user = $_POST['user'];
 
         $view = new View();
@@ -97,6 +97,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
+            new Helper()
         );
 
         $controller->view();
@@ -112,6 +113,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame($user['created'], $results['user']->created);
         self::assertSame('', $results['user']->updated);
         self::assertSame($user['birthday'] . ' 12:00:00', $results['user']->birthday);
+        self::assertSame('standard', $results['user']->role);
         self::assertTrue($results['user']->active);
     }
 
@@ -119,13 +121,15 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = 'save';
+        $_GET['action'] = 'save';
         $_POST['user'] = [
             'id' => 6,
             'username' => 'testSAVE',
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
             'birthday' => '2001-02-01',
+            'role' => 'standard',
+            'active' => 1,
         ];
 
         $view = new View();
@@ -135,6 +139,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
+            new Helper()
         );
 
         $controller->view();
@@ -146,9 +151,11 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('testSAVE', $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
-        self::assertSame('2022-08-17 08:05:02', $results['user']->created);
+        self::assertSame('2022-08-26 03:05:31', $results['user']->created);
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->updated);
         self::assertSame('2001-02-01 12:00:00', $results['user']->birthday);
+        self::assertSame('2001-02-01 12:00:00', $results['user']->birthday);
+        self::assertSame('standard', $results['user']->role);
         self::assertTrue($results['user']->active);
     }
 
@@ -156,7 +163,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = 'save';
+        $_GET['action'] = 'save';
         $_POST['user'] = [
             'id' => 6,
             'username' => 'testSAVE',
@@ -164,6 +171,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             'firstname' => 'testvorname1',
             'lastname' => 'testNachname1',
             'birthday' => '2001-02-01',
+            'role' => 'standard',
+            'active' => 1,
         ];
 
         $view = new View();
@@ -173,6 +182,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
+            new Helper()
         );
 
         $controller->view();
@@ -184,9 +194,9 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('testSAVE', $results['user']->username);
         self::assertSame('testvorname1', $results['user']->firstname);
         self::assertSame('testNachname1', $results['user']->lastname);
-        self::assertSame('2022-08-17 08:05:02', $results['user']->created);
+        self::assertSame('2022-08-26 03:05:31', $results['user']->created);
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->updated);
-        self::assertSame('2001-02-01 12:00:00', $results['user']->birthday);
+        self::assertSame('standard', $results['user']->role);
         self::assertTrue($results['user']->active);
     }
 }

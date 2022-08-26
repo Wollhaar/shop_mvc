@@ -16,7 +16,7 @@ class CategoryListControllerTest extends TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = '';
+        unset($_GET['action']);
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -45,8 +45,8 @@ class CategoryListControllerTest extends TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = 'delete';
-        $_REQUEST['id'] = '9';
+        $_GET['action'] = 'delete';
+        $_GET['id'] = '34';
 
         $view = new View();
         $catMapper = new CategoriesMapper();

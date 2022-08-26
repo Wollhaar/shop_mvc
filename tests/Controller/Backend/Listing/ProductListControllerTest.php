@@ -15,8 +15,8 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = '';
-        $_REQUEST['id'] = '';
+        unset($_GET['action']);
+        $_GET['id'] = '';
 
         $view = new View();
         $controller = new ProductListController($view,
@@ -49,8 +49,8 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        $_REQUEST['action'] = 'delete';
-        $_REQUEST['id'] = 16;
+        $_GET['action'] = 'delete';
+        $_GET['id'] = 4;
 
         $view = new View();
         $controller = new ProductListController($view,
