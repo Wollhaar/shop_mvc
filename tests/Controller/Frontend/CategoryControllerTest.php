@@ -16,8 +16,6 @@ class CategoryControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-        $_GET['id'] = '';
-
         $view = new View();
         $catMapper = new CategoriesMapper();
 
@@ -83,5 +81,11 @@ class CategoryControllerTest extends TestCase
         self::assertSame('Shirt No.1', $results['build'][1]->name);
         self::assertSame('Bandshirt - Outkast', $results['build'][2]->name);
         self::assertSame('plain white', $results['build'][3]->name);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
     }
 }

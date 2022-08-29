@@ -14,8 +14,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        unset($_GET['action']);
-        $_POST['product'] = '';
         $_GET['id'] = 14;
 
         $view = new View();
@@ -47,8 +45,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
         $_GET['create'] = 1;
-        $_GET['id'] = '';
-        $_POST['product'] = '';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -148,5 +144,11 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(34.55, $results['product']->price);
         self::assertSame(130, $results['product']->amount);
         self::assertTrue($results['product']->active);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
     }
 }

@@ -14,7 +14,6 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
     public function testView()
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
-        unset($_GET['action']);
 
         $view = new View();
         $usrMapper = new UsersMapper();
@@ -60,5 +59,11 @@ class UserListControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('test', $results['users'][1]->username);
         self::assertSame(3, $results['users'][2]->id);
         self::assertSame('maxi', $results['users'][2]->username);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
     }
 }

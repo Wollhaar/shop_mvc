@@ -2,7 +2,7 @@
 
 // create_product.php <name>
 require_once __DIR__ . "/../bootstrap-doctrine.php";
-$helper = new \Shop\Core\Helper();
+$helper = new \Shop\Core\PasswordGenerator();
 
 $id = $argv[1];
 $attr = $argv[2];

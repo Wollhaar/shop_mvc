@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ShopTest\Controller\Backend\Profile;
 
 use Shop\Controller\Backend\Profile\UserProfileController;
-use Shop\Core\Helper;
+use Shop\Core\PasswordGenerator;
 use Shop\Core\View;
 use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\UsersMapper;
@@ -16,7 +16,6 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        unset($_GET['action']);
         $_GET['create'] = 1;
 
         $view = new View();
@@ -26,7 +25,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
-            new Helper()
+            new PasswordGenerator()
         );
 
         $controller->view();
@@ -60,7 +59,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
-            new Helper()
+            new PasswordGenerator()
         );
 
         $controller->view();
@@ -86,8 +85,6 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        unset($_GET['action']);
-        $_GET['create'] = '';
         $user = $_POST['user'];
 
         $view = new View();
@@ -97,7 +94,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
-            new Helper()
+            new PasswordGenerator()
         );
 
         $controller->view();
@@ -139,7 +136,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
-            new Helper()
+            new PasswordGenerator()
         );
 
         $controller->view();
@@ -182,7 +179,7 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
             $usrMapper,
-            new Helper()
+            new PasswordGenerator()
         );
 
         $controller->view();
@@ -198,5 +195,11 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->updated);
         self::assertSame('standard', $results['user']->role);
         self::assertTrue($results['user']->active);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
     }
 }

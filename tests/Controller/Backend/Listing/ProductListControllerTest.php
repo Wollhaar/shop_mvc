@@ -15,9 +15,6 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        unset($_GET['action']);
-        $_GET['id'] = '';
-
         $view = new View();
         $controller = new ProductListController($view,
             new ProductRepository(new ProductsMapper(), $entityManager),
@@ -77,5 +74,11 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('plain white', $results['products'][12]->name);
         self::assertSame(14, $results['products'][13]->id);
         self::assertSame('Strickjacke', $results['products'][13]->name);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
     }
 }

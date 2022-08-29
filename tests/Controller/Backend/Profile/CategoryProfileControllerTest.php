@@ -11,12 +11,10 @@ use Shop\Model\Repository\CategoryRepository;
 
 class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testView()
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        unset($_GET['action']);
         $_GET['id'] = 4;
 
         $view = new View();
@@ -39,9 +37,7 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
     {
         require __DIR__ . '/../../../../bootstrap-doctrine.php';
 
-        unset($_GET['action']);
         $_GET['create'] = 1;
-        $_GET['id'] = '';
 
         $view = new View();
         $catMapper = new CategoriesMapper();
@@ -81,5 +77,11 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('Category', $results['title']);
         self::assertSame('testKategorieCREATE', $results['category']->name);
         self::assertTrue($results['category']->active);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
     }
 }

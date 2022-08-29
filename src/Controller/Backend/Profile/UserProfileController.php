@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Shop\Controller\Backend\Profile;
 
 use Shop\Controller\BasicController;
-use Shop\Core\Helper;
+use Shop\Core\PasswordGenerator;
 use Shop\Core\View;
 use Shop\Model\Dto\UserDataTransferObject;
 use Shop\Model\Repository\UserRepository;
@@ -20,7 +20,7 @@ class UserProfileController implements BasicController
         private UserRepository $usrRepository,
         private UserEntityManager $usrEntManager,
         private UsersMapper $usrMapper,
-        private Helper $helper
+        private PasswordGenerator $generator
     )
     {}
 
@@ -60,7 +60,7 @@ class UserProfileController implements BasicController
 
         $user['passwordHash'] = '';
         if (isset($user['password']) && $user['password'] !== '') {
-            $user['passwordHash'] = $this->helper->hash($user['password']);
+            $user['passwordHash'] = $this->generator->hash($user['password']);
         }
         $user['created'] = date('Y-m-d h:i:s') ?? '';
         $user['updated'] = '';
@@ -77,7 +77,7 @@ class UserProfileController implements BasicController
 
         $user['passwordHash'] = $user['password'] ?? '';
         if (isset($user['password']) && $user['password'] !== '') {
-            $user['passwordHash'] = $this->helper->hash($user['passwordHash']);
+            $user['passwordHash'] = $this->generator->hash($user['passwordHash']);
         }
 
         $user['created'] = '';

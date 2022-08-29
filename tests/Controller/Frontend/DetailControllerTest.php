@@ -38,8 +38,6 @@ class DetailControllerTest extends TestCase
     {
         require __DIR__ . '/../../../bootstrap-doctrine.php';
 
-        $_GET['id'] = 0;
-
         $view = new View();
         $controller = new DetailController($view,
             new ProductRepository(new ProductsMapper(), $entityManager)
@@ -48,5 +46,11 @@ class DetailControllerTest extends TestCase
         $results = $view->getParams();
 
         self::assertNull($results['product']);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
     }
 }
