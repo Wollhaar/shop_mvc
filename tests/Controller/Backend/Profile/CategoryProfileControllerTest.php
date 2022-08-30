@@ -13,8 +13,6 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['id'] = 4;
 
         $view = new View();
@@ -35,8 +33,6 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreationView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['create'] = 1;
 
         $view = new View();
@@ -58,8 +54,6 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['action'] = 'create';
         $_POST['category'] = ['name' => 'testKategorieCREATE'];
 
@@ -77,6 +71,12 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('Category', $results['title']);
         self::assertSame('testKategorieCREATE', $results['category']->name);
         self::assertTrue($results['category']->active);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
     }
 
     protected function tearDown(): void

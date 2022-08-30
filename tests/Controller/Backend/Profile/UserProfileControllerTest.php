@@ -14,8 +14,6 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreationView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['create'] = 1;
 
         $view = new View();
@@ -39,9 +37,6 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
-        $_GET['create'] = '';
         $_GET['action'] = 'create';
         $_POST['user'] = [
             'username' => 'testCREATE',
@@ -83,8 +78,6 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $user = $_POST['user'];
 
         $view = new View();
@@ -116,8 +109,6 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['action'] = 'save';
         $_POST['user'] = [
             'id' => 6,
@@ -158,8 +149,6 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testSavePasswordView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['action'] = 'save';
         $_POST['user'] = [
             'id' => 6,
@@ -195,6 +184,12 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->updated);
         self::assertSame('standard', $results['user']->role);
         self::assertTrue($results['user']->active);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
     }
 
     protected function tearDown(): void

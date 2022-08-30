@@ -14,8 +14,6 @@ class CategoryListControllerTest extends TestCase
 {
     public function testView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $view = new View();
         $catMapper = new CategoriesMapper();
 
@@ -41,8 +39,6 @@ class CategoryListControllerTest extends TestCase
 
     public function testDeleteView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['action'] = 'delete';
         $_GET['id'] = '34';
 
@@ -68,6 +64,12 @@ class CategoryListControllerTest extends TestCase
         self::assertSame('Sportswear', $results['categories'][3]->name);
         self::assertSame(8, $results['categories'][4]->id);
         self::assertSame('Jacken', $results['categories'][4]->name);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
     }
 
     protected function tearDown(): void

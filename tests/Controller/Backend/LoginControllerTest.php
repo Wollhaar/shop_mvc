@@ -15,8 +15,6 @@ class LoginControllerTest extends TestCase
 {
     public function testView()
     {
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
-
         $_POST = ['username' => 'test', 'password' => 'test123'];
         $usrMapper = new UsersMapper();
         $usrRepository = new UserRepository($usrMapper, $entityManager);
@@ -44,8 +42,6 @@ class LoginControllerTest extends TestCase
 
     public function testFailedLogin()
     {
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
-
         $_POST = ['username' => 'test', 'password' => 'test1234'];
         $usrMapper = new UsersMapper();
 
@@ -62,5 +58,11 @@ class LoginControllerTest extends TestCase
         self::assertTrue($results['authentication']);
         self::assertFalse($results['wrongUsername']);
         self::assertTrue($results['wrongPassword']);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
     }
 }

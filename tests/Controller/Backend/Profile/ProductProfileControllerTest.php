@@ -12,8 +12,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['id'] = 14;
 
         $view = new View();
@@ -42,8 +40,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreationView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['create'] = 1;
 
         $view = new View();
@@ -68,8 +64,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_POST['product'] = [
             'name' => 'TesthoseCREATE',
             'size' => 'W:30;L:34',
@@ -107,8 +101,6 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['action'] = 'save';
         $_POST['product'] = [
             'id' => 15,
@@ -144,6 +136,12 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(34.55, $results['product']->price);
         self::assertSame(130, $results['product']->amount);
         self::assertTrue($results['product']->active);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
     }
 
     protected function tearDown(): void

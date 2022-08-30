@@ -14,8 +14,6 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
-
         $usrMapper = new UsersMapper();
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
@@ -40,8 +38,6 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testAdminView()
     {
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
-
         $usrMapper = new UsersMapper();
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
@@ -66,8 +62,6 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testRootView()
     {
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
-
         $usrMapper = new UsersMapper();
         $usrRepository = new UserRepository($usrMapper, $entityManager);
 
@@ -88,5 +82,11 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('root', $results['user']->username);
         self::assertTrue($results['user']->active);
         self::assertSame('root', $results['user']->role);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
     }
 }

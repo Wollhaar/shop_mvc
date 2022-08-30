@@ -13,8 +13,6 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $view = new View();
         $controller = new ProductListController($view,
             new ProductRepository(new ProductsMapper(), $entityManager),
@@ -44,8 +42,6 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testDeleteView()
     {
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-
         $_GET['action'] = 'delete';
         $_GET['id'] = 4;
 
@@ -74,6 +70,12 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('plain white', $results['products'][12]->name);
         self::assertSame(14, $results['products'][13]->id);
         self::assertSame('Strickjacke', $results['products'][13]->name);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../../bootstrap-doctrine.php';
     }
 
     protected function tearDown(): void
