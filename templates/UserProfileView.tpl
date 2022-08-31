@@ -15,6 +15,7 @@
 <div>
 {if $create}
     {$username = ''}
+    {$email = ''}
     {$firstname = ''}
     {$lastname = ''}
     {$birthday = 0}
@@ -23,6 +24,7 @@
 {else}
     {$id = $user->id}
     {$username = $user->username}
+    {$email = $user->email}
     {$firstname = $user->firstname}
     {$lastname = $user->lastname}
     {$birthday = $user->birthday|date_format:"%Y-%m-%d"}
@@ -38,6 +40,10 @@
         <div class="profile-user--password">
             <label for="password">password</label>
             <input type="password" id="password" name="user[password]" />
+        </div>
+        <div class="profile-user--email">
+            <label for="email">email</label>
+            <input type="text" id="email" name="user[email]" value="{$email}" />
         </div>
         <div class="profile-user--firstname">
             <label for="firstname">firstname</label>

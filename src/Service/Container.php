@@ -2,8 +2,11 @@
 
 namespace Shop\Service;
 
+use Doctrine\ORM\EntityManager;
+
 class Container
 {
+    public static EntityManager $entityManager;
     private array $storage = [];
 
     public function set(string $classname, object $object): void

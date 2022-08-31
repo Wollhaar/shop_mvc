@@ -6,7 +6,7 @@ $path = explode('/', $_SERVER['PATH_INFO'] ?? '');
 $page = $get['page'] ?? 'home';
 
 $container = new \Shop\Service\Container();
-$container->set(\Doctrine\ORM\EntityManager::class, $entityManager);
+$container::$entityManager = $entityManager;
 
 $dependencyProvider = new \Shop\Service\DependencyProvider();
 $dependencyProvider->provide($container);

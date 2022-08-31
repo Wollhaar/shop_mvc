@@ -9,6 +9,7 @@ class UserDataTransferObject
         public readonly int $id,
         public readonly string $username,
         public readonly string $passwordHash,
+        public readonly string $email,
         public readonly string $firstname,
         public readonly string $lastname,
         public readonly string $created,

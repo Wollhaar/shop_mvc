@@ -18,6 +18,7 @@ class UserEntityManager
         $user = new User();
         $user->username = $data->username;
         $user->passwordHash = $data->passwordHash;
+        $user->email = $data->email;
         $user->firstname = $data->firstname;
         $user->lastname = $data->lastname;
         $user->created = new \DateTime($data->created);
@@ -40,6 +41,7 @@ class UserEntityManager
         }
 
         $user->username = $data->username;
+        $user->email = $data->email;
         $user->firstname = $data->firstname;
         $user->lastname = $data->lastname;
         $user->updated = new \DateTime('now');

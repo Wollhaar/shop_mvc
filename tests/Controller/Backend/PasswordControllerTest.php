@@ -10,24 +10,35 @@ use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\EmailsMapper;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
+use Shop\Service\Mailer;
 use Shop\Service\Session;
 use Shop\Service\SymfonyMailerManager;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\Transports;
+use Symfony\Component\Mime\RawMessage;
 
 class PasswordControllerTest extends \PHPUnit\Framework\TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
+    }
+
     public function testIndex()
     {
         $view = new View();
         $usrMapper = new UsersMapper();
 
         $controller = new PasswordController($view,
-            new UserRepository($usrMapper, $entityManager),
+            new UserRepository($usrMapper, $entityManager), // TODO: resolve undefined EntityManager
             new UserEntityManager($entityManager),
-            $usrMapper,
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
-            new SymfonyMailerManager()
+            new SymfonyMailerManager(
+                    new Mailer(new Transports(['main' => new EsmtpTransport('localhost', 1025)]), new RawMessage())
+            )
         );
 
         $controller->view();
@@ -47,11 +58,12 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new PasswordController($view,
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
-            $usrMapper,
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
-            new SymfonyMailerManager()
+            new SymfonyMailerManager(
+                new Mailer(new Transports(['main' => new EsmtpTransport('localhost', 1025)]), new RawMessage())
+            )
         );
 
         $controller->view();
@@ -72,11 +84,12 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new PasswordController($view,
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
-            $usrMapper,
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
-            new SymfonyMailerManager()
+            new SymfonyMailerManager(
+                new Mailer(new Transports(['main' => new EsmtpTransport('localhost', 1025)]), new RawMessage())
+            )
         );
 
         $controller->view();
@@ -96,11 +109,12 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new PasswordController($view,
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
-            $usrMapper,
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
-            new SymfonyMailerManager()
+            new SymfonyMailerManager(
+                new Mailer(new Transports(['main' => new EsmtpTransport('localhost', 1025)]), new RawMessage())
+            )
         );
 
         $controller->view();
@@ -121,11 +135,12 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $controller = new PasswordController($view,
             new UserRepository($usrMapper, $entityManager),
             new UserEntityManager($entityManager),
-            $usrMapper,
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
-            new SymfonyMailerManager()
+            new SymfonyMailerManager(
+                new Mailer(new Transports(['main' => new EsmtpTransport('localhost', 1025)]), new RawMessage())
+            )
         );
 
         $controller->view();
@@ -133,17 +148,5 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
 
         self::assertSame('passwordSet', $results['phase']);
         self::assertTrue($results['result']);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $_GET = [];
     }
 }

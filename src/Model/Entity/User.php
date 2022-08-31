@@ -31,6 +31,11 @@ class User
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    public string $email;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     public string $firstname;
 
     /**

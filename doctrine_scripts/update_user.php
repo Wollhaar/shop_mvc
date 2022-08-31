@@ -18,6 +18,9 @@ switch ($attr) {
     case 'password':
         $user->passwordHash = $helper->hash($val);
         break;
+    case 'email':
+        $user->email = $val;
+        break;
     case 'firstname':
         $user->firstname = $val;
         break;

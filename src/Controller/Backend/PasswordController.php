@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Shop\Controller\Backend;
 
+use Doctrine\ORM\Query\AST\Functions\DateDiffFunction;
 use Shop\Core\PasswordGenerator;
 use Shop\Core\View;
 use Shop\Model\Dto\UserDataTransferObject;
@@ -17,12 +18,12 @@ use Shop\Service\SymfonyMailerManager;
 class PasswordController implements \Shop\Controller\BasicController
 {
     private const TPL = 'PasswordView.tpl';
+    private const TTL = 300;
 
     public function __construct(
         private View $renderer,
         private UserRepository $usrRepository,
         private UserEntityManager $usrEntManager,
-        private UsersMapper $usrMapper,
         private EmailsMapper $emailMapper,
         private PasswordGenerator $passGenerator,
         private Session $session,
@@ -54,12 +55,42 @@ class PasswordController implements \Shop\Controller\BasicController
         if ($user instanceof UserDataTransferObject) {
             $mail = [
                 'to' => $user->email,
+                'subject' => 'Password recovering',
                 'message' => 'Link to recover your password',
-                'html' => '<p>Link to recover your password</p><a href="/backend/password?action=newPassword&id=' . $user->id . '">Neues Passwort</a> anfragen'
+                'html' => $user->id
             ];
+            $this->session->set(true, 'verified');
+            $this->session->set(new \DateTime('now'), 'timeOfVerification');
 
             return $this->mailerManager->sendMail($this->emailMapper->mapToDto($mail));
         }
         return false;
+    }
+
+    private function newPassword(): bool
+    {
+        $verified = $this->session->get('verified') ?? false;
+        $veriTime = $this->session->get('timeOfVerification');
+
+        return $verified && ($this->valuateTime(
+            $veriTime->diff(new \DateTime())
+            ) < self::TTL);
+    }
+
+    private function passwordSet(): bool
+    {
+
+    }
+
+    private function valuateTime(\DateInterval $dateDiff): int
+    {
+        $seconds = 0;
+        $seconds += $dateDiff->y * 12 * 30 * 24 * 60 * 60;
+        $seconds += $dateDiff->m * 30 * 24 * 60 * 60;
+        $seconds += $dateDiff->d * 24 * 60 * 60;
+        $seconds += $dateDiff->h * 60 * 60;
+        $seconds += $dateDiff->i * 60;
+        $seconds += $dateDiff->s;
+        return $seconds;
     }
 }

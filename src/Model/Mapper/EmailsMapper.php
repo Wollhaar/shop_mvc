@@ -11,9 +11,6 @@ class EmailsMapper
     {
         return new EmailDataTransferObject(
             $email['to'],
-            $email['from'],
-            $email['cc'],
-            $email['bcc'],
             $email['subject'],
             $email['message'],
             $email['html']
