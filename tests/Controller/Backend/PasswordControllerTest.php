@@ -10,6 +10,7 @@ use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\EmailsMapper;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
+use Shop\Service\Container;
 use Shop\Service\Mailer;
 use Shop\Service\Session;
 use Shop\Service\SymfonyMailerManager;
@@ -31,14 +32,17 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new PasswordController($view,
-            new UserRepository($usrMapper, $entityManager), // TODO: resolve undefined EntityManager
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager), // TODO: resolve undefined EntityManager
+            new UserEntityManager(Container::$entityManager),
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
-            new SymfonyMailerManager(
-                    new Mailer(new Transports(['main' => new EsmtpTransport('localhost', 1025)]), new RawMessage())
-            )
+            new SymfonyMailerManager(new Mailer(
+                new Transports([
+                    'main' => new EsmtpTransport('localhost', 1025)
+                ]),
+                new RawMessage()
+            ))
         );
 
         $controller->view();
@@ -56,8 +60,8 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new PasswordController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
@@ -82,8 +86,8 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new PasswordController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
@@ -107,8 +111,8 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new PasswordController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),
@@ -133,8 +137,8 @@ class PasswordControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new PasswordController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             new EmailsMapper(),
             new PasswordGenerator(),
             new Session(true),

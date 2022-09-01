@@ -6,13 +6,10 @@ $path = explode('/', $_SERVER['PATH_INFO'] ?? '');
 $page = $get['page'] ?? 'home';
 
 $container = new \Shop\Service\Container();
-$container::$entityManager = $entityManager;
-
 $dependencyProvider = new \Shop\Service\DependencyProvider();
 $dependencyProvider->provide($container);
 
 $session = $container->get(\Shop\Service\Session::class);
-
 if ($page === 'logout') {
     $session->logout();
     $page = 'home';

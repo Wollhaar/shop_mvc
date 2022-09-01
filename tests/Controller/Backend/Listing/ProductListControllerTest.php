@@ -8,15 +8,22 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\ProductEntityManager;
 use Shop\Model\Mapper\ProductsMapper;
 use Shop\Model\Repository\ProductRepository;
+use Shop\Service\Container;
 
 class ProductListControllerTest extends \PHPUnit\Framework\TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
+    }
+
     public function testView()
     {
         $view = new View();
         $controller = new ProductListController($view,
-            new ProductRepository(new ProductsMapper(), $entityManager),
-            new ProductEntityManager($entityManager),
+            new ProductRepository(new ProductsMapper(), Container::$entityManager),
+            new ProductEntityManager(Container::$entityManager),
         );
         $controller->view();
         $results = $view->getParams();
@@ -47,8 +54,8 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
 
         $view = new View();
         $controller = new ProductListController($view,
-            new ProductRepository(new ProductsMapper(), $entityManager),
-            new ProductEntityManager($entityManager)
+            new ProductRepository(new ProductsMapper(), Container::$entityManager),
+            new ProductEntityManager(Container::$entityManager)
         );
         $controller->view();
         $results = $view->getParams();
@@ -70,17 +77,5 @@ class ProductListControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('plain white', $results['products'][12]->name);
         self::assertSame(14, $results['products'][13]->id);
         self::assertSame('Strickjacke', $results['products'][13]->name);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $_GET = [];
     }
 }

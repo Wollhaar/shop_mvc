@@ -9,17 +9,24 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\CategoryEntityManager;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;
+use Shop\Service\Container;
 
 class CategoryListControllerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
+    }
+
     public function testView()
     {
         $view = new View();
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryListController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new CategoryEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new CategoryEntityManager(Container::$entityManager),
         );
         $controller->view();
         $results = $view->getParams();
@@ -46,8 +53,8 @@ class CategoryListControllerTest extends TestCase
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryListController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new CategoryEntityManager($entityManager)
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new CategoryEntityManager(Container::$entityManager)
         );
 
         $controller->view();
@@ -64,17 +71,5 @@ class CategoryListControllerTest extends TestCase
         self::assertSame('Sportswear', $results['categories'][3]->name);
         self::assertSame(8, $results['categories'][4]->id);
         self::assertSame('Jacken', $results['categories'][4]->name);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $_GET = [];
     }
 }

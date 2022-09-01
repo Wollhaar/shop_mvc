@@ -7,9 +7,16 @@ use Shop\Core\View;
 use Shop\Model\Mapper\{CategoriesMapper, ProductsMapper};
 use Shop\Model\Repository\{CategoryRepository, ProductRepository};
 use Shop\Model\EntityManager\ProductEntityManager;
+use Shop\Service\Container;
 
 class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
+    }
+
     public function testView()
     {
         $_GET['id'] = 14;
@@ -19,9 +26,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $prodMapper = new ProductsMapper();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new ProductRepository($prodMapper, $entityManager),
-            new ProductEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new ProductRepository($prodMapper, Container::$entityManager),
+            new ProductEntityManager(Container::$entityManager),
             $prodMapper
         );
 
@@ -47,9 +54,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $prodMapper = new ProductsMapper();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new ProductRepository($prodMapper, $entityManager),
-            new ProductEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new ProductRepository($prodMapper, Container::$entityManager),
+            new ProductEntityManager(Container::$entityManager),
             $prodMapper
         );
 
@@ -80,9 +87,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $prodMapper = new ProductsMapper();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new ProductRepository($prodMapper, $entityManager),
-            new ProductEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new ProductRepository($prodMapper, Container::$entityManager),
+            new ProductEntityManager(Container::$entityManager),
             $prodMapper
         );
 
@@ -118,9 +125,9 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         $prodMapper = new ProductsMapper();
 
         $controller = new ProductProfileController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new ProductRepository($prodMapper, $entityManager),
-            new ProductEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new ProductRepository($prodMapper, Container::$entityManager),
+            new ProductEntityManager(Container::$entityManager),
             $prodMapper
         );
 
@@ -136,17 +143,5 @@ class ProductProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(34.55, $results['product']->price);
         self::assertSame(130, $results['product']->amount);
         self::assertTrue($results['product']->active);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $_GET = [];
     }
 }

@@ -8,6 +8,7 @@ use Shop\Core\Authenticator;
 use Shop\Core\View;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
+use Shop\Service\Container;
 use Shop\Service\Session;
 
 class BackendControllerTest extends \PHPUnit\Framework\TestCase
@@ -15,7 +16,7 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
     public function testView()
     {
         $usrMapper = new UsersMapper();
-        $usrRepository = new UserRepository($usrMapper, $entityManager);
+        $usrRepository = new UserRepository($usrMapper, Container::$entityManager);
 
         $session = new Session(true);
         $session->set(true, 'auth');
@@ -39,7 +40,7 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
     public function testAdminView()
     {
         $usrMapper = new UsersMapper();
-        $usrRepository = new UserRepository($usrMapper, $entityManager);
+        $usrRepository = new UserRepository($usrMapper, Container::$entityManager);
 
         $session = new Session(true);
         $session->set(true, 'auth');
@@ -63,7 +64,7 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
     public function testRootView()
     {
         $usrMapper = new UsersMapper();
-        $usrRepository = new UserRepository($usrMapper, $entityManager);
+        $usrRepository = new UserRepository($usrMapper, Container::$entityManager);
 
         $session = new Session(true);
         $session->set(true, 'auth');
@@ -82,11 +83,5 @@ class BackendControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('root', $results['user']->username);
         self::assertTrue($results['user']->active);
         self::assertSame('root', $results['user']->role);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
     }
 }

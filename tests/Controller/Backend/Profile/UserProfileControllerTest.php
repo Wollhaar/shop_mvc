@@ -9,9 +9,16 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\UserEntityManager;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
+use Shop\Service\Container;
 
 class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
+    }
+
     public function testCreationView()
     {
         $_GET['create'] = 1;
@@ -20,8 +27,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             $usrMapper,
             new PasswordGenerator()
         );
@@ -51,8 +58,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             $usrMapper,
             new PasswordGenerator()
         );
@@ -84,8 +91,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             $usrMapper,
             new PasswordGenerator()
         );
@@ -124,8 +131,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             $usrMapper,
             new PasswordGenerator()
         );
@@ -165,8 +172,8 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         $usrMapper = new UsersMapper();
 
         $controller = new UserProfileController($view,
-            new UserRepository($usrMapper, $entityManager),
-            new UserEntityManager($entityManager),
+            new UserRepository($usrMapper, Container::$entityManager),
+            new UserEntityManager(Container::$entityManager),
             $usrMapper,
             new PasswordGenerator()
         );
@@ -184,17 +191,5 @@ class UserProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(date('Y-m-d h:i:s'), $results['user']->updated);
         self::assertSame('standard', $results['user']->role);
         self::assertTrue($results['user']->active);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $_GET = [];
     }
 }

@@ -10,8 +10,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $isDevMode = true;
 $proxyDir = null;
 $cache = null;
-$useSimpleAnnotationReader = false;
-$config = ORMSetup::createAnnotationMetadataConfiguration(array(__DIR__ . "/src"), $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
+$config = ORMSetup::createAnnotationMetadataConfiguration(array(__DIR__ . "/src"), $isDevMode, $proxyDir, $cache);
 
 // database configuration parameters
 $conn = array(
@@ -21,3 +20,4 @@ $conn = array(
 
 // obtaining the entity manager
 $entityManager = EntityManager::create($conn, $config);
+\Shop\Service\Container::$entityManager = $entityManager;

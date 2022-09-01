@@ -9,15 +9,22 @@ use Shop\Core\Authenticator;
 use Shop\Core\View;
 use Shop\Model\Mapper\UsersMapper;
 use Shop\Model\Repository\UserRepository;
+use Shop\Service\Container;
 use Shop\Service\Session;
 
 class LoginControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        require __DIR__ . '/../../../bootstrap-doctrine.php';
+    }
+
     public function testView()
     {
         $_POST = ['username' => 'test', 'password' => 'test123'];
         $usrMapper = new UsersMapper();
-        $usrRepository = new UserRepository($usrMapper, $entityManager);
+        $usrRepository = new UserRepository($usrMapper, Container::$entityManager);
 
         $view = new View();
         $session = new Session(true);
@@ -45,7 +52,7 @@ class LoginControllerTest extends TestCase
         $_POST = ['username' => 'test', 'password' => 'test1234'];
         $usrMapper = new UsersMapper();
 
-        $usrRepository = new UserRepository($usrMapper, $entityManager);
+        $usrRepository = new UserRepository($usrMapper, Container::$entityManager);
         $view = new View();
 
         $controller = new LoginController($view,
@@ -58,11 +65,5 @@ class LoginControllerTest extends TestCase
         self::assertTrue($results['authentication']);
         self::assertFalse($results['wrongUsername']);
         self::assertTrue($results['wrongPassword']);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../bootstrap-doctrine.php';
     }
 }

@@ -8,9 +8,16 @@ use Shop\Core\View;
 use Shop\Model\EntityManager\CategoryEntityManager;
 use Shop\Model\Mapper\CategoriesMapper;
 use Shop\Model\Repository\CategoryRepository;
+use Shop\Service\Container;
 
 class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $_GET = [];
+    }
+
     public function testView()
     {
         $_GET['id'] = 4;
@@ -19,8 +26,8 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryProfileController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new CategoryEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new CategoryEntityManager(Container::$entityManager),
             $catMapper
         );
         $controller->view();
@@ -39,8 +46,8 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryProfileController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new CategoryEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new CategoryEntityManager(Container::$entityManager),
             $catMapper
         );
         $controller->view();
@@ -61,8 +68,8 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         $catMapper = new CategoriesMapper();
 
         $controller = new CategoryProfileController($view,
-            new CategoryRepository($catMapper, $entityManager),
-            new CategoryEntityManager($entityManager),
+            new CategoryRepository($catMapper, Container::$entityManager),
+            new CategoryEntityManager(Container::$entityManager),
             $catMapper
         );
         $controller->view();
@@ -71,17 +78,5 @@ class CategoryProfileControllerTest extends \PHPUnit\Framework\TestCase
         self::assertSame('Category', $results['title']);
         self::assertSame('testKategorieCREATE', $results['category']->name);
         self::assertTrue($results['category']->active);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        require __DIR__ . '/../../../../bootstrap-doctrine.php';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $_GET = [];
     }
 }
