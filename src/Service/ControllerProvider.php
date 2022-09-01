@@ -3,7 +3,7 @@
 namespace Shop\Service;
 
 use Shop\Controller\ErrorController;
-use Shop\Controller\Backend\{BackendController, LoginController};
+use Shop\Controller\Backend\{BackendController, LoginController, PasswordController};
 use Shop\Controller\Backend\Listing\{CategoryListController, ProductListController, UserListController};
 use Shop\Controller\Backend\Profile\{CategoryProfileController, ProductProfileController, UserProfileController};
 use Shop\Controller\Frontend\{CategoryController, DetailController, HomeController};
@@ -32,6 +32,7 @@ class ControllerProvider
             CategoryProfileController::class,
             ProductProfileController::class,
             UserProfileController::class,
+            PasswordController::class,
         ];
     }
 }
