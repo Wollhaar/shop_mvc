@@ -50,6 +50,14 @@ class UserEntityManager
         $this->dataManager->flush();
     }
 
+    public function savePassword(int $id, $passwordHash): bool
+    {
+        $user = $this->dataManager->find(User::class, $id);
+        $user->passwordHash = $passwordHash;
+        $this->dataManager->flush();
+        return true;
+    }
+
     public function deleteUserById(int $id): void
     {
         $user = $this->dataManager->find(User::class, $id);

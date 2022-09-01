@@ -59,6 +59,8 @@ class PasswordController implements \Shop\Controller\BasicController
                 'message' => 'Link to recover your password',
                 'html' => $user->id
             ];
+
+            $this->session->set($user, 'user');
             $this->session->set(true, 'verified');
             $this->session->set(new \DateTime('now'), 'timeOfVerification');
 
@@ -79,7 +81,25 @@ class PasswordController implements \Shop\Controller\BasicController
 
     private function passwordSet(): bool
     {
+        $user = $this->session->get('user');
+        $verified = $this->session->get('verified') ?? false;
+        $veriTime = $this->session->get('timeOfVerification');
 
+        $valid = $this->valuateTime(
+                $veriTime->diff(new \DateTime())
+            ) < self::TTL;
+
+        if ($user && $verified && $valid) {
+            $newPassword = $_POST['password'] ?? '';
+            if ($newPassword !== '') {
+                return $this->usrEntManager->savePassword(
+                    $user,
+                    $this->passGenerator->hash($newPassword)
+                );
+            }
+        }
+
+        return false;
     }
 
     private function valuateTime(\DateInterval $dateDiff): int
